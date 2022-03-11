@@ -4,12 +4,10 @@ date: "03/11/2022"
 output:
   github_document: default
   html_document: default
-# knit: (function(inputFile, encoding) {
-#       out_dir <- "../html/";
-#       rmarkdown::render(inputFile,
-#                         encoding=encoding,
-#                         output_format = "all",
-#                         output_dir=file.path(dirname(inputFile), out_dir))})
+knit: (function(inputFile, encoding) {
+      rmarkdown::render(inputFile,
+                        encoding=encoding,
+                        output_format = "all")})
 ---
 
 This chapter will place Pakistan’s core development priorities and challenges in the context of climate change.  and assess the immediate and longer-term risks to sustainable and inclusive development from climate change. The assessment of Pakistan’s core development priorities will be placed in the context of the government’s development vision and revised NDCs, the draft World Bank’s Country Partnership Framework (CPF) and the Country Climate Action Plan (CCAP) for Pakistan. It will summarize the main sectoral, macro-fiscal and financial opportunities to address critical development needs while building climate resilience and reducing emissions, with a focus on synergistic short- and medium-term strategies that are urgent for sustainable and inclusive growth and poverty reduction while transitioning to a resilient and low carbon economy.
