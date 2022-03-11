@@ -1,0 +1,337 @@
+---
+title: "Pakistan CCDR - 02. The Macro-Fiscal, Financial and Distributional Impacts of Climate Risks"
+date: "2/22/2022"
+output:
+  html_document: default
+---
+
+This chapter assesses the macro-fiscal, financial, and distributional risks posed by climate change and environmental degradation to Pakistan’s development path. Both physical and transition related risks are assessed, including those arising from international decarbonization policies. It identifies the main channels through which the impacts of climate change will be transmitted and evaluates associated macro-fiscal, sectoral, financial, and distributional implications.
+
+### Required packages and settings
+
+```{r, results='hide', message=FALSE}
+source("../styles/CCDR_basic_style.R")
+source("../styles/SDG_atlas_styles.R")
+source("../utils/CCDR_utils.R")
+library(knitr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(ggalt)
+library(forcats)
+library(png)
+library(ggpubr)
+library(scales)
+library(hrbrthemes)
+library(viridis)
+library(wbstats)
+library(wbgcharts)
+library(wbgmaps)
+library(wbggeo)
+library(readr)
+library(readxl)
+library(gtable)
+library(grid)
+library(lubridate)
+library(extrafont)
+# this only needs to be done once
+# library(remotes)
+# remotes::install_version("Rttf2pt1", version = "1.3.8")
+# font_import() 
+# loadfonts(device = 'win')
+create_wbgref()
+```
+
+
+## 2.1	Economy Wide Impacts of a Changing Climate 
+
+
+```{r, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch2_crop_yield <- function() {
+  
+  # data
+  df_maize <- read_csv("../data/yield_maize_co2_PAK_PAK_area_annual.csv", skip=3) %>%
+    select(2, 7, 8, 9, 10) %>%
+    rename_with(~ tolower(gsub("NGFS current policies ", "", .x, fixed = TRUE))) %>%
+    mutate(crop = "Maize")
+  df_rice <- read_csv("../data/yield_rice_co2_PAK_PAK_area_annual.csv", skip=3) %>%
+    select(2, 7, 8, 9, 10) %>%
+    rename_with(~ tolower(gsub("NGFS current policies ", "", .x, fixed = TRUE))) %>%
+    mutate(crop = "Rice")
+  df_soy <- read_csv("../data/yield_soy_co2_PAK_PAK_area_annual.csv", skip=3) %>%
+    select(2, 7, 8, 9, 10) %>%
+    rename_with(~ tolower(gsub("NGFS current policies ", "", .x, fixed = TRUE))) %>%
+    mutate(crop = "Soy")
+  df_wheat <- read_csv("../data/yield_wheat_co2_PAK_PAK_area_annual.csv", skip=3) %>%
+    select(2, 7, 8, 9, 10) %>%
+    rename_with(~ tolower(gsub("NGFS current policies ", "", .x, fixed = TRUE))) %>%
+    mutate(crop = "Wheat")
+  df <- bind_rows(df_maize, df_rice, df_soy, df_wheat) %>%
+    mutate(year = as.numeric(year))
+
+  
+  color_list <- c("#972D07", "#7D1538", "#D3F3EE", "#DACC3E")
+
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_atlas()) {
+      ggplot(df, aes(x=year, y=median, color=crop)) +
+      geom_line(aes(x=year, y=median, color=crop), size=1.5) +
+      # geom_ribbon(aes(ymin=`2.5th percentile`, ymax=`97.5th percentile`,
+      #                 fill=crop),color="grey70",alpha=0.1) +
+      scale_x_continuous(breaks = bracketed_breaks(df$year), expand=c(0,0)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(year == max(year)) %>% pull(median) %>% repel(gap=2),
+          labels = df %>% filter(year == max(year)) %>% pull(crop)
+        )) +
+      annotate("text", x = 2060, y = 1, label = "Baseline (reference period 1986-2006)", size = 3, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_hline(yintercept = 0, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Relative change in crop yield in Pakistan.",
+    subtitle = "Median relative changes in Yield (%) at different global warming levels compared to the reference period 1986-2006, based on the NGFS current policies scenario.",
+    source = "Source: Climate Analytics"
+  )
+}
+
+fig_ch2_crop_yield()
+
+figure_save_draft_png(fig_ch2_crop_yield(), style_atlas, "../drafts/fig_ch2_crop_yield.png", height=4.1, width=5.5)
+```
+
+
+```{r, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch2_annual_expected_damage <- function() {
+  
+  # data
+  df_floods <- read_csv("../data/ec2_floods_PAK_other_annual.csv", skip=4) %>%
+    select(2, 7, 8, 9, 10) %>%
+    rename_with(~ tolower(gsub("NGFS current policies ", "", .x, fixed = TRUE))) %>%
+    mutate(disaster = "Floods")
+  df_cyclones <- read_csv("../data/ec3_cyclones_PAK_other_annual.csv", skip=4) %>%
+    select(2, 7, 8, 9, 10) %>%
+    rename_with(~ tolower(gsub("NGFS current policies ", "", .x, fixed = TRUE))) %>%
+    mutate(disaster = "Cyclones")
+  df <- bind_rows(df_floods, df_cyclones) %>%
+    mutate(year = as.numeric(year))
+
+  
+  color_list <- c("#A64253", "#3581B8")
+
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_atlas()) {
+      ggplot(df, aes(x=year, y=median, color=disaster)) +
+      geom_line(aes(x=year, y=median, color=disaster), size=1.5) +
+      geom_ribbon(aes(ymin=`2.5th percentile`, ymax=`97.5th percentile`,
+                      fill=disaster),color="grey70",alpha=0.3) +
+      scale_x_continuous(breaks = bracketed_breaks(df$year), expand=c(0,0)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(year == max(year)) %>% pull(median) %>% repel(gap=20),
+          labels = df %>% filter(year == max(year)) %>% pull(disaster)
+        )) +
+      coord_cartesian(ylim = c(-100, 200)) +
+      annotate("text", x = 2060, y = -10, label = "Baseline (reference year 2020)", size = 3, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_hline(yintercept = 0, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Relative change in annual expected damage in Pakistan.",
+    subtitle = "Median and 2.5th - 97.5 percentiles of relative changes in Annual Expected Damage at different global warming levels compared to the reference period 1986-2006, based on the NGFS current policies scenario.",
+    source = "Source: Climate Analytics"
+  )
+}
+
+fig_ch2_annual_expected_damage()
+
+figure_save_draft_png(fig_ch2_annual_expected_damage(), style_atlas, "../drafts/fig_ch2_annual_expected_damage.png", height=4.1, width=5.5)
+```
+
+## 2.2	Impacts of Climate Change on Poverty and Equity 
+
+```{r, message=FALSE, warning = FALSE, fig.height=8.5, fig.width=8.5, out.width=800, dpi=200}
+library(raster)
+library(maps)
+library(sf)
+library(sp)
+
+# data
+rel_wi <- read_csv("../data/ind_pak_relative_wealth_index.csv")
+spdf.rel_wi <- SpatialPointsDataFrame(coords = rel_wi[, c("longitude", "latitude")], data = rel_wi,
+                               proj4string = CRS("+proj=longlat +datum=WGS84"))
+pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+
+pakistan.rel_wi <- spdf.rel_wi[!is.na(over(spdf.rel_wi, as(pakistan.gadm, "SpatialPolygons"))), ]
+
+df.pakistan.rel_wi <- as.data.frame(pakistan.rel_wi) %>%
+    rename(RWI = rwi)
+
+# chart
+ggplot() +
+# geom_tile(data = df.pakistan.rel_wi, size = 10, aes(x = longitude, y = latitude, fill = RWI), alpha = 0.9) +
+geom_point(data = df.pakistan.rel_wi, size = 0.01, aes(x = longitude, y = latitude, color = RWI), alpha = 0.9) +
+geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+             colour = "gray20", size = 0.3, fill = NA) +  
+labs(title = "Relative Wealth Index", x = "Longitude", y = "Latitude",
+     subtitle = "Relative standard of living at 2.4km resolution",
+     caption = "Source: Facebook Data for Good, https://dataforgood.fb.com/tools/relative-wealth-index/.") +
+scale_color_distiller(type = "div", palette = "Spectral", direction=1) +
+theme_bw() +
+theme(plot.title = element_text(size = 20, face = "bold"),
+      plot.caption = element_text(size = 10, hjust = 0),
+      legend.title = element_text(size = 15),
+      axis.text = element_text(size = 15),
+      axis.title.x = element_blank(),
+      axis.title.y = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_blank(),
+      legend.text = element_text(size = 10)) 
+# coord_map()
+```
+
+
+
+
+
+
+## 2.3	Climate Macroeconomic Models for Pakistan
+
+
+
+## 2.4  Policy scenarios (till 2050)
+
+
+```{r, message=FALSE, warning = FALSE, fig.height=7.5, fig.width=8.5, out.width=800, dpi=200}
+
+# data
+pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+heatmap_data <- read_csv("../data/Land Fraction annually exposed to crop failure_NGFS current policies.csv")
+heatmap_data <- heatmap_data %>%
+  gather(key="lon", value="impact", "60.5":"77.5") %>%
+  mutate(lon = as.numeric(lon)) %>%
+  mutate(lat = as.numeric(lat))
+
+# chart
+ggplot() +
+  geom_raster(data = heatmap_data, hjust = 1, vjust = 1, aes(x = lon, y = lat, fill = impact), alpha = 0.9) +
+  geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+               colour = "gray20", size = 0.3, fill = NA) +
+  labs(title = "Land fraction annually exposed to Crop Failures", x = "Longitude", y = "Latitude",
+       subtitle = "NGFS current policies scenario, 2030",
+       caption = "Source: Climate Analytics",
+       fill = "Land fraction (%)") +
+  scale_fill_gradient2(
+    low = muted("white"),
+    high = muted("red"),
+    midpoint = 0,
+    space = "Lab",
+    na.value = NA,
+    guide = "colourbar",
+    aesthetics = "fill") +
+  theme_bw() +
+  theme(plot.title = element_text(size = 20, face = "bold"),
+        plot.caption = element_text(size = 10, hjust = 0),
+        legend.title = element_text(size = 15),
+        axis.text = element_text(size = 15),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        legend.text = element_text(size = 10)) 
+  # coord_map()
+```
+
+
+
+
+
+```{r, message=FALSE, warning = FALSE, fig.height=7.5, fig.width=8.5, out.width=800, dpi=200}
+
+# data
+pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+heatmap_data <- read_csv("../data/Land fraction annually exposed to River Floods_NGFS current policies.csv")
+heatmap_data <- heatmap_data %>%
+  gather(key="lon", value="impact", "60.5":"77.5") %>%
+  mutate(lon = as.numeric(lon)) %>%
+  mutate(lat = as.numeric(lat))
+
+# chart
+ggplot() +
+  geom_raster(data = heatmap_data, hjust = 1, vjust = 1, aes(x = lon, y = lat, fill = impact), alpha = 0.9) +
+  geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+               colour = "gray20", size = 0.3, fill = NA) +
+  labs(title = "Land fraction annually exposed to River Floods", x = "Longitude", y = "Latitude",
+       subtitle = "NGFS current policies scenario, 2030",
+       caption = "Source: Climate Analytics",
+       fill = "Land fraction (%)") +
+  scale_fill_gradient2(
+    low = muted("white"),
+    high = muted("red"),
+    midpoint = 0,
+    space = "Lab",
+    na.value = NA,
+    guide = "colourbar",
+    aesthetics = "fill") +
+  theme_bw() +
+  theme(plot.title = element_text(size = 20, face = "bold"),
+        plot.caption = element_text(size = 10, hjust = 0),
+        legend.title = element_text(size = 15),
+        axis.text = element_text(size = 15),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        legend.text = element_text(size = 10)) 
+  # coord_map()
+```
+
+
+```{r, message=FALSE, warning = FALSE, fig.height=7.5, fig.width=8.5, out.width=800, dpi=200}
+
+# data
+pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+heatmap_data <- read_csv("../data/Labour Productivity due to Heat Stress_NGFS current policies.csv")
+heatmap_data <- heatmap_data %>%
+  gather(key="lon", value="impact", "60.5":"77.5") %>%
+  mutate(lon = as.numeric(lon)) %>%
+  mutate(lat = as.numeric(lat))
+
+# chart
+ggplot() +
+  geom_raster(data = heatmap_data, hjust = 1, vjust = 1, aes(x = lon, y = lat, fill = impact), alpha = 0.9) +
+  geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+               colour = "gray20", size = 0.3, fill = NA) +
+  labs(title = "Labour Productivity due to Heat Stress", x = "Longitude", y = "Latitude",
+       subtitle = "NGFS current policies scenario, 2030",
+       caption = "Source: Climate Analytics",
+       fill = "Productivity\nchange (%)") +
+  scale_fill_gradient2(
+    low = "firebrick",
+    high = "white",
+    midpoint = 0,
+    space = "Lab",
+    na.value = NA,
+    guide = "colourbar",
+    aesthetics = "fill") +
+  theme_bw() +
+  theme(plot.title = element_text(size = 20, face = "bold"),
+        plot.caption = element_text(size = 10, hjust = 0),
+        legend.title = element_text(size = 15),
+        axis.text = element_text(size = 15),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        legend.text = element_text(size = 10)) 
+  # coord_map()
+```
+

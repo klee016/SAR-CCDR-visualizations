@@ -1,0 +1,7 @@
+Entity,Code,Year,total_damages_pct_gdp_temperature,total_damages_pct_gdp_wildfire,total_damages_pct_gdp_storm,total_damages_pct_gdp_landslide,total_damages_pct_gdp_mass_movement,total_damages_pct_gdp_volcanic,total_damages_pct_gdp_earthquake,total_damages_pct_gdp_flood,total_damages_pct_gdp_drought
+Pakistan,PAK,1960,0,0,0.007877108,0,0,0,0,0.004711706,0
+Pakistan,PAK,1970,0,0,0,0,0,0,0.003657635,1.419779932,0
+Pakistan,PAK,1980,0,0,0,0,0,0,0.003467072,0,0
+Pakistan,PAK,1990,0,0,0.001736594,0,0,0,0.002441704,0.222203444,0.039222626
+Pakistan,PAK,2000,0,0,0.106308979,0,0,0,0.433785684,0.060974529,0
+Pakistan,PAK,2010,0.000736615,0,0.004515539,0.001015996,0,0,0.004935927,0.915124836,0
