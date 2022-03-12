@@ -1,0 +1,12 @@
+Source: IEA World Energy Balances https://www.iea.org/data-and-statistics/data-product/world-energy-statistics-and-balances
+Documentation: https://iea.blob.core.windows.net/assets/20a89a1b-634c-41f1-87d1-d218f07769fb/WORLDBAL_Documentation.pdf
+This data is subject to the IEA's terms and conditions: https://www.iea.org/terms
+
+,Coal,Natural gas,Hydro,Biofuels and waste,Oil,"Wind, solar, etc.",Units
+1990,11781,156049,3182,287395,75533,,TJ
+1995,13434,230015,1339,302220,114135,,TJ
+2000,13811,309020,2761,319391,130781,,TJ
+2005,17682,452583,2761,345409,149351,,TJ
+2010,33942,696221,2779,356687,158001,,TJ
+2015,95050,884880,2160,351714,210377,778,TJ
+2019,165740,1068016,2767,331716,238913,1353,TJ

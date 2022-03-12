@@ -1,0 +1,7 @@
+Entity,Code,Year,total_damages_pct_gdp_temperature,total_damages_pct_gdp_wildfire,total_damages_pct_gdp_storm,total_damages_pct_gdp_landslide,total_damages_pct_gdp_mass_movement,total_damages_pct_gdp_volcanic,total_damages_pct_gdp_earthquake,total_damages_pct_gdp_flood,total_damages_pct_gdp_drought
+Bangladesh,BGD,1960,0,0,0.263467638,0,0,0,0,0.277282363,0
+Bangladesh,BGD,1970,0,0,0.148083671,0,0,0,0,0.490698823,0
+Bangladesh,BGD,1980,0,0,0.028071814,0,0,0,0,1.321937545,0
+Bangladesh,BGD,1990,0,0,0.823599677,0,0,0,0,1.059158169,0
+Bangladesh,BGD,2000,0,0,0.315248695,0,0,0,0.076794836,0.445902714,0
+Bangladesh,BGD,2010,0,0,0.030878554,0,0,0,0,0.045707662,0

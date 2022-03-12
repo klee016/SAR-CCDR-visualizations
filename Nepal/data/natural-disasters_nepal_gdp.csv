@@ -1,0 +1,7 @@
+Entity,Code,Year,total_damages_pct_gdp_temperature,total_damages_pct_gdp_wildfire,total_damages_pct_gdp_storm,total_damages_pct_gdp_landslide,total_damages_pct_gdp_mass_movement,total_damages_pct_gdp_volcanic,total_damages_pct_gdp_earthquake,total_damages_pct_gdp_flood,total_damages_pct_gdp_drought
+Nepal,NPL,1960,0,0,0,0,0,0,0.011027645,0.00388486,0
+Nepal,NPL,1970,0,0,0,0,0,0,0,0.00319793,0.097646828
+Nepal,NPL,1980,0,0,0.012628103,0,0,0,1.431113975,0.363764205,0
+Nepal,NPL,1990,0,0.018228798,0,0,0,0,0,0.608740119,0
+Nepal,NPL,2000,0,0,0,0,0,0,0,0.060488459,0
+Nepal,NPL,2010,0.0000569,0,0,0.006598743,0,0,2.123904377,0.271624046,0

@@ -1,0 +1,7 @@
+Entity,Code,Year,deaths_temperature,deaths_wildfire,deaths_storm,deaths_landslide,deaths_mass_movement,deaths_volcanic,deaths_earthquake,deaths_flood,deaths_drought
+Bangladesh,BGD,1960,0,0,9262.3,0,0,0,0,1029,0
+Bangladesh,BGD,1970,0,0,30714.4,0,0,0,0,2937.5,1.8
+Bangladesh,BGD,1980,17,0,1897.7,0,0,0,0.3,706.4,0
+Bangladesh,BGD,1990,80.1,0,14259.4,0,0,0,2.9,294.4,0
+Bangladesh,BGD,2000,133.5,0,558.8,1.3,0,0,0.4,240.4,0
+Bangladesh,BGD,2010,21.8,0,59.2,25.2,0,0,0.9,65.3,0

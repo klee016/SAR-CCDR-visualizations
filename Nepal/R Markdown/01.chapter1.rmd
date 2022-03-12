@@ -1,0 +1,702 @@
+---
+title: "Nepal CCDR - 01. Chapter 1"
+date: "03/11/2022"
+output:
+  github_document: default
+  html_document: default
+knit: (function(inputFile, encoding) {
+      rmarkdown::render(inputFile,
+                        encoding=encoding,
+                        output_format = "github_document");
+      rmarkdown::render(inputFile,
+                        encoding=encoding,
+                        output_format = "html_document",
+                        output_dir=file.path(dirname(inputFile), "../html/"))                  
+      })
+---
+
+Chapter 1 description
+
+```{r, echo=FALSE, results='hide', message=FALSE}
+source("../../styles/SAR_CCDR_style.R")
+source("../../utils/CCDR_utils.R")
+library(knitr)
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(stringr)
+library(ggplot2)
+library(ggalt)
+library(forcats)
+library(png)
+library(ggpubr)
+library(ggrepel)
+library(scales)
+library(hrbrthemes)
+library(viridis)
+library(wbstats)
+library(wbgcharts)
+library(wbgmaps)
+library(wbggeo)
+library(readr)
+library(readxl)
+library(gtable)
+library(grid)
+library(lubridate)
+library(extrafont)
+# this only needs to be done once
+# library(remotes)
+# remotes::install_version("Rttf2pt1", version = "1.3.8")
+# font_import() 
+# loadfonts(device = 'win')
+create_wbgref()
+```
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Economic growth
+
+Data source: WDI
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch1_economic_growth <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("NY.GDP.PCAP.PP.CD"),
+    country = c("NPL", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(num_def = NY.GDP.PCAP.PP.CD) %>% 
+    select(iso3c, country, date, num_def) 
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = date, y = num_def, group = rev(iso3c), color = iso3c)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(date == max(date)) %>% pull(num_def) %>% repel(gap=6),
+            labels = df %>% filter(date == max(date)) %>% pull(country)
+          )) +
+        scale_color_manual(values = c(
+          "XN" = style$colors$spot.secondary.light, 
+          "SAS" = style$colors$spot.secondary.light,
+          "NPL" = style$colors$spot.primary)) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Nepal's economic growth compared with South Asia and lower-middle-income group",
+    subtitle = "GDP per capita, PPP (current international $), 1990 to 2020",
+    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)."
+  )
+}
+
+fig_ch1_economic_growth()
+
+figure_save_draft_png(fig_ch1_economic_growth(), style_SAR_CCDR, "../png/fig_ch1_economic_growth.png", height=3.1, width=5.5)
+
+```
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Structure of economy
+
+Data source: WDI
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.5, out.width=800, dpi=200}
+
+fig_ch1_structure_of_economy <- function() {
+  
+# data
+country_code = "NPL"
+columns = c("iso2c", "iso3c", "country", "year", "Agriculture", "Industry", "Services")
+
+indicators <- c("NV.AGR.TOTL.ZS", "NV.IND.TOTL.ZS", "NV.SRV.TOTL.ZS")
+year <- 2020
+df.nv <- wb_data(
+  indicator = indicators,
+  country = country_code,
+  start_date = year,
+  end_date = year
+)
+
+names(df.nv) = columns
+for (x in colnames(df.nv)) attr(df.nv[[x]], "label") <- NULL
+df.nv$indicator = "value added (% of GDP)"
+ 
+indicators <- c("SL.AGR.EMPL.ZS", "SL.IND.EMPL.ZS", "SL.SRV.EMPL.ZS")
+year <- 2019
+df.empl <- wb_data(
+  indicator = indicators,
+  country = country_code,
+  start_date = year,
+  end_date = year
+)
+
+names(df.empl) = columns
+for (x in colnames(df.empl)) attr(df.empl[[x]], "label") <- NULL
+df.empl$indicator = "% of employment (modeled ILO estimate)"
+
+indicators <- c("SL.AGR.EMPL.MA.ZS", "SL.IND.EMPL.MA.ZS", "SL.SRV.EMPL.MA.ZS")
+year <- 2019
+df.ma <- wb_data(
+  indicator = indicators,
+  country = country_code,
+  start_date = year,
+  end_date = year
+)
+
+names(df.ma) = columns
+for (x in colnames(df.ma)) attr(df.ma[[x]], "label") <- NULL
+df.ma$indicator = "% of male employment (modeled ILO estimate)"
+
+indicators <- c("SL.AGR.EMPL.FE.ZS", "SL.IND.EMPL.FE.ZS", "SL.SRV.EMPL.FE.ZS")
+year <- 2019
+df.fe <- wb_data(
+  indicator = indicators,
+  country = country_code,
+  start_date = year,
+  end_date = year
+)
+
+names(df.fe) = columns
+for (x in colnames(df.fe)) attr(df.fe[[x]], "label") <- NULL
+df.fe$indicator = "% of female employment (modeled ILO estimate)"
+
+df <- bind_rows(df.nv, df.empl, df.ma, df.fe) %>%
+  gather(sector, value, c(Agriculture, Industry, Services)) %>%
+  mutate(year = as.numeric(year))
+
+# chart
+indicator_labels = c("value added (% of GDP)", "% of employment (modeled ILO estimate)", "% of male employment (modeled ILO estimate)", "% of female employment (modeled ILO estimate)")
+figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = "", y = value, fill = sector)) +
+        geom_bar(width = 1, stat = "identity") +
+        scale_fill_manual(values = c(
+          Agriculture = style$colors$spot.secondary,
+          Industry = style$colors$spot.primary.light,
+          Services = style$colors$spot.primary
+        )) +
+        # geom_text(aes(y = ypos, label = sector), color = "white", size=2) +
+        facet_grid(cols = vars(factor(indicator, levels=indicator_labels))) +
+        # facet_grid(indicator ~ .) +
+        # facet_grid(iso3c ~ ., labeller = as_labeller(str_wrap_lines(wbgref$regions$labels,3,force=TRUE))) + 
+        coord_polar(theta = "y") +
+        style$theme() +
+        style$theme_legend("bottom") +
+        theme(
+          axis.text = element_blank(),
+          panel.grid  = element_blank(),
+          strip.text.x = element_text(angle = 0, hjust = 0.5),
+          panel.spacing = unit(0, "npc")
+        )
+    },
+    title = "Structure of ecomony in Nepal",
+    subtitle = "Industry value added (2020) and employment breakdown (2019)",
+    source = "Source: World Development Indicators"
+  )
+}
+
+fig_ch1_structure_of_economy()
+
+figure_save_draft_png(fig_ch1_structure_of_economy(), style_SAR_CCDR, "../png/fig_ch1_structure_of_economy.png", height=4.1, width=8.5)
+```
+
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Total energy supply (TES)
+
+Data source: https://www.iea.org/data-and-statistics/data-browser/?country=NEPAL&fuel=Energy%20supply&indicator=TESbySource
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=6.5, out.width=800, dpi=200}
+
+fig_ch1_TES_share_by_source <- function() {
+  
+  # data
+  df <- read_csv("../data/Total energy supply (TES) by source - Nepal.csv", skip=4) %>%
+    rename(year = X1) %>%
+    select(-Units)
+  df <- df %>%
+    gather(source, TJ, 2:6) %>%
+    group_by(year) %>%
+    mutate(percentage =  100 *TJ/sum(TJ, na.rm=TRUE)) %>%
+    mutate(year = as.numeric(year))
+  
+  # plot
+  color_list <- c("#45462A", "#BCAA99", "#3AAFB9", "#8E5572", "#BBBE64")
+  figure(
+    data = df,
+    plot = function(data, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = year, y = percentage, fill = source)) +
+        geom_area() +
+        style$theme() + 
+        style$theme_legend("right") +
+        scale_x_continuous(expand = c(0, 1)) +
+        # scale_y_continuous(labels = millions()) +
+        scale_fill_manual(values=color_list)
+      },
+      aspect_ratio = 1.5,
+      title = paste0("Nepal's total energy supply (TES)"),
+      subtitle = "Share by source (%), 1990-2019",
+      note = "Note: TES is made up of production + imports - exports - international marine bunkers - international aviation bunkers ± stock changes.",
+      source = "Source: IEA World Energy Balances https://www.iea.org/data-and-statistics/data-product/world-energy-statistics-and-balances"
+  )
+}
+
+fig_ch1_TES_share_by_source()
+
+figure_save_draft_png(fig_ch1_TES_share_by_source(), style_SAR_CCDR, "../png/fig_ch1_TES_share_by_source.png", height=4.1, width=6.5)
+
+```
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Natural disasters
+
+Data source: https://ourworldindata.org/natural-disasters
+Country: Nepal
+Disaster type: All disasters (by type)
+Impact: Deaths, Economic damages (%GDP)
+Timespan: Decadal average
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch1_natural_disasters <- function() {
+  
+  # data
+  df1 <- read_csv("../data/natural-disasters_nepal_deaths.csv")
+  names(df1) <- c('Entity', 'Code', 'Year', 'Extreme temperature', 'Wildfires', 'Storms', 
+                  'Landslides', 'Mass movement (dry)', 'Volcanic activity', 'Earthquakes', 'Floods', 'Drought')
+  df1 <- df1 %>%
+    select(-c('Mass movement (dry)', 'Volcanic activity', 'Drought')) %>%
+    gather(Type, Deaths, 4:9) %>%
+    select(Year, Type, Deaths)
+  
+  df2 <- read_csv("../data/natural-disasters_nepal_gdp.csv")
+  names(df2) <- c('Entity', 'Code', 'Year', 'Extreme temperature', 'Wildfires', 'Storms', 
+                  'Landslides', 'Mass movement (dry)', 'Volcanic activity', 'Earthquakes', 'Floods', 'Drought')
+  df2 <- df2 %>%
+    select(-c('Mass movement (dry)', 'Volcanic activity', 'Drought')) %>%
+    gather(Type, Damage, 4:9) %>%
+    mutate(Damage = Damage*100) %>%
+    select(Year, Type, Damage)
+  
+  df <- merge(df1, df2, by=c("Year", "Type"))
+  
+  # chart
+  figure(
+    data =  df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      p <- ggplot(df, aes(x=Year, y=reorder(Type, desc(Type)), size=ifelse(Damage==0, NA, Damage), color=Deaths, fill=Deaths)) +
+        geom_point(alpha=0.5, shape=21, color="black") +
+        scale_size(range = c(1, 18), name="Damage (%GDP)",
+                   breaks = c(10, 50,100),
+                   labels = c("10", "50", "100")) +
+        scale_fill_distiller(palette = "Spectral") + 
+        scale_x_continuous(limits = c(1960, 2012), breaks = c(1960, 1970, 1980, 1990, 2000, 2010), labels = c("1960-1969", "1970-1979", "1980-1989", "1990-1999", "2000-2009", "2010-2019")) +
+        xlab("Year") +
+        ylab("Natural Disasters") +
+        geom_curve(aes(x = 2000, y = 5, xend = 2005, yend = 6), 
+                               colour = "#555555", 
+                               size=0.3, 
+                               curvature = -0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 2000, y = 4.8, label = "including 2015 Nepal earthquake", size = 2.5, family = style$family) +
+        style$theme() +
+        theme(
+          axis.title.x = element_text(vjust = -5),
+          axis.title.y = element_text(angle = 90, vjust = 0, margin = margin(r = 15)),
+          axis.text.x = element_text(angle = 0, vjust = 2), 
+          legend.title = element_text(),
+          legend.box.just = "center",
+          legend.position = "right"
+        )
+    },
+    aspect_ratio = 1,
+    title = "Earthquakes and floods are the most damaging natural disasters in Nepal.",
+    subtitle = "Decadal average: Number of deaths and economic damages (% GDP) from natural disasters",
+    note = "Note: Decadal figures are measured as the annual average over the subsequent ten-year period.",
+    source = "Source: Our World in Data."
+  )
+}
+
+fig_ch1_natural_disasters()
+
+figure_save_draft_png(fig_ch1_natural_disasters(), style_SAR_CCDR, "../png/fig_ch1_natural_disasters.png", height=4.1, width=5.5)
+```
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## National GHG Emission Profile 
+
+Data source: https://www.climatewatchdata.org/data-explorer/historical-emissions?historical-emissions-data-sources=cait&historical-emissions-gases=all-ghg&historical-emissions-regions=All%20Selected%2CNPL&historical-emissions-sectors=All%20Selected&page=1
+Source: CAIT
+Country: Nepal
+Sector: All selected
+Gases: All GHG
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch1_greenhouse_gas_emissions <- function() {
+  
+  # data
+  df <- read_csv("../data/historical_emissions.csv")
+  df <- df[-c(1,2),] %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    select(Sector, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year))
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = Year, y = Emissions, group = Sector, color = Sector)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(Year == max(Year)) %>% pull(Emissions) %>% repel(gap=6),
+            labels = df %>% filter(Year == max(Year)) %>% pull(Sector)
+          )) +
+        scale_color_manual(values = c(
+          "Agriculture" = "#A43031", 
+          "Building" = "#888D8E",   
+          "Bunker Fuels" = "#888D8E",   
+          "Electricity/Heat" = "#CB6655",   
+          "Energy" = "#A41623",   
+          "Fugitive Emissions" = "#888D8E",  
+          "Industrial Processes" = "#888D8E",
+          "Land-Use Change and Forestry" = "#888D8E",
+          "Manufacturing/Construction" = "#888D8E",
+          "Other Fuel Combustion" = "#888D8E",
+          "Transportation" = "#888D8E",
+          "Waste" = "#888D8E"),
+          labels = unique(df$Sector)) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Energy and agriculture sectors take up the largest portions of greenhouse gas emissions in Nepal.",
+    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
+    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
+  )
+}
+
+fig_ch1_greenhouse_gas_emissions()
+
+figure_save_draft_png(fig_ch1_greenhouse_gas_emissions(), style_SAR_CCDR, "../png/fig_ch1_greenhouse_gas_emissions.png", height=5.1, width=5.5)
+```
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Vulnerability score
+
+Data source: https://gain.nd.edu/our-work/country-index/download-data/
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=4.1, out.width=800, dpi=200}
+library(ggradar)
+library(showtext)
+
+fig_ch1_vulnerability <- function() {
+  
+  # data
+  df <- read_csv("../data/vulnerability.csv")
+
+  # add regions and income levels
+  df <- df %>%
+    rename(iso3c = ISO3) %>%
+    left_join(wbgref$countries$regions, by="iso3c") %>%
+    left_join(wbgref$countries$incomegroups, by="iso3c")
+  
+  # calculate aggregates by regions
+  region_aggregates <- df %>%
+    group_by(region_iso3c) %>% summarize(ecosystems = mean(ecosystems, na.rm=TRUE),
+                                         food = mean(food, na.rm=TRUE),
+                                         health = mean(health, na.rm=TRUE),
+                                         habitat = mean(habitat, na.rm=TRUE),
+                                         infrastructure = mean(infrastructure, na.rm=TRUE),
+                                         water = mean(water, na.rm=TRUE)) %>%
+    rename(iso3c = region_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$regions$labels), Name = wbgref$regions$labels), by="iso3c")
+    
+  # calculate aggregates by income levels
+  income_level_aggregates <- df %>%
+    group_by(income_level_iso3c) %>% summarize(ecosystems = mean(ecosystems, na.rm=TRUE),
+                                         food = mean(food, na.rm=TRUE),
+                                         health = mean(health, na.rm=TRUE),
+                                         habitat = mean(habitat, na.rm=TRUE),
+                                         infrastructure = mean(infrastructure, na.rm=TRUE),
+                                         water = mean(water, na.rm=TRUE)) %>%
+    rename(iso3c = income_level_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$incomes$labels), Name = wbgref$incomes$labels), by="iso3c")
+  
+  # merge and select
+  df <- df %>%
+    bind_rows(region_aggregates, income_level_aggregates) %>%
+    filter(iso3c == "NPL" | iso3c == "LMC" | iso3c == "SAS") %>%
+    select(Name, ecosystems, food, health, habitat, infrastructure, water)
+  
+  # rescale
+  min <- 0.3
+  max <- 0.9
+  min_max_norm <- function(x) {
+    (x - min) / (max - min)
+  }
+  df <- df %>%
+    mutate(ecosystems = min_max_norm(ecosystems)) %>%
+    mutate(food = min_max_norm(food)) %>%
+    mutate(health = min_max_norm(health)) %>%
+    mutate(habitat = min_max_norm(habitat)) %>%
+    mutate(infrastructure = min_max_norm(infrastructure)) %>%
+    mutate(water = min_max_norm(water))
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggradar(
+        df,
+        font.radar = style$family,
+        values.radar = c(min, (min+max)/2, max),
+        grid.min = 0, grid.mid = 0.5, grid.max = 1,
+        grid.label.size = 3,  # Affects the grid annotations (0%, 50%, etc.)
+        axis.label.size = 3, # Afftects the names of the variables
+        group.point.size = 3   # Simply the size of the point 
+      ) +
+      style$theme() +
+      theme(
+        line = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        legend.position = c(1, 0),  
+        legend.justification = c(1, 0),
+        legend.text = element_text(size = 7, family = style$family),
+        legend.key = element_rect(fill = NA, color = NA),
+        legend.background = element_blank()
+      )
+    },
+    aspect_ratio = 1,
+    title = "Nepal's vulnerability in six life-supporting sectors.",
+    subtitle = "Vulnerability scores (0-1 lower is better), 2019",
+    note = "Note: Vulnerability measures a country's exposure, sensitivity and ability to adapt to the negative impact of climate change.",
+    source = "Source: The Notre Dame-Global Adaptation Index (ND-GAIN) Country Index."
+  )
+}
+
+fig_ch1_vulnerability()
+
+figure_save_draft_png(fig_ch1_vulnerability(), style_SAR_CCDR, "../png/fig_ch1_vulnerability.png", height=4.1, width=4.1)
+```
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Readiness score
+
+Data source: https://gain.nd.edu/our-work/country-index/download-data/
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=4.1, out.width=800, dpi=200}
+library(ggradar)
+library(showtext)
+
+fig_ch1_readiness <- function() {
+  
+  # data
+  df <- read_csv("../data/readiness.csv")
+
+  # add regions and income levels
+  df <- df %>%
+    rename(iso3c = ISO3) %>%
+    left_join(wbgref$countries$regions, by="iso3c") %>%
+    left_join(wbgref$countries$incomegroups, by="iso3c")
+  
+  # calculate aggregates by regions
+  region_aggregates <- df %>%
+    group_by(region_iso3c) %>% summarize(economic = mean(economic, na.rm=TRUE),
+                                         governance = mean(governance, na.rm=TRUE),
+                                         social = mean(social, na.rm=TRUE)) %>%
+    rename(iso3c = region_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$regions$labels), Name = wbgref$regions$labels), by="iso3c")
+    
+  # calculate aggregates by income levels
+  income_level_aggregates <- df %>%
+    group_by(income_level_iso3c) %>% summarize(economic = mean(economic, na.rm=TRUE),
+                                         governance = mean(governance, na.rm=TRUE),
+                                         social = mean(social, na.rm=TRUE)) %>%
+    rename(iso3c = income_level_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$incomes$labels), Name = wbgref$incomes$labels), by="iso3c")
+  
+  # merge and select
+  df <- df %>%
+    bind_rows(region_aggregates, income_level_aggregates) %>%
+    filter(iso3c == "NPL" | iso3c == "LMC" | iso3c == "SAS") %>%
+    select(Name, economic, governance, social)
+  
+  # rescale
+  min <- 0.25
+  max <- 0.45
+  min_max_norm <- function(x) {
+    (x - min) / (max - min)
+  }
+  df <- df %>%
+    mutate(economic = min_max_norm(economic)) %>%
+    mutate(governance = min_max_norm(governance)) %>%
+    mutate(social = min_max_norm(social))
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggradar(
+        df,
+        font.radar = style$family,
+        values.radar = c(min, (min+max)/2, max),
+        grid.min = 0, grid.mid = 0.5, grid.max = 1,
+        grid.label.size = 3,  # Affects the grid annotations (0%, 50%, etc.)
+        axis.label.size = 3, # Afftects the names of the variables
+        group.point.size = 3   # Simply the size of the point 
+      ) +
+      style$theme() +
+      theme(
+        line = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank(),
+        legend.position = c(1, 0),  
+        legend.justification = c(1, 0),
+        legend.text = element_text(size = 7, family = style$family),
+        legend.key = element_rect(fill = NA, color = NA),
+        legend.background = element_blank()
+      )
+    },
+    aspect_ratio = 1,
+    title = "Nepal's readiness in economic opportunity, governance, and social structures.",
+    subtitle = "Readiness scores (0-1 higher is better), 2019",
+    note = "Note: Readiness measures a country’s ability to leverage investments and convert them to adaptation actions.",
+    source = "Source: The Notre Dame-Global Adaptation Index (ND-GAIN) Country Index."
+  )
+}
+
+fig_ch1_readiness()
+
+figure_save_draft_png(fig_ch1_readiness(), style_SAR_CCDR, "../png/fig_ch1_readiness.png", height=4.1, width=4.1)
+
+```
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## ND-GAIN
+
+Data source: https://gain.nd.edu/our-work/country-index/download-data/
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_nd_gain <- function() {
+  
+  # data
+  df <- read_csv("../data/ND-gain.csv")
+
+  # add regions and income levels
+  df <- df %>%
+    rename(iso3c = ISO3) %>%
+    left_join(wbgref$countries$regions, by="iso3c") %>%
+    left_join(wbgref$countries$incomegroups, by="iso3c")
+
+  # calculate aggregates by regions
+  region_aggregates <- df %>%
+    group_by(region_iso3c) %>% summarise(across(where(is.double), ~ mean(.x, na.rm = TRUE))) %>%
+    rename(iso3c = region_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$regions$labels), Name = wbgref$regions$labels), by="iso3c")
+  
+  # calculate aggregates by income levels
+  income_level_aggregates <- df %>%
+    group_by(income_level_iso3c) %>% summarise(across(where(is.double), ~ mean(.x, na.rm = TRUE))) %>%
+    rename(iso3c = income_level_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$incomes$labels), Name = wbgref$incomes$labels), by="iso3c")
+  
+  # merge and select
+  df <- df %>%
+    bind_rows(region_aggregates, income_level_aggregates) %>%
+    filter(iso3c == "NPL" | iso3c == "LMC" | iso3c == "SAS") %>%
+    select(-c(region_iso3c, income_level_iso3c)) %>%
+    gather(key="Year", value="Gain", "1995":"2019") %>%
+    select(iso3c, Name, Year, Gain) %>%
+    mutate(Year = as.numeric(Year))
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = Year, y = Gain, group = rev(iso3c), color = iso3c)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(Year == max(Year)) %>% pull(Gain) %>% repel(gap=0.6),
+            labels = df %>% filter(Year == max(Year)) %>% pull(Name)
+          )) +
+        scale_color_manual(values = c(
+          "LMC" = style$colors$spot.secondary.light, 
+          "SAS" = style$colors$spot.secondary.light,
+          "NPL" = style$colors$spot.primary)) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Nepal's ND-GAIN has been increasing since 2004.",
+    subtitle = "ND-GAIN Country Index (0-100 higher is better), 1995-2019",
+    note = "Note: The ND-GAIN Country Index summarizes a country's vulnerability to climate change and other global challenges in combination with its readiness to improve resilience.",
+    source = "Source: The Notre Dame-Global Adaptation Index (ND-GAIN) Country Index."
+  )
+}
+
+fig_ch1_nd_gain()
+
+figure_save_draft_png(fig_ch1_nd_gain(), style_SAR_CCDR, "../png/fig_ch1_nd_gain.png", height=3.1, width=5.5)
+```
+
+
+
+
+
+
+
+

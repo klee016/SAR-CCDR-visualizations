@@ -1,0 +1,7 @@
+Entity,Code,Year,deaths_temperature,deaths_wildfire,deaths_storm,deaths_landslide,deaths_mass_movement,deaths_volcanic,deaths_earthquake,deaths_flood,deaths_drought
+Nepal,NPL,1960,0,0,0,0,15,0,8,27.6,0
+Nepal,NPL,1970,0,0,0,40.1,0,0,0,48,0
+Nepal,NPL,1980,0,0,7.1,17.6,0,0,80.9,151.1,0
+Nepal,NPL,1990,0,8.8,2.6,22.8,0,0,0,253.7,0
+Nepal,NPL,2000,12.6,0,0,80.1,0,0,0,106.5,0
+Nepal,NPL,2010,14.1,1.1,11.1,28.8,0,0,897.6,132.3,0
