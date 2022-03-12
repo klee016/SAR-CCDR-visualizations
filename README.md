@@ -10,7 +10,9 @@
 
 ## Pakistan
 
-* [Chapter 1](Pakistan/R%20Markdown/01.climate_and_development.md)
+* [Chapter 1](Pakistan/R%20Markdown/01.chapter1.md)
+* [Chapter 2](Pakistan/R%20Markdown/02.chapter2.md)
+* [Chapter 3](Pakistan/R%20Markdown/03.chapter3.md)
 
 
 
