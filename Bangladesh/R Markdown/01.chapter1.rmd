@@ -61,6 +61,7 @@ create_wbgref()
 ## Economic growth
 
 Data source: WDI
+Indicators: NY.GDP.PCAP.PP.CD
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -91,7 +92,7 @@ fig_ch1_economic_growth <- function() {
             labels = df %>% filter(date == max(date)) %>% pull(country)
           )) +
         scale_color_manual(values = c(
-          "XN" = style$colors$spot.secondary.light, 
+          "XN" = style$colors$spot.secondary, 
           "SAS" = style$colors$spot.secondary.light,
           "BGD" = style$colors$spot.primary)) +
         style$theme()
@@ -108,6 +109,113 @@ fig_ch1_economic_growth()
 figure_save_draft_png(fig_ch1_economic_growth(), style_SAR_CCDR, "../png/fig_ch1_economic_growth.png", height=3.1, width=5.5)
 
 ```
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Economic growth
+
+Data source: WDI
+Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=8.2, out.width=800, dpi=200}
+
+library(zoo)
+
+fig_ch1_economic_growth_and_poverty <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("NY.GDP.PCAP.PP.CD", "SI.POV.DDAY"),
+    country = c("BGD", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(gdp = NY.GDP.PCAP.PP.CD) %>% 
+    mutate(poverty = SI.POV.DDAY) %>% 
+    select(iso3c, country, date, gdp, poverty)  %>%
+    mutate(date = as.numeric(date))
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.gdp <- df %>%
+        select(iso3c, country, date, gdp) 
+      
+      p.gdp <- ggplot(df.gdp, aes(x = date, y = gdp, group = rev(iso3c), color = iso3c)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df.gdp %>% filter(date == max(date)) %>% pull(gdp) %>% repel(gap=6),
+            labels = df.gdp %>% filter(date == max(date)) %>% pull(country)
+          )) +
+        scale_color_manual(values = c(
+          "XN" = style$colors$spot.secondary, 
+          "SAS" = style$colors$spot.secondary.light,
+          "BGD" = style$colors$spot.primary)) +
+        labs(subtitle = "GDP per capita, PPP (current international $)")+
+        style$theme()
+      
+      df.poverty <- df %>%
+        select(iso3c, country, date, poverty) %>% 
+        group_by(iso3c) %>% 
+        mutate(interp = na.approx(poverty, na.rm=FALSE))
+      
+      p.poverty <- ggplot(df.poverty, aes(x = date, group = rev(iso3c), color = iso3c)) +
+        geom_point(aes(y = poverty)) +
+        geom_line(aes(y = interp), size = style$linesize/2, linetype = "dotted") +
+        geom_line(aes(y = poverty), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,1)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = c(16, 12.8),
+            labels = c("Bangladesh", "Lower middle income")
+          )) +
+        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        scale_color_manual(values = c(
+          "XN" = style$colors$spot.secondary, 
+          "SAS" = style$colors$spot.secondary.light,
+          "BGD" = style$colors$spot.primary)) +
+        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)")+
+        style$theme()
+      
+      
+      pt.gdp <- ggplotGrob(p.gdp)
+      pt.poverty <- ggplotGrob(p.poverty)
+  
+      chart <- gtable_row(
+        "chart", 
+        list(pt.gdp, zeroGrob(), pt.poverty), 
+        height = unit(1, "null"), 
+        widths = unit.c(unit(1, "null"), unit(0.3, "in"), unit(1, "null"))
+        )
+      chart$theme <- style$theme()
+      chart
+      
+    },
+    aspect_ratio = 1,
+    title = "Bangladesh's economic growth and poverty compared with South Asia and lower-middle-income group",
+    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD, SI.POV.DDAY)."
+  )
+}
+
+fig_ch1_economic_growth_and_poverty()
+
+figure_save_draft_png(fig_ch1_economic_growth_and_poverty(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty.png", height=3.1, width=8.2)
+
+```
+
+
+
 
 
 
@@ -245,12 +353,22 @@ fig_ch1_TES_share_by_source <- function() {
     mutate(percentage =  100 *TJ/sum(TJ, na.rm=TRUE)) %>%
     mutate(year = as.numeric(year))
   
+  ordered_source <- df %>%
+    filter(year == 2019) %>%
+    arrange(desc(percentage),source) %>% pull(source)
+  
   # plot
-  color_list <- c("#45462A", "#227C9D", "#BCAA99", "#3AAFB9", "#8E5572", "#BBBE64")
+  color_list <- c("Natural gas" = "#227C9D",
+                  "Biofuels and waste" = "#45462A", 
+                  "Oil" = "#BCAA99", 
+                  "Coal" = "#443850", 
+                  "Hydro" = "#3AAFB9",
+                  "Wind, solar, etc." = "#BBBE64")
+  
   figure(
     data = df,
     plot = function(data, style = style_SAR_CCDR()) {
-      ggplot(df, aes(x = year, y = percentage, fill = source)) +
+      ggplot(df, aes(x = year, y = percentage, fill = factor(source, levels = ordered_source))) +
         geom_area() +
         style$theme() + 
         style$theme_legend("right") +
@@ -259,8 +377,8 @@ fig_ch1_TES_share_by_source <- function() {
         scale_fill_manual(values=color_list)
       },
       aspect_ratio = 1.5,
-      title = paste0("Bangladesh's total energy supply (TES)"),
-      subtitle = "Share by source (%), 1990-2019",
+      title = paste0("Natural gas provide 59% of total energy supply, followed by Biofuels and waste, oil, and coal."),
+      subtitle = "Total energy supply (TES) by source (%), 1990-2019",
       note = "Note: TES is made up of production + imports - exports - international marine bunkers - international aviation bunkers ± stock changes.",
       source = "Source: IEA World Energy Balances https://www.iea.org/data-and-statistics/data-product/world-energy-statistics-and-balances"
   )
@@ -417,6 +535,68 @@ figure_save_draft_png(fig_ch1_greenhouse_gas_emissions(), style_SAR_CCDR, "../pn
 ```
 
 
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch1_greenhouse_gas_emissions <- function() {
+  
+  # data
+  df <- read_csv("../data/historical_emissions.csv")
+  df <- df[-c(1,2),] %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    select(Sector, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year)) %>%
+    mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Electricity/Heat", "Land-Use Change and Forestry", "Waste"),
+                                  Sector, 
+                                  "ETC")) %>%
+    select(-Sector) %>%
+    group_by(Year, Sector_merged) %>% 
+    summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
+    rename(Sector = Sector_merged) %>%
+    group_by(Year) %>%
+    mutate(percentage =  100 *Emissions/sum(Emissions, na.rm=TRUE))
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = Year, y = Emissions, group = Sector, color = Sector)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(Year == 2018) %>% pull(Emissions) %>% repel(gap=6),
+            labels = df %>% filter(Year == 2018) %>% pull(Sector)
+          )) +
+        scale_color_manual(values = c(
+          "Agriculture" = "#2F4858", 
+          "Building" = "#888D8E",   
+          "Bunker Fuels" = "#888D8E",   
+          "Electricity/Heat" = "#86BBD8",   
+          "Energy" = "#336699",   
+          "Fugitive Emissions" = "#888D8E",  
+          "Industrial Processes" = "#888D8E",
+          "Land-Use Change and Forestry" = "#9EE493",
+          "Manufacturing/Construction" = "#DAF7DC",
+          "Other Fuel Combustion" = "#888D8E",
+          "Transportation" = "#9EE493",
+          "Waste" = "#DAF7DC",
+          "ETC" = "#CED0CE"), 
+          labels = unique(df$Sector)) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Emissions are primarily from agriculture and energy, comprising 29% and 28% respectively, followed by Electricity/Heat (13%), Land-Use Change and Forestry (7.1%), and Waste (6.7%).",
+    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
+    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
+  )
+}
+
+fig_ch1_greenhouse_gas_emissions()
+
+figure_save_draft_png(fig_ch1_greenhouse_gas_emissions(), style_SAR_CCDR, "../png/fig_ch1_greenhouse_gas_emissions.png", height=5.1, width=5.5)
+```
 
 
 

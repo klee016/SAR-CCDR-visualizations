@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2148b99c-fe50-472e-bf61-47a5d8a99756" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-10-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-11-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Bangladesh/png/fig_ch1_economic_growth_and_poverty.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-10-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-11-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Nepal/png/fig_ch1_economic_growth_and_poverty.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-11-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-12-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Pakistan/png/fig_ch1_economic_growth_and_poverty.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1.md" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1.rmd" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1.rmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-2-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-2-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-3-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-3-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-4-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-4-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-5-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-5-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-6-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-6-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-7-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-7-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-8-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-8-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-9-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-9-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/html/01.chapter1.html" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/html/01.chapter1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/png/fig_ch1_TES_share_by_source.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/png/fig_ch1_TES_share_by_source.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/png/fig_ch1_economic_growth.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/png/fig_ch1_economic_growth.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bangladesh/png/fig_ch1_greenhouse_gas_emissions.png" beforeDir="false" afterPath="$PROJECT_DIR$/Bangladesh/png/fig_ch1_greenhouse_gas_emissions.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1.md" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1.rmd" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1.rmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-2-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-2-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-3-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-3-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-4-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-4-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-5-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-5-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-6-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-6-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-7-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-7-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-8-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-8-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-9-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-9-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/html/01.chapter1.html" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/html/01.chapter1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/png/fig_ch1_TES_share_by_source.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/png/fig_ch1_TES_share_by_source.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/png/fig_ch1_economic_growth.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/png/fig_ch1_economic_growth.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Nepal/png/fig_ch1_greenhouse_gas_emissions.png" beforeDir="false" afterPath="$PROJECT_DIR$/Nepal/png/fig_ch1_greenhouse_gas_emissions.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1.md" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1.rmd" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1.rmd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-10-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-10-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-2-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-2-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-3-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-3-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-4-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-4-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-5-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-5-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-6-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-6-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-7-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-7-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-8-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-8-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-9-1.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/R Markdown/01.chapter1_files/figure-gfm/unnamed-chunk-9-1.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/html/01.chapter1.html" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/html/01.chapter1.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/png/fig_ch1_TES_share_by_source.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/png/fig_ch1_TES_share_by_source.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/png/fig_ch1_economic_growth.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/png/fig_ch1_economic_growth.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Pakistan/png/fig_ch1_greenhouse_gas_emissions.png" beforeDir="false" afterPath="$PROJECT_DIR$/Pakistan/png/fig_ch1_greenhouse_gas_emissions.png" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="26JsWnrTr7abvhVF4og8B1FKR5C" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2148b99c-fe50-472e-bf61-47a5d8a99756" name="Default Changelist" comment="" />
+      <created>1647153065153</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1647153065153</updated>
+      <workItem from="1647153073678" duration="38000" />
+    </task>
+    <servers />
+  </component>
+</project>
