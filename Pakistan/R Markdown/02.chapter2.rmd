@@ -50,12 +50,18 @@ library(extrafont)
 
 ## Relative change in crop yield
 
+Data source: 
+* http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_maize_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
+* http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_rice_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
+* http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_soy_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
+* http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_wheat_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
 
 fig_ch2_crop_yield <- function() {
   
   # data
-  df_maize <- read_csv("../data/yield_maize_co2_PAK_PAK_area_annual.csv", skip=3) %>%
+  df_maize <- read_csv("../data/yield_maize_co2_PAK_PAK_area_annual.csv", skip=4) %>%
     dplyr::select(2, 7, 8, 9, 10) %>%
     rename_with(~ tolower(gsub("NGFS current policies ", "", .x, fixed = TRUE))) %>%
     mutate(crop = "Maize")
@@ -116,6 +122,10 @@ figure_save_draft_png(fig_ch2_crop_yield(), style_SAR_CCDR, "../png/fig_ch2_crop
 
 ## Relative change in annual expected damage
 
+Data source: 
+* http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=ec2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=other&compareYear=2030
+* http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=ec3&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=other&compareYear=2030
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
 fig_ch2_annual_expected_damage <- function() {
   
@@ -174,6 +184,8 @@ figure_save_draft_png(fig_ch2_annual_expected_damage(), style_SAR_CCDR, "../png/
 
 ## Relative Wealth Index
 
+Data source: https://data.humdata.org/dataset/relative-wealth-index
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=8.5, fig.width=8.5, out.width=800, dpi=200}
 library(raster)
 library(maps)
@@ -184,7 +196,9 @@ library(sp)
 rel_wi <- read_csv("../data/ind_pak_relative_wealth_index.csv")
 spdf.rel_wi <- SpatialPointsDataFrame(coords = rel_wi[, c("longitude", "latitude")], data = rel_wi,
                                proj4string = CRS("+proj=longlat +datum=WGS84"))
-pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+pakistan.gadm <- getData('GADM', country='Pakistan', level=2)
+pakistan_wo_disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 != "PAK.6_1" & pakistan.gadm@data$GID_1 != "PAK.1_1",]
+disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 == "PAK.6_1" | pakistan.gadm@data$GID_1 == "PAK.1_1",]
 
 pakistan.rel_wi <- spdf.rel_wi[!is.na(over(spdf.rel_wi, as(pakistan.gadm, "SpatialPolygons"))), ]
 
@@ -195,8 +209,10 @@ df.pakistan.rel_wi <- as.data.frame(pakistan.rel_wi) %>%
 ggplot() +
 # geom_tile(data = df.pakistan.rel_wi, size = 10, aes(x = longitude, y = latitude, fill = RWI), alpha = 0.9) +
 geom_point(data = df.pakistan.rel_wi, size = 0.01, aes(x = longitude, y = latitude, color = RWI), alpha = 0.9) +
-geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+geom_polygon(data = pakistan_wo_disputed_area.gadm, aes(x = long, y = lat, group = group),
              colour = "gray20", size = 0.3, fill = NA) +  
+geom_polygon(data = disputed_area.gadm, aes(x = long, y = lat, group = group),
+             linetype=3, colour = "gray20", size = 0.5, fill = "gray50", alpha = 0.5) +  
 labs(title = "Relative Wealth Index", x = "Longitude", y = "Latitude",
      subtitle = "Relative standard of living at 2.4km resolution",
      caption = "Source: Facebook Data for Good, https://dataforgood.fb.com/tools/relative-wealth-index/.") +
@@ -216,6 +232,9 @@ theme(plot.title = element_text(size = 20, face = "bold"),
 
 
 
+```{r}
+
+```
 
 
 
@@ -223,10 +242,14 @@ theme(plot.title = element_text(size = 20, face = "bold"),
 
 ## Crop Failures
 
+Data source: http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=pec&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=pop&compareDimension=compareScenario&compareValues=h_cpol%2Crcp26&compareYear=2030&compareScenario=h_cpol
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=7.5, fig.width=8.5, out.width=800, dpi=200}
 
 # data
-pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+pakistan.gadm <- getData('GADM', country='Pakistan', level=2)
+pakistan_wo_disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 != "PAK.6_1" & pakistan.gadm@data$GID_1 != "PAK.1_1",]
+disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 == "PAK.6_1" | pakistan.gadm@data$GID_1 == "PAK.1_1",]
 heatmap_data <- read_csv("../data/Land Fraction annually exposed to crop failure_NGFS current policies.csv")
 heatmap_data <- heatmap_data %>%
   gather(key="lon", value="impact", "60.5":"77.5") %>%
@@ -236,8 +259,10 @@ heatmap_data <- heatmap_data %>%
 # chart
 ggplot() +
   geom_raster(data = heatmap_data, hjust = 1, vjust = 1, aes(x = lon, y = lat, fill = impact), alpha = 0.9) +
-  geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+  geom_polygon(data = pakistan_wo_disputed_area.gadm, aes(x = long, y = lat, group = group),
                colour = "gray20", size = 0.3, fill = NA) +
+  geom_polygon(data = disputed_area.gadm, aes(x = long, y = lat, group = group),
+             linetype=3, colour = "gray20", size = 0.5, fill = "gray80", alpha = 0.5) +  
   labs(title = "Land fraction annually exposed to Crop Failures", x = "Longitude", y = "Latitude",
        subtitle = "NGFS current policies scenario, 2030",
        caption = "Source: Climate Analytics",
@@ -271,10 +296,14 @@ ggplot() +
 
 ## River Floods
 
+Data source: http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=fldfrc&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareDimension=compareScenario&compareValues=h_cpol%2Crcp26&compareYear=2030&compareScenario=h_cpol
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=7.5, fig.width=8.5, out.width=800, dpi=200}
 
 # data
-pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+pakistan.gadm <- getData('GADM', country='Pakistan', level=2)
+pakistan_wo_disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 != "PAK.6_1" & pakistan.gadm@data$GID_1 != "PAK.1_1",]
+disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 == "PAK.6_1" | pakistan.gadm@data$GID_1 == "PAK.1_1",]
 heatmap_data <- read_csv("../data/Land fraction annually exposed to River Floods_NGFS current policies.csv")
 heatmap_data <- heatmap_data %>%
   gather(key="lon", value="impact", "60.5":"77.5") %>%
@@ -284,8 +313,10 @@ heatmap_data <- heatmap_data %>%
 # chart
 ggplot() +
   geom_raster(data = heatmap_data, hjust = 1, vjust = 1, aes(x = lon, y = lat, fill = impact), alpha = 0.9) +
-  geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+  geom_polygon(data = pakistan_wo_disputed_area.gadm, aes(x = long, y = lat, group = group),
                colour = "gray20", size = 0.3, fill = NA) +
+  geom_polygon(data = disputed_area.gadm, aes(x = long, y = lat, group = group),
+             linetype=3, colour = "gray20", size = 0.5, fill = "gray80", alpha = 0.5) +  
   labs(title = "Land fraction annually exposed to River Floods", x = "Longitude", y = "Latitude",
        subtitle = "NGFS current policies scenario, 2030",
        caption = "Source: Climate Analytics",
@@ -319,10 +350,14 @@ ggplot() +
 
 ## Heat Stress
 
+Data source: http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=ec1&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareDimension=compareScenario&compareValues=h_cpol%2Crcp26&compareYear=2030&compareScenario=h_cpol
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=7.5, fig.width=8.5, out.width=800, dpi=200}
 
 # data
-pakistan.gadm <- getData('GADM', country='Pakistan', level=1)
+pakistan.gadm <- getData('GADM', country='Pakistan', level=2)
+pakistan_wo_disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 != "PAK.6_1" & pakistan.gadm@data$GID_1 != "PAK.1_1",]
+disputed_area.gadm <- pakistan.gadm[pakistan.gadm@data$GID_1 == "PAK.6_1" | pakistan.gadm@data$GID_1 == "PAK.1_1",]
 heatmap_data <- read_csv("../data/Labour Productivity due to Heat Stress_NGFS current policies.csv")
 heatmap_data <- heatmap_data %>%
   gather(key="lon", value="impact", "60.5":"77.5") %>%
@@ -332,8 +367,10 @@ heatmap_data <- heatmap_data %>%
 # chart
 ggplot() +
   geom_raster(data = heatmap_data, hjust = 1, vjust = 1, aes(x = lon, y = lat, fill = impact), alpha = 0.9) +
-  geom_polygon(data = pakistan.gadm, aes(x = long, y = lat, group = group),
+  geom_polygon(data = pakistan_wo_disputed_area.gadm, aes(x = long, y = lat, group = group),
                colour = "gray20", size = 0.3, fill = NA) +
+  geom_polygon(data = disputed_area.gadm, aes(x = long, y = lat, group = group),
+             linetype=3, colour = "gray20", size = 0.5, fill = "gray80", alpha = 0.5) +  
   labs(title = "Labour Productivity due to Heat Stress", x = "Longitude", y = "Latitude",
        subtitle = "NGFS current policies scenario, 2030",
        caption = "Source: Climate Analytics",

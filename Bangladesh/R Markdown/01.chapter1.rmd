@@ -44,11 +44,6 @@ library(gtable)
 library(grid)
 library(lubridate)
 library(extrafont)
-# this only needs to be done once
-# library(remotes)
-# remotes::install_version("Rttf2pt1", version = "1.3.8")
-# font_import() 
-# loadfonts(device = 'win')
 create_wbgref()
 ```
 
@@ -538,7 +533,7 @@ figure_save_draft_png(fig_ch1_greenhouse_gas_emissions(), style_SAR_CCDR, "../pn
 
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
-fig_ch1_greenhouse_gas_emissions <- function() {
+fig_ch1_GHG_emissions_line <- function() {
   
   # data
   df <- read_csv("../data/historical_emissions.csv")
@@ -593,11 +588,189 @@ fig_ch1_greenhouse_gas_emissions <- function() {
   )
 }
 
-fig_ch1_greenhouse_gas_emissions()
+fig_ch1_GHG_emissions_line()
 
-figure_save_draft_png(fig_ch1_greenhouse_gas_emissions(), style_SAR_CCDR, "../png/fig_ch1_greenhouse_gas_emissions.png", height=5.1, width=5.5)
+figure_save_draft_png(fig_ch1_GHG_emissions_line(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_line.png", height=5.1, width=5.5)
 ```
 
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_GHG_emissions_pie <- function() {
+  
+  # data
+  df <- read_csv("../data/historical_emissions.csv")
+  df <- df[-c(1,2),] %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    dplyr::select(Sector, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year)) %>%
+    mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Electricity/Heat", "Land-Use Change and Forestry", "Waste"),
+                                  Sector, 
+                                  "ETC")) %>%
+    dplyr::select(-Sector) %>%
+    group_by(Year, Sector_merged) %>% 
+    summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
+    rename(Sector = Sector_merged) %>%
+    group_by(Year) %>%
+    mutate(percentage =  100 *Emissions/sum(Emissions, na.rm=TRUE)) %>%
+    filter(Year == 2018) %>%
+    arrange(desc(percentage))
+  
+  df$ymax <- cumsum(df$percentage)
+  df$ymin <- c(0, head(df$ymax, n=-1))
+  df$labelPosition <- (df$ymax + df$ymin) / 2
+  df$label <- paste0(gsub("Land-Use Change and Forestry", "Land-Use Change\nand Forestry", df$Sector), "\n", round(df$percentage,1), "%")
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector)) +
+      geom_rect() +
+      geom_label(x=4.4, aes(y=labelPosition, label=label), size=2.5, label.size = NA, fill = NA) +
+      coord_polar(theta="y") +
+      xlim(c(2, 4.5)) +
+      scale_fill_manual(values = c(
+          "Agriculture" = "#2F4858", 
+          "Building" = "#888D8E",   
+          "Bunker Fuels" = "#888D8E",   
+          "Electricity/Heat" = "#86BBD8",   
+          "Energy" = "#336699",   
+          "Fugitive Emissions" = "#888D8E",  
+          "Industrial Processes" = "#888D8E",
+          "Land-Use Change and Forestry" = "#9EE493",
+          "Manufacturing/Construction" = "#DAF7DC",
+          "Other Fuel Combustion" = "#888D8E",
+          "Transportation" = "#9EE493",
+          "Waste" = "#DAF7DC",
+          "ETC" = "#CED0CE"), 
+        labels = unique(df$Sector)) +
+      # theme_void() +
+      style$theme() +
+      theme(legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank())
+    },
+    aspect_ratio = 1,
+    title = "Emissions are primarily from agriculture and energy, comprising 29% and 28% respectively, followed by Electricity/Heat (13%), Land-Use Change and Forestry (7.1%), and Waste (6.7%).",
+    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 2018",
+    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (2018)."
+  )
+}
+
+fig_ch1_GHG_emissions_pie()
+
+figure_save_draft_png(fig_ch1_GHG_emissions_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_pie.png", height=5.1, width=5.5)
+```
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.5, fig.width=8.2, out.width=800, dpi=200}
+
+library(zoo)
+
+fig_ch1_GHG_emissions_line_pie <- function() {
+
+  # data
+  df <- read_csv("../data/historical_emissions.csv")
+  df <- df[-c(1,2),] %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    dplyr::select(Sector, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year)) %>%
+    mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Electricity/Heat", "Land-Use Change and Forestry", "Waste"),
+                                  Sector, 
+                                  "ETC")) %>%
+    dplyr::select(-Sector) %>%
+    group_by(Year, Sector_merged) %>% 
+    summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
+    rename(Sector = Sector_merged) %>%
+    group_by(Year) %>%
+    mutate(percentage =  100 *Emissions/sum(Emissions, na.rm=TRUE))
+  
+  # chart
+  color_list <- c(
+    "Agriculture" = "#2F4858", 
+    "Building" = "#888D8E",   
+    "Bunker Fuels" = "#888D8E",   
+    "Electricity/Heat" = "#86BBD8",   
+    "Energy" = "#336699",   
+    "Fugitive Emissions" = "#888D8E",  
+    "Industrial Processes" = "#888D8E",
+    "Land-Use Change and Forestry" = "#9EE493",
+    "Manufacturing/Construction" = "#DAF7DC",
+    "Other Fuel Combustion" = "#888D8E",
+    "Transportation" = "#9EE493",
+    "Waste" = "#DAF7DC",
+    "ETC" = "#CED0CE")
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+
+      p.line <- ggplot(df, aes(x = Year, y = Emissions, group = Sector, color = Sector)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(Year == 2018) %>% pull(Emissions) %>% repel(gap=8),
+            labels = df %>% filter(Year == 2018) %>% pull(Sector)
+          )) +
+        scale_color_manual(values = color_list, labels = unique(df$Sector)) +
+        style$theme()
+      
+      df.pie <- df %>%
+        filter(Year == 2018) %>%
+        arrange(desc(percentage))
+  
+      df.pie$ymax <- cumsum(df.pie$percentage)
+      df.pie$ymin <- c(0, head(df.pie$ymax, n=-1))
+      df.pie$labelPosition <- (df.pie$ymax + df.pie$ymin) / 2
+      df.pie$label <- paste0(gsub("Land-Use Change and Forestry", "Land-Use Change\nand Forestry", df.pie$Sector), "\n", round(df.pie$percentage,1), "%")
+      
+      p.pie <- ggplot(df.pie, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector)) +
+        geom_rect() +
+        geom_label(x=4.5, aes(y=labelPosition, label=label), family=style$family, size=2.5, label.size = NA, fill = NA) +
+        coord_polar(theta="y") +
+        xlim(c(2, 4.5)) +
+        scale_fill_manual(values = color_list, labels = unique(df$Sector)) +
+        annotate(geom = 'text', x = 2, y = 0, label = "2018") +
+        style$theme() +
+        theme(legend.position = "none",
+              panel.grid.major.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_blank(),
+              axis.text.x = element_blank(),
+              axis.text.y = element_blank())
+      
+      pt.line <- ggplotGrob(p.line)
+      pt.pie <- ggplotGrob(p.pie)
+  
+      chart <- gtable_row(
+        "chart", 
+        list(pt.line, zeroGrob(), pt.pie), 
+        height = unit(1, "null"), 
+        widths = unit.c(unit(1, "null"), unit(0.0, "in"), unit(1, "null"))
+        )
+      chart$theme <- style$theme()
+      chart
+      
+    },
+    aspect_ratio = 1,
+    title = "Emissions are primarily from agriculture and energy, comprising 29% and 28% respectively, followed by Electricity/Heat (13%), Land-Use Change and Forestry (7.1%), and Waste (6.7%).",
+    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
+    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
+  )
+}
+
+fig_ch1_GHG_emissions_line_pie()
+
+figure_save_draft_png(fig_ch1_GHG_emissions_line_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_line_pie.png", height=4.5, width=8.2)
+
+```
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -686,7 +859,12 @@ fig_ch1_vulnerability <- function() {
         legend.text = element_text(size = 7, family = style$family),
         legend.key = element_rect(fill = NA, color = NA),
         legend.background = element_blank()
-      )
+      ) +
+      scale_color_manual(values = c(
+        "Lower middle income" = style$colors$spot.secondary, 
+        "South Asia" = style$colors$spot.secondary.light,
+        "Bangladesh" = style$colors$spot.primary
+      ))
     },
     aspect_ratio = 1,
     title = "Bangladesh's vulnerability in six life-supporting sectors.",
@@ -780,7 +958,12 @@ fig_ch1_readiness <- function() {
         legend.text = element_text(size = 7, family = style$family),
         legend.key = element_rect(fill = NA, color = NA),
         legend.background = element_blank()
-      )
+      ) +
+      scale_color_manual(values = c(
+        "Lower middle income" = style$colors$spot.secondary, 
+        "South Asia" = style$colors$spot.secondary.light,
+        "Bangladesh" = style$colors$spot.primary
+      ))
     },
     aspect_ratio = 1,
     title = "Bangladesh's readiness in economic opportunity, governance, and social structures.",
@@ -797,6 +980,204 @@ figure_save_draft_png(fig_ch1_readiness(), style_SAR_CCDR, "../png/fig_ch1_readi
 ```
 
 
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.2, out.width=800, dpi=200}
+
+library(zoo)
+
+fig_ch1_vulnerability_readiness <- function() {
+
+  # vulnerability data
+  df <- read_csv("../data/vulnerability.csv")
+
+  # add regions and income levels
+  df <- df %>%
+    rename(iso3c = ISO3) %>%
+    left_join(wbgref$countries$regions, by="iso3c") %>%
+    left_join(wbgref$countries$incomegroups, by="iso3c")
+  
+  # calculate aggregates by regions
+  region_aggregates <- df %>%
+    group_by(region_iso3c) %>% summarize(ecosystems = mean(ecosystems, na.rm=TRUE),
+                                         food = mean(food, na.rm=TRUE),
+                                         health = mean(health, na.rm=TRUE),
+                                         habitat = mean(habitat, na.rm=TRUE),
+                                         infrastructure = mean(infrastructure, na.rm=TRUE),
+                                         water = mean(water, na.rm=TRUE)) %>%
+    rename(iso3c = region_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$regions$labels), Name = wbgref$regions$labels), by="iso3c")
+    
+  # calculate aggregates by income levels
+  income_level_aggregates <- df %>%
+    group_by(income_level_iso3c) %>% summarize(ecosystems = mean(ecosystems, na.rm=TRUE),
+                                         food = mean(food, na.rm=TRUE),
+                                         health = mean(health, na.rm=TRUE),
+                                         habitat = mean(habitat, na.rm=TRUE),
+                                         infrastructure = mean(infrastructure, na.rm=TRUE),
+                                         water = mean(water, na.rm=TRUE)) %>%
+    rename(iso3c = income_level_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$incomes$labels), Name = wbgref$incomes$labels), by="iso3c")
+  
+  # merge and select
+  df <- df %>%
+    bind_rows(region_aggregates, income_level_aggregates) %>%
+    filter(iso3c == "BGD" | iso3c == "LMC" | iso3c == "SAS") %>%
+    select(Name, ecosystems, food, health, habitat, infrastructure, water)
+  
+  # rescale
+  vulnerability.min <- 0.3
+  vulnerability.max <- 0.9
+  vulnerability.min_max_norm <- function(x) {
+    (x - vulnerability.min) / (vulnerability.max - vulnerability.min)
+  }
+  df.vulnerability <- df %>%
+    mutate(ecosystems = vulnerability.min_max_norm(ecosystems)) %>%
+    mutate(food = vulnerability.min_max_norm(food)) %>%
+    mutate(health = vulnerability.min_max_norm(health)) %>%
+    mutate(habitat = vulnerability.min_max_norm(habitat)) %>%
+    mutate(infrastructure = vulnerability.min_max_norm(infrastructure)) %>%
+    mutate(water = vulnerability.min_max_norm(water))
+  
+  # readiness data
+  df <- read_csv("../data/readiness.csv")
+
+  # add regions and income levels
+  df <- df %>%
+    rename(iso3c = ISO3) %>%
+    left_join(wbgref$countries$regions, by="iso3c") %>%
+    left_join(wbgref$countries$incomegroups, by="iso3c")
+  
+  # calculate aggregates by regions
+  region_aggregates <- df %>%
+    group_by(region_iso3c) %>% summarize(economic = mean(economic, na.rm=TRUE),
+                                         governance = mean(governance, na.rm=TRUE),
+                                         social = mean(social, na.rm=TRUE)) %>%
+    rename(iso3c = region_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$regions$labels), Name = wbgref$regions$labels), by="iso3c")
+    
+  # calculate aggregates by income levels
+  income_level_aggregates <- df %>%
+    group_by(income_level_iso3c) %>% summarize(economic = mean(economic, na.rm=TRUE),
+                                         governance = mean(governance, na.rm=TRUE),
+                                         social = mean(social, na.rm=TRUE)) %>%
+    rename(iso3c = income_level_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$incomes$labels), Name = wbgref$incomes$labels), by="iso3c")
+  
+  # merge and select
+  df <- df %>%
+    bind_rows(region_aggregates, income_level_aggregates) %>%
+    filter(iso3c == "BGD" | iso3c == "LMC" | iso3c == "SAS") %>%
+    select(Name, economic, governance, social)
+  
+  # rescale
+  readiness.min <- 0.2
+  readiness.max <- 0.5
+  readiness.min_max_norm <- function(x) {
+    (x - readiness.min) / (readiness.max - readiness.min)
+  }
+  df.readiness <- df %>%
+    mutate(economic = readiness.min_max_norm(economic)) %>%
+    mutate(governance = readiness.min_max_norm(governance)) %>%
+    mutate(social = readiness.min_max_norm(social))
+  
+  df <- merge(x = df.vulnerability, y = df.readiness, by = "Name", all = TRUE)
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.vulnerability <- df %>%
+        select(Name, ecosystems, food, health, habitat, infrastructure, water)
+      
+      p.vulnerability <- ggradar(
+          df.vulnerability,
+          font.radar = style$family,
+          values.radar = c(vulnerability.min, (vulnerability.min+vulnerability.max)/2, vulnerability.max),
+          grid.min = 0, grid.mid = 0.5, grid.max = 1,
+          grid.label.size = 3,  # Affects the grid annotations (0%, 50%, etc.)
+          axis.label.size = 3, # Afftects the names of the variables
+          group.point.size = 3   # Simply the size of the point 
+        ) +
+        style$theme() +
+        theme(
+          plot.subtitle=element_text(hjust=0.5),
+          line = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text.x = element_blank(),
+          legend.position = c(1, 0),  
+          legend.justification = c(1, 0),
+          legend.text = element_text(size = 7, family = style$family),
+          legend.key = element_rect(fill = NA, color = NA),
+          legend.background = element_blank()
+        ) +
+        scale_color_manual(values = c(
+          "Lower middle income" = style$colors$spot.secondary, 
+          "South Asia" = style$colors$spot.secondary.light,
+          "Bangladesh" = style$colors$spot.primary
+        )) +
+        labs(subtitle = "Vulnerability scores (0-1 lower is better), 2019")
+      
+      df.readiness <- df %>%
+        select(Name, economic, governance, social)
+      
+      p.readiness <- ggradar(
+          df.readiness,
+          font.radar = style$family,
+          values.radar = c(readiness.min, (readiness.min+readiness.max)/2, readiness.max),
+          grid.min = 0, grid.mid = 0.5, grid.max = 1,
+          grid.label.size = 3,  # Affects the grid annotations (0%, 50%, etc.)
+          axis.label.size = 3, # Afftects the names of the variables
+          group.point.size = 3   # Simply the size of the point 
+        ) +
+        style$theme() +
+        theme(
+          plot.subtitle=element_text(hjust=0.5),
+          line = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text.x = element_blank(),
+          legend.position = c(1, 0),  
+          legend.justification = c(1, 0),
+          legend.text = element_text(size = 7, family = style$family),
+          legend.key = element_rect(fill = NA, color = NA),
+          legend.background = element_blank()
+        ) +
+        scale_color_manual(values = c(
+          "Lower middle income" = style$colors$spot.secondary, 
+          "South Asia" = style$colors$spot.secondary.light,
+          "Bangladesh" = style$colors$spot.primary
+        )) +
+        labs(subtitle = "Readiness scores (0-1 higher is better), 2019")
+      
+      
+      pt.vulnerability <- ggplotGrob(p.vulnerability)
+      pt.readiness <- ggplotGrob(p.readiness)
+  
+      chart <- gtable_row(
+        "chart", 
+        list(pt.vulnerability, zeroGrob(), pt.readiness), 
+        height = unit(1, "null"), 
+        widths = unit.c(unit(1, "null"), unit(0.3, "in"), unit(1, "null"))
+        )
+      chart$theme <- style$theme()
+      chart
+      
+    },
+    aspect_ratio = 1,
+    title = "Bangladesh's climate vulnerability and adaptation readiness",
+    note = "Note: Vulnerability measures a country's exposure, sensitivity and ability to adapt to the negative impact of climate change while Readiness measures a country’s ability to leverage investments and convert them to adaptation actions.",
+    source = "Source: The Notre Dame-Global Adaptation Index (ND-GAIN) Country Index."
+  )
+}
+
+fig_ch1_vulnerability_readiness()
+
+figure_save_draft_png(fig_ch1_vulnerability_readiness(), style_SAR_CCDR, "../png/fig_ch1_vulnerability_readiness.png", height=4.1, width=8.2)
+
+```
 
 
 
