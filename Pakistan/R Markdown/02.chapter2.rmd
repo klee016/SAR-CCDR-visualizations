@@ -51,9 +51,13 @@ library(extrafont)
 ## Relative change in crop yield
 
 Data source: 
+
 * http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_maize_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
+
 * http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_rice_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
+
 * http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_soy_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
+
 * http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=yield_wheat_co2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=area&compareYear=2030
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
@@ -123,7 +127,9 @@ figure_save_draft_png(fig_ch2_crop_yield(), style_SAR_CCDR, "../png/fig_ch2_crop
 ## Relative change in annual expected damage
 
 Data source: 
+
 * http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=ec2&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=other&compareYear=2030
+
 * http://climate-impact-explorer.climateanalytics.org/impacts/?region=PAK&indicator=ec3&scenario=h_cpol&warmingLevel=1.5&temporalAveraging=annual&spatialWeighting=other&compareYear=2030
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
