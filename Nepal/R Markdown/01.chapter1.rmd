@@ -61,6 +61,7 @@ create_wbgref()
 ## Economic growth
 
 Data source: WDI
+
 Indicators: NY.GDP.PCAP.PP.CD
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
@@ -118,6 +119,7 @@ figure_save_draft_png(fig_ch1_economic_growth(), style_SAR_CCDR, "../png/fig_ch1
 ## Economic growth
 
 Data source: WDI
+
 Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=8.2, out.width=800, dpi=200}
@@ -397,9 +399,13 @@ figure_save_draft_png(fig_ch1_TES_share_by_source(), style_SAR_CCDR, "../png/fig
 ## Natural disasters
 
 Data source: https://ourworldindata.org/natural-disasters
+
 Country: Nepal
+
 Disaster type: All disasters (by type)
+
 Impact: Deaths, Economic damages (%GDP)
+
 Timespan: Decadal average
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
@@ -469,6 +475,291 @@ figure_save_draft_png(fig_ch1_natural_disasters(), style_SAR_CCDR, "../png/fig_c
 
 
 
+Data source: https://public.emdat.be/data
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_natural_disaster_frequency <- function() {
+  
+  # data
+  df <- read_excel("../data/emdat_public_2022_03_14_Nepal.xlsx", skip=6) %>%
+    filter(Year >= 2000) %>%
+    select(`Disaster Subgroup`, `Disaster Type`, `Total Deaths`, `Total Damages, Adjusted ('000 US$)`) %>% 
+    rename(category = `Disaster Subgroup`) %>%
+    rename(type = `Disaster Type`)
+  
+  df.category <- df %>%
+    group_by(category) %>%
+    summarise(category_frequency = n(),
+              category_deaths = sum(`Total Deaths`, na.rm=TRUE),
+              category_damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE)) %>%
+    mutate(percentage_frequency =  100 *category_frequency/sum(category_frequency, na.rm=TRUE)) %>%
+    mutate(percentage_deaths =  100 *category_deaths/sum(category_deaths, na.rm=TRUE)) %>%
+    mutate(percentage_damage =  100 *category_damage/sum(category_damage, na.rm=TRUE)) 
+
+  df.type <- df %>%
+    group_by(category, type) %>%
+    summarise(frequency = n(),
+              deaths = sum(`Total Deaths`, na.rm=TRUE),
+              damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE),
+              .groups = 'drop') %>%
+    inner_join(df.category, by="category") 
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.category <- df.category %>%
+        arrange(desc(category_frequency)) %>%
+        arrange(category == "Climatological")
+      df.category$ymax <- cumsum(df.category$category_frequency)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      # df.category$labelPosition <- c(45.0, 102.5, 123.5, 138.0, 144.55)
+      df.category$label <- paste0(df.category$category, "\n(", df.category$category_frequency, ")")
+      # df.category$label <- c("Hydrological\n(90)", "Meteorological\n(25)", "Geophysical\n(17)", "Biological\n(12)", "" )
+      df.category$vjust <- c(0.5, 0.5, 0.6, 0.9, 0.1)
+      
+      df.type <- df.type %>%
+        arrange(desc(category_frequency), desc(frequency))
+      df.type$ymax <- cumsum(df.type$frequency)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180, 
+                              90 - df.type$labelPosition/max(df.type$ymax)*360, 
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type)
+      # df.type$label <- c("Flood", "Landslide", "Storm", "Extrm temp", "Earthquake", "Mass movement", "Epidemic", "Insect", "" )
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1)
+      
+  
+      ggplot() +
+      geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+      geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+      # geom_text_repel(data = df.category, x=2.6, aes(y = labelPosition, label = label, family=style$family), size=3, box.padding = unit(0, "lines"), 
+      #                 show.legend = F, nudge_x = 0) +
+      geom_text(data = df.category, x=2.8, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3) +
+      geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2.5, show.legend = F) + 
+      coord_polar(theta="y") +
+      xlim(c(1, 4.5)) +
+      scale_fill_manual(values = c(
+      "Hydrological" = "#07A0C3", 
+      "Meteorological" = "#4D8B31",   
+      "Geophysical" = "#EF476F",   
+      "Biological" = "#F0C808",   
+      "Climatological" = "#A15E49"))+
+      annotate(geom = 'text', x = 1, y = 0, label = "Frequency") +
+      style$theme() +
+      theme(legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank())
+    },
+    aspect_ratio = 1,
+    title = "Natural disasters in recent years",
+    subtitle = "Frequency of natural disasters by type, 2000-2022",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_natural_disaster_frequency()
+
+figure_save_draft_png(fig_ch1_natural_disaster_frequency(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_frequency.png", height=5.1, width=5.5)
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_natural_disaster_deaths <- function() {
+  
+  # data
+  df <- read_excel("../data/emdat_public_2022_03_14_Nepal.xlsx", skip=6) %>%
+    filter(Year >= 2000) %>%
+    select(`Disaster Subgroup`, `Disaster Type`, `Total Deaths`, `Total Damages, Adjusted ('000 US$)`) %>% 
+    rename(category = `Disaster Subgroup`) %>%
+    rename(type = `Disaster Type`)
+  
+  df.category <- df %>%
+    group_by(category) %>%
+    summarise(category_frequency = n(),
+              category_deaths = sum(`Total Deaths`, na.rm=TRUE),
+              category_damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE)) %>%
+    mutate(percentage_frequency =  100 *category_frequency/sum(category_frequency, na.rm=TRUE)) %>%
+    mutate(percentage_deaths =  100 *category_deaths/sum(category_deaths, na.rm=TRUE)) %>%
+    mutate(percentage_damage =  100 *category_damage/sum(category_damage, na.rm=TRUE)) 
+
+  df.type <- df %>%
+    group_by(category, type) %>%
+    summarise(frequency = n(),
+              deaths = sum(`Total Deaths`, na.rm=TRUE),
+              damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE),
+              .groups = 'drop') %>%
+    inner_join(df.category, by="category") 
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.category <- df.category %>%
+        arrange(desc(category_deaths))
+      df.category$ymax <- cumsum(df.category$category_deaths)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      # df.category$labelPosition <- c(37202.5, 76007.0, 85776.0, 85784.5, 85764.5)
+      df.category$label <- paste0(df.category$category, "\n(", prettyNum(df.category$category_deaths,big.mark=","), ")")
+      df.category$label <- c("Geophysical\n(8,976)", "Hydrological\n(4,176)", "Biological\n(764)", "Meteorological\n(378)", "")
+      df.category$vjust <- c(0.4, 0.5, 0.9, -0.2, 0.5)
+      
+      df.type <- df.type %>%
+        arrange(desc(category_deaths), desc(deaths))
+      df.type$ymax <- cumsum(df.type$deaths)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180, 
+                              90 - df.type$labelPosition/max(df.type$ymax)*360, 
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type)
+      df.type$label <- c("Earthquake", "Flood", "Landslide", "Epidemic", "Extrm temp", "Storm", "", "")
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1)
+
+  
+      ggplot() +
+      geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+      geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+      # geom_text_repel(data = df.category, x=2.6, aes(y = labelPosition, label = label, family=style$family), size=3, box.padding = unit(0, "lines"), 
+      #                 show.legend = F, nudge_x = 0.5, nudge_y = 0.5) +
+      geom_text(data = df.category, x=2.7, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3) +
+      geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2.5, show.legend = F) + 
+      coord_polar(theta="y") +
+      xlim(c(1, 4.5)) +
+      scale_fill_manual(values = c(
+      "Hydrological" = "#07A0C3", 
+      "Meteorological" = "#4D8B31",   
+      "Geophysical" = "#EF476F",   
+      "Biological" = "#F0C808",   
+      "Climatological" = "#A15E49"))+
+      annotate(geom = 'text', x = 1, y = 0, label = "Deaths") +
+      style$theme() +
+      theme(legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank())
+    },
+    aspect_ratio = 1,
+    title = "Natural disasters in recent years",
+    subtitle = "Total deaths from natural disasters by type, 2000-2022",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_natural_disaster_deaths()
+
+figure_save_draft_png(fig_ch1_natural_disaster_deaths(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_deaths.png", height=5.1, width=5.5)
+```
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_natural_disaster_damage <- function() {
+  
+  # data
+  df <- read_excel("../data/emdat_public_2022_03_14_Nepal.xlsx", skip=6) %>%
+    filter(Year >= 2000) %>%
+    select(`Disaster Subgroup`, `Disaster Type`, `Total Deaths`, `Total Damages, Adjusted ('000 US$)`) %>% 
+    rename(category = `Disaster Subgroup`) %>%
+    rename(type = `Disaster Type`)
+  
+  df.category <- df %>%
+    group_by(category) %>%
+    summarise(category_frequency = n(),
+              category_deaths = sum(`Total Deaths`, na.rm=TRUE),
+              category_damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE)) %>%
+    mutate(percentage_frequency =  100 *category_frequency/sum(category_frequency, na.rm=TRUE)) %>%
+    mutate(percentage_deaths =  100 *category_deaths/sum(category_deaths, na.rm=TRUE)) %>%
+    mutate(percentage_damage =  100 *category_damage/sum(category_damage, na.rm=TRUE)) 
+
+  df.type <- df %>%
+    group_by(category, type) %>%
+    summarise(frequency = n(),
+              deaths = sum(`Total Deaths`, na.rm=TRUE),
+              damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE),
+              .groups = 'drop') %>%
+    inner_join(df.category, by="category") 
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.category <- df.category %>%
+        arrange(desc(category_damage))
+      df.category$ymax <- cumsum(df.category$category_damage)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      df.category$label <- paste0(df.category$category, "\n(", prettyNum(df.category$category_damage,big.mark=","), ")")
+      df.category$label <- c("Geophysical\n(5,915,176)", "Hydrological\n(1,102,817)", "", "", "")
+      
+      df.type <- df.type %>%
+        arrange(desc(category_damage), desc(damage))
+      df.type$ymax <- cumsum(df.type$damage)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180,
+                              90 - df.type$labelPosition/max(df.type$ymax)*360,
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type)
+      df.type$label <- c("Earthquake", "Flood", "", "", "", "", "", "")
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1)
+
+  
+      ggplot() +
+      geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+      geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+      geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, family=style$family), size=3, box.padding = unit(0, "lines"), 
+                      show.legend = F) +
+      geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2.5, show.legend = F) + 
+      coord_polar(theta="y") +
+      xlim(c(1, 4.5)) +
+      scale_fill_manual(values = c(
+      "Hydrological" = "#07A0C3", 
+      "Meteorological" = "#4D8B31",   
+      "Geophysical" = "#EF476F",   
+      "Biological" = "#F0C808",   
+      "Climatological" = "#A15E49"))+
+      annotate(geom = 'text', x = 1, y = 0, label = "Damage") +
+      style$theme() +
+      theme(legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank())
+    },
+    aspect_ratio = 1,
+    title = "Natural disasters in recent years",
+    subtitle = "Total damages from natural disasters by type, Adjusted ('000 US$), 2000-2022",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_natural_disaster_damage()
+
+figure_save_draft_png(fig_ch1_natural_disaster_damage(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_damage.png", height=5.1, width=5.5)
+```
+
+
+
+
+
+
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -476,9 +767,13 @@ figure_save_draft_png(fig_ch1_natural_disasters(), style_SAR_CCDR, "../png/fig_c
 ## National GHG Emission Profile 
 
 Data source: https://www.climatewatchdata.org/data-explorer/historical-emissions?historical-emissions-data-sources=cait&historical-emissions-gases=all-ghg&historical-emissions-regions=All%20Selected%2CNPL&historical-emissions-sectors=All%20Selected&page=1
+
 Source: CAIT
+
 Country: Nepal
+
 Sector: All selected
+
 Gases: All GHG
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
@@ -545,7 +840,7 @@ fig_ch1_GHG_emissions_line <- function() {
     mutate(Year = as.numeric(Year)) %>%
     mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Other Fuel Combustion", "Transportation", "Manufacturing/Construction"),
                                   Sector, 
-                                  "ETC")) %>%
+                                  "Other")) %>%
     select(-Sector) %>%
     group_by(Year, Sector_merged) %>% 
     summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
@@ -579,7 +874,7 @@ fig_ch1_GHG_emissions_line <- function() {
           "Other Fuel Combustion" = "#86BBD8",
           "Transportation" = "#9EE493",
           "Waste" = "#DAF7DC",
-          "ETC" = "#CED0CE"), 
+          "Other" = "#CED0CE"), 
           labels = unique(df$Sector)) +
         style$theme()
     },
@@ -609,7 +904,7 @@ fig_ch1_GHG_emissions_pie <- function() {
     mutate(Year = as.numeric(Year)) %>%
     mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Other Fuel Combustion", "Transportation", "Manufacturing/Construction"),
                                   Sector, 
-                                  "ETC")) %>%
+                                  "Other")) %>%
     dplyr::select(-Sector) %>%
     group_by(Year, Sector_merged) %>% 
     summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
@@ -617,12 +912,14 @@ fig_ch1_GHG_emissions_pie <- function() {
     group_by(Year) %>%
     mutate(percentage =  100 *Emissions/sum(Emissions, na.rm=TRUE)) %>%
     filter(Year == 2018) %>%
-    arrange(desc(percentage))
+    arrange(desc(percentage)) %>%
+    arrange(Sector == "Other")
   
   df$ymax <- cumsum(df$percentage)
   df$ymin <- c(0, head(df$ymax, n=-1))
   df$labelPosition <- (df$ymax + df$ymin) / 2
   df$label <- paste0(df$Sector, "\n", round(df$percentage,1), "%")
+  df$label <- c("Agriculture\n32.7%", "Energy\n30%", "Other Fuel\nCombustion\n16.9%", "Transportation\n6.8%", "Manufacturing\n/Construction\n4.3%", "Other\n9.1%")
   
   # chart
   figure(
@@ -646,7 +943,7 @@ fig_ch1_GHG_emissions_pie <- function() {
         "Other Fuel Combustion" = "#86BBD8",
         "Transportation" = "#9EE493",
         "Waste" = "#DAF7DC",
-        "ETC" = "#CED0CE"), 
+        "Other" = "#CED0CE"), 
         labels = unique(df$Sector)) +
       # theme_void() +
       style$theme() +
@@ -686,7 +983,7 @@ fig_ch1_GHG_emissions_line_pie <- function() {
     mutate(Year = as.numeric(Year)) %>%
     mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Other Fuel Combustion", "Transportation", "Manufacturing/Construction"),
                                   Sector, 
-                                  "ETC")) %>%
+                                  "Other")) %>%
     dplyr::select(-Sector) %>%
     group_by(Year, Sector_merged) %>% 
     summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
@@ -708,7 +1005,7 @@ fig_ch1_GHG_emissions_line_pie <- function() {
     "Other Fuel Combustion" = "#86BBD8",
     "Transportation" = "#9EE493",
     "Waste" = "#DAF7DC",
-    "ETC" = "#CED0CE")
+    "Other" = "#CED0CE")
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
@@ -727,12 +1024,14 @@ fig_ch1_GHG_emissions_line_pie <- function() {
       
       df.pie <- df %>%
         filter(Year == 2018) %>%
-        arrange(desc(percentage))
+        arrange(desc(percentage)) %>%
+        arrange(Sector == "Other")
   
       df.pie$ymax <- cumsum(df.pie$percentage)
       df.pie$ymin <- c(0, head(df.pie$ymax, n=-1))
       df.pie$labelPosition <- (df.pie$ymax + df.pie$ymin) / 2
-      df.pie$label <- paste0(gsub("Other Fuel Combustion", "Other\nFuel Combustion", df.pie$Sector), "\n", round(df.pie$percentage,1), "%")
+      df.pie$label <- paste0(df.pie$Sector, "\n", round(df.pie$percentage,1), "%")
+      df.pie$label <- c("Agriculture\n32.7%", "Energy\n30%", "Other Fuel\nCombustion\n16.9%", "Transportation\n6.8%", "Manufacturing\n/Construction\n4.3%", "Other\n9.1%")
       
       p.pie <- ggplot(df.pie, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector)) +
         geom_rect() +
