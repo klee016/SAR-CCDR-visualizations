@@ -1911,11 +1911,13 @@ Sector: Total including LUCF
 
 Gases: All GHG
 
+Show by: Sectors
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
-fig_ch1_greenhouse_gas_emissions <- function() {
+fig_ch1_GHG_by_sector_line <- function() {
   
   # data
-  df <- read_csv("../data/ghg-emissions.csv")
+  df <- read_csv("../data/ghg-emissions_by_sector.csv")
   df <- head(df, - 2)
   df <- df %>%
     gather(key="Year", value="Emissions", "2018":"1990") %>%
@@ -1952,17 +1954,17 @@ fig_ch1_greenhouse_gas_emissions <- function() {
   )
 }
 
-fig_ch1_greenhouse_gas_emissions()
+fig_ch1_GHG_by_sector_line()
 
-figure_save_draft_png(fig_ch1_greenhouse_gas_emissions(), style_SAR_CCDR, "../png/fig_ch1_greenhouse_gas_emissions.png", height=5.1, width=5.5)
+figure_save_draft_png(fig_ch1_GHG_by_sector_line(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_sector_line.png", height=5.1, width=5.5)
 ```
 
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
-fig_ch1_GHG_emissions_area <- function() {
+fig_ch1_GHG_by_sector_area <- function() {
   
   # data
-  df <- read_csv("../data/ghg-emissions.csv")
+  df <- read_csv("../data/ghg-emissions_by_sector.csv")
   df <- head(df, - 2)
   df <- df %>%
     gather(key="Year", value="Emissions", "2018":"1990") %>%
@@ -2003,18 +2005,18 @@ fig_ch1_GHG_emissions_area <- function() {
   )
 }
 
-fig_ch1_GHG_emissions_area()
+fig_ch1_GHG_by_sector_area()
 
-figure_save_draft_png(fig_ch1_GHG_emissions_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_area.png", height=5.1, width=5.5)
+figure_save_draft_png(fig_ch1_GHG_by_sector_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_sector_area.png", height=5.1, width=5.5)
 ```
 
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
-fig_ch1_GHG_emissions_pie <- function() {
+fig_ch1_GHG_by_sector_pie <- function() {
   
   # data
-  df <- read_csv("../data/ghg-emissions.csv")
+  df <- read_csv("../data/ghg-emissions_by_sector.csv")
   df <- head(df, - 2)
   df <- df %>%
     gather(key="Year", value="Emissions", "2018":"1990") %>%
@@ -2030,7 +2032,7 @@ fig_ch1_GHG_emissions_pie <- function() {
   df$labelPosition <- (df$ymax + df$ymin) / 2
   df$label <- paste0(df$Sector, "\n", round(df$percentage,1), "%")
   df$label <- c("Energy\n48.1%", "Agriculture\n42.5%", "Industrial\nProcesses\n5.7%", "Waste\n2.1%", "Land-Use Change and Forestry\n1.6%")
-  df$vjust <- c(0.5, 0.5, 0.75, 0.8, 0.0)
+  df$vjust <- c(0.5, 0.5, 0.8, 0.9, 0.0)
   
   # chart
   color_list = c(
@@ -2044,8 +2046,8 @@ fig_ch1_GHG_emissions_pie <- function() {
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
       ggplot(df, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector)) +
-      geom_rect() +
-      geom_label(x=4.5, aes(y=labelPosition, label=label, vjust=vjust), size=2.5, label.size = NA, fill = NA) +
+      geom_rect(color = "white", size=1) +
+      geom_label(x=4.5, aes(y=labelPosition, label=label, vjust=vjust), size=2.5, family = style$family, label.size = NA, fill = NA) +
       coord_polar(theta="y") +
       xlim(c(2, 4.5)) +
       scale_fill_manual(values = color_list) +
@@ -2066,13 +2068,138 @@ fig_ch1_GHG_emissions_pie <- function() {
   )
 }
 
-fig_ch1_GHG_emissions_pie()
+fig_ch1_GHG_by_sector_pie()
 
-figure_save_draft_png(fig_ch1_GHG_emissions_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_pie.png", height=5.1, width=5.5)
+figure_save_draft_png(fig_ch1_GHG_by_sector_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_sector_pie.png", height=5.1, width=5.5)
 ```
 
 
 
+
+
+
+Data source: https://www.climatewatchdata.org/ghg-emissions?breakBy=gas&chartType=line&end_year=2018&gases=all-ghg&regions=PAK&sectors=total-including-lucf&start_year=1990
+
+Source: CAIT
+
+Country: Pakistan
+
+Sector: Total including LUCF
+
+Gases: All GHG
+
+Show by: Gases
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch1_GHG_by_gas_area <- function() {
+  
+  # data
+  df <- read_csv("../data/ghg-emissions_by_gases.csv")
+  df <- head(df, - 2)
+  df <- df %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    select(Gas, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year)) %>%
+    group_by(Year) %>%
+    mutate(percentage = 100 *Emissions/sum(Emissions, na.rm=TRUE))
+  
+  ordered_gases <- df %>%
+    filter(Year == 2018) %>%
+    arrange(desc(percentage)) %>% pull(Gas)
+  
+  # chart
+  color_list = c(
+    "CO2" = style$colors$blue,   
+    "CH4" = style$colors$orange,  
+    "N2O" = style$colors$purple,
+    "F-Gas" = style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = Year, y = Emissions, fill = factor(Gas, levels=ordered_gases))) +
+        geom_area() +
+        scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left"
+        ) +
+        scale_fill_manual(values = color_list) +
+        style$theme() +
+        style$theme_legend("right")
+    },
+    aspect_ratio = 1,
+    title = "GHG emissions by gases",
+    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
+    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
+  )
+}
+
+fig_ch1_GHG_by_gas_area()
+
+figure_save_draft_png(fig_ch1_GHG_by_gas_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_gas_area.png", height=5.1, width=5.5)
+```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.5, out.width=800, dpi=200}
+
+fig_ch1_GHG_by_gas_pie <- function() {
+  
+  # data
+  df <- read_csv("../data/ghg-emissions_by_gases.csv")
+  df <- head(df, - 2)
+  df <- df %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    select(Gas, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year)) %>%
+    group_by(Year) %>%
+    mutate(percentage = 100 *Emissions/sum(Emissions, na.rm=TRUE)) %>%
+    filter(Year == 2018) %>%
+    arrange(desc(percentage))
+  
+  df$ymax <- cumsum(df$percentage)
+  df$ymin <- c(0, head(df$ymax, n=-1))
+  df$labelPosition <- (df$ymax + df$ymin) / 2
+  df$label <- paste0(df$Gas, "\n", round(df$percentage,1), "%")
+  # df$label <- c("Energy\n48.1%", "Agriculture\n42.5%", "Industrial\nProcesses\n5.7%", "Waste\n2.1%", "Land-Use Change and Forestry\n1.6%")
+  df$vjust <- c(0.5, 0.5, 0.5, 0.5)
+  
+  # chart
+  color_list = c(
+    "CO2" = style$colors$blue,   
+    "CH4" = style$colors$orange,  
+    "N2O" = style$colors$purple,
+    "F-Gas" = style$colors$red)
+    
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Gas)) +
+      geom_rect(color = "white", size=1) +
+      geom_label(x=4.3, aes(y=labelPosition, label=label, vjust=vjust), size=2.5, family = style$family, label.size = NA, fill = NA) +
+      coord_polar(theta="y") +
+      xlim(c(2, 4)) +
+      scale_fill_manual(values = color_list) +
+      style$theme() +
+      theme(legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank(),
+            plot.margin = margin(1,1,-5,1, unit = "mm"))
+    },
+    aspect_ratio = 1,
+    title = "GHG emissions by gases",
+    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 2018",
+    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (2018)."
+  )
+}
+
+fig_ch1_GHG_by_gas_pie()
+
+figure_save_draft_png(fig_ch1_GHG_by_gas_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_gas_pie.png", height=3.1, width=3.5)
+```
 
 
 
