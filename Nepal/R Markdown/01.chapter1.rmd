@@ -44,12 +44,9 @@ library(gtable)
 library(grid)
 library(lubridate)
 library(extrafont)
-# this only needs to be done once
-# library(remotes)
-# remotes::install_version("Rttf2pt1", version = "1.3.8")
-# font_import() 
-# loadfonts(device = 'win')
+library(zoo)
 create_wbgref()
+style = style_SAR_CCDR()
 ```
 
 
@@ -58,7 +55,7 @@ create_wbgref()
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-## Economic growth
+## Economic growth and poverty
 
 Data source: WDI
 
@@ -79,6 +76,11 @@ fig_ch1_economic_growth <- function() {
     select(iso3c, country, date, num_def) 
   
   # chart
+  color_list = c(
+    "XN" = style$colors$neutral.dark,
+    "SAS" = style$colors$neutral, 
+    "NPL" = style$colors$blue)
+  
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
@@ -91,10 +93,57 @@ fig_ch1_economic_growth <- function() {
             breaks = df %>% filter(date == max(date)) %>% pull(num_def) %>% repel(gap=6),
             labels = df %>% filter(date == max(date)) %>% pull(country)
           )) +
-        scale_color_manual(values = c(
-          "XN" = style$colors$spot.secondary, 
-          "SAS" = style$colors$spot.secondary.light,
-          "NPL" = style$colors$spot.primary)) +
+        scale_color_manual(values = color_list) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Nepal's economic growth compared with South Asia and lower-middle-income group",
+    subtitle = "GDP per capita, PPP (current international $), 1990 to 2020",
+    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)."
+  )
+}
+
+fig_ch1_economic_growth()
+
+figure_save_draft_png(fig_ch1_economic_growth(), style_SAR_CCDR, "../png/fig_ch1_economic_growth.png", height=3.1, width=5.5)
+
+```
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+fig_ch1_economic_growth <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("NY.GDP.PCAP.PP.CD"),
+    country = c("NPL", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(num_def = NY.GDP.PCAP.PP.CD) %>% 
+    select(iso3c, country, date, num_def) 
+  
+  # chart
+  color_list = c(
+    "XN" = style$colors$red.light,
+    "SAS" = style$colors$purple.light, 
+    "NPL" = style$colors$navy)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = date, y = num_def, group = rev(iso3c), color = iso3c)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(date == max(date)) %>% pull(num_def) %>% repel(gap=6),
+            labels = df %>% filter(date == max(date)) %>% pull(country)
+          ), 
+          expand=c(0.15,0)) +
+        scale_color_manual(values = color_list) +
         style$theme()
     },
     aspect_ratio = 1,
@@ -112,19 +161,130 @@ figure_save_draft_png(fig_ch1_economic_growth(), style_SAR_CCDR, "../png/fig_ch1
 
 
 
+Data source: WDI
+
+Indicators: SI.POV.DDAY
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_poverty <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("SI.POV.DDAY"),
+    country = c("NPL", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(poverty = SI.POV.DDAY) %>% 
+    select(iso3c, country, date, poverty) 
+  df.poverty <- df %>%
+    group_by(iso3c) %>% 
+    mutate(interp = na.approx(poverty, na.rm=FALSE))
+  
+  # chart
+  color_list = c(
+    "XN" = style$colors$neutral.dark,
+    "SAS" = style$colors$neutral, 
+    "NPL" = style$colors$blue)
+  
+  figure(
+    data = df.poverty,
+    plot = function(df.poverty, style = style_SAR_CCDR()) {
+      ggplot(df.poverty, aes(x = date, group = rev(iso3c), color = iso3c)) +
+        geom_point(aes(y = poverty)) +
+        geom_line(aes(y = interp), size = style$linesize/2, linetype = "dotted") +
+        geom_line(aes(y = poverty), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,1)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = c(12.8),
+            labels = c("Lower middle income")
+          )) +
+        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2007, y = 15, label = "Nepal", size = 2.5, family = style$family, color = style$colors$text) +
+        scale_color_manual(values = color_list) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Nepal's poverty compared with South Asia and lower-middle-income group",
+    subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)",
+    source = "Source: World Development Indicators (SI.POV.DDAY)."
+  )
+}
+
+fig_ch1_poverty()
+
+figure_save_draft_png(fig_ch1_poverty(), style_SAR_CCDR, "../png/fig_ch1_poverty.png", height=3.1, width=5.5)
+
+```
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
 
-## Economic growth
+fig_ch1_poverty_var1 <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("SI.POV.DDAY"),
+    country = c("NPL", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(poverty = SI.POV.DDAY) %>% 
+    select(iso3c, country, date, poverty) 
+  df.poverty <- df %>%
+    group_by(iso3c) %>% 
+    mutate(interp = na.approx(poverty, na.rm=FALSE))
+  
+  # chart
+  color_list = c(
+    "XN" = style$colors$red.light,
+    "SAS" = style$colors$purple.light, 
+    "NPL" = style$colors$navy)
+  
+  figure(
+    data = df.poverty,
+    plot = function(df.poverty, style = style_SAR_CCDR()) {
+      ggplot(df.poverty, aes(x = date, group = rev(iso3c), color = iso3c)) +
+        geom_point(aes(y = poverty)) +
+        geom_line(aes(y = interp), size = style$linesize/2, linetype = "dotted") +
+        geom_line(aes(y = poverty), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,1)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = c(12.8),
+            labels = c("Lower middle income")
+          ), 
+          expand=c(0.25,0)) +
+        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2007, y = 15, label = "Nepal", size = 2.5, family = style$family, color = style$colors$text) +
+        scale_color_manual(values = color_list) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Nepal's poverty compared with South Asia and lower-middle-income group",
+    subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)",
+    source = "Source: World Development Indicators (SI.POV.DDAY)."
+  )
+}
+
+fig_ch1_poverty_var1()
+
+figure_save_draft_png(fig_ch1_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_poverty_var1.png", height=3.1, width=5.5)
+
+```
+
 
 Data source: WDI
 
 Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=8.2, out.width=800, dpi=200}
-
-library(zoo)
 
 fig_ch1_economic_growth_and_poverty <- function() {
 
@@ -142,6 +302,11 @@ fig_ch1_economic_growth_and_poverty <- function() {
     mutate(date = as.numeric(date))
   
   # chart
+  color_list = c(
+    "XN" = style$colors$neutral.dark,
+    "SAS" = style$colors$neutral, 
+    "NPL" = style$colors$blue)
+  
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
@@ -158,10 +323,7 @@ fig_ch1_economic_growth_and_poverty <- function() {
             breaks = df.gdp %>% filter(date == max(date)) %>% pull(gdp) %>% repel(gap=6),
             labels = df.gdp %>% filter(date == max(date)) %>% pull(country)
           )) +
-        scale_color_manual(values = c(
-          "XN" = style$colors$spot.secondary, 
-          "SAS" = style$colors$spot.secondary.light,
-          "NPL" = style$colors$spot.primary)) +
+        scale_color_manual(values = color_list) +
         labs(subtitle = "GDP per capita, PPP (current international $)")+
         style$theme()
       
@@ -183,10 +345,7 @@ fig_ch1_economic_growth_and_poverty <- function() {
           )) +
         annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         annotate("text", x = 2007, y = 15, label = "Nepal", size = 2.5, family = style$family, color = style$colors$text) +
-        scale_color_manual(values = c(
-          "XN" = style$colors$spot.secondary, 
-          "SAS" = style$colors$spot.secondary.light,
-          "NPL" = style$colors$spot.primary)) +
+        scale_color_manual(values = color_list) +
         labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)")+
         style$theme()
       
@@ -218,6 +377,103 @@ figure_save_draft_png(fig_ch1_economic_growth_and_poverty(), style_SAR_CCDR, "..
 
 
 
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=8.2, out.width=800, dpi=200}
+
+fig_ch1_economic_growth_and_poverty_var1 <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("NY.GDP.PCAP.PP.CD", "SI.POV.DDAY"),
+    country = c("NPL", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(gdp = NY.GDP.PCAP.PP.CD) %>% 
+    mutate(poverty = SI.POV.DDAY) %>% 
+    select(iso3c, country, date, gdp, poverty)  %>%
+    mutate(date = as.numeric(date))
+  
+  # chart
+  color_list = c(
+    "XN" = style$colors$red.light,
+    "SAS" = style$colors$purple.light, 
+    "NPL" = style$colors$navy)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.gdp <- df %>%
+        select(iso3c, country, date, gdp) 
+      
+      p.gdp <- ggplot(df.gdp, aes(x = date, y = gdp, group = rev(iso3c), color = iso3c)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df.gdp %>% filter(date == max(date)) %>% pull(gdp) %>% repel(gap=6),
+            labels = df.gdp %>% filter(date == max(date)) %>% pull(country)
+          ), 
+          expand=c(0.15,0)) +
+        scale_color_manual(values = color_list) +
+        labs(subtitle = "GDP per capita, PPP (current international $)")+
+        style$theme()
+      
+      df.poverty <- df %>%
+        select(iso3c, country, date, poverty) %>% 
+        group_by(iso3c) %>% 
+        mutate(interp = na.approx(poverty, na.rm=FALSE))
+      
+      p.poverty <- ggplot(df.poverty, aes(x = date, group = rev(iso3c), color = iso3c)) +
+        geom_point(aes(y = poverty)) +
+        geom_line(aes(y = interp), size = style$linesize/2, linetype = "dotted") +
+        geom_line(aes(y = poverty), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,1)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = c(12.8),
+            labels = c("Lower middle income")
+          ), 
+          expand=c(0.25,0)) +
+        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2007, y = 15, label = "Nepal", size = 2.5, family = style$family, color = style$colors$text) +
+        scale_color_manual(values = color_list) +
+        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)")+
+        style$theme()
+      
+      
+      pt.gdp <- ggplotGrob(p.gdp)
+      pt.poverty <- ggplotGrob(p.poverty)
+  
+      chart <- gtable_row(
+        "chart", 
+        list(pt.gdp, zeroGrob(), pt.poverty), 
+        height = unit(1, "null"), 
+        widths = unit.c(unit(1, "null"), unit(0.3, "in"), unit(1, "null"))
+        )
+      chart$theme <- style$theme()
+      chart
+      
+    },
+    aspect_ratio = 1,
+    title = "Nepal's economic growth and poverty compared with South Asia and lower-middle-income group",
+    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD, SI.POV.DDAY)."
+  )
+}
+
+fig_ch1_economic_growth_and_poverty_var1()
+
+figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty_var1.png", height=3.1, width=8.2)
+
+```
+
+
+
+
+
 
 
 
@@ -226,6 +482,8 @@ figure_save_draft_png(fig_ch1_economic_growth_and_poverty(), style_SAR_CCDR, "..
 ## Structure of economy
 
 Data source: WDI
+
+Indicators: "NV.AGR.TOTL.ZS", "NV.IND.TOTL.ZS", "NV.SRV.TOTL.ZS", "SL.AGR.EMPL.ZS", "SL.IND.EMPL.ZS", "SL.SRV.EMPL.ZS", "SL.AGR.EMPL.MA.ZS", "SL.IND.EMPL.MA.ZS", "SL.SRV.EMPL.MA.ZS", "SL.AGR.EMPL.FE.ZS", "SL.IND.EMPL.FE.ZS", "SL.SRV.EMPL.FE.ZS"
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.5, out.width=800, dpi=200}
 
@@ -330,6 +588,115 @@ figure_save_draft_png(fig_ch1_structure_of_economy(), style_SAR_CCDR, "../png/fi
 
 
 
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.5, out.width=800, dpi=200}
+
+fig_ch1_structure_of_economy_var1 <- function() {
+  
+  # data
+  country_code = "NPL"
+  columns = c("iso2c", "iso3c", "country", "year", "Agriculture", "Industry", "Services")
+  
+  indicators <- c("NV.AGR.TOTL.ZS", "NV.IND.TOTL.ZS", "NV.SRV.TOTL.ZS")
+  year <- 2020
+  df.nv <- wb_data(
+    indicator = indicators,
+    country = country_code,
+    start_date = year,
+    end_date = year
+  )
+  
+  names(df.nv) = columns
+  for (x in colnames(df.nv)) attr(df.nv[[x]], "label") <- NULL
+  df.nv$indicator = "value added (% of GDP)"
+   
+  indicators <- c("SL.AGR.EMPL.ZS", "SL.IND.EMPL.ZS", "SL.SRV.EMPL.ZS")
+  year <- 2019
+  df.empl <- wb_data(
+    indicator = indicators,
+    country = country_code,
+    start_date = year,
+    end_date = year
+  )
+  
+  names(df.empl) = columns
+  for (x in colnames(df.empl)) attr(df.empl[[x]], "label") <- NULL
+  df.empl$indicator = "% of employment (modeled ILO estimate)"
+  
+  indicators <- c("SL.AGR.EMPL.MA.ZS", "SL.IND.EMPL.MA.ZS", "SL.SRV.EMPL.MA.ZS")
+  year <- 2019
+  df.ma <- wb_data(
+    indicator = indicators,
+    country = country_code,
+    start_date = year,
+    end_date = year
+  )
+  
+  names(df.ma) = columns
+  for (x in colnames(df.ma)) attr(df.ma[[x]], "label") <- NULL
+  df.ma$indicator = "% of male employment (modeled ILO estimate)"
+  
+  indicators <- c("SL.AGR.EMPL.FE.ZS", "SL.IND.EMPL.FE.ZS", "SL.SRV.EMPL.FE.ZS")
+  year <- 2019
+  df.fe <- wb_data(
+    indicator = indicators,
+    country = country_code,
+    start_date = year,
+    end_date = year
+  )
+  
+  names(df.fe) = columns
+  for (x in colnames(df.fe)) attr(df.fe[[x]], "label") <- NULL
+  df.fe$indicator = "% of female employment (modeled ILO estimate)"
+  
+  df <- bind_rows(df.nv, df.empl, df.ma, df.fe) %>%
+    gather(sector, value, c(Agriculture, Industry, Services)) %>%
+    mutate(year = as.numeric(year)) %>%
+    arrange(desc(sector), desc(value)) %>%
+    group_by(indicator) %>%
+    mutate(pos = cumsum(value)- value/2)
+  
+  # chart
+  color_list = c(
+    Agriculture = style$colors$red,
+    Industry = style$colors$orange,
+    Services = style$colors$blue
+  )
+  
+  indicator_labels = c("value added (% of GDP)", "% of employment (modeled ILO estimate)", "% of male employment (modeled ILO estimate)", "% of female employment (modeled ILO estimate)")
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = factor(1), y = value, fill = sector)) +
+        geom_bar(width = 1, stat = "identity", color = "white", size=1) +
+        scale_fill_manual(values = color_list) +
+        # geom_text(aes(y = ypos, label = sector), color = "white", size=2) +
+        geom_text(aes(x= factor(1), y=pos, label = paste0(round(value), "%")), size=3, family=style$family) +
+        facet_grid(cols = vars(factor(indicator, levels=indicator_labels))) +
+        # facet_grid(indicator ~ .) +
+        # facet_grid(iso3c ~ ., labeller = as_labeller(str_wrap_lines(wbgref$regions$labels,3,force=TRUE))) + 
+        coord_polar(theta = "y") +
+        style$theme() +
+        style$theme_legend("bottom") +
+        theme(
+          panel.grid  = element_blank(),
+          strip.text.x = element_text(angle = 0, hjust = 0.5),
+          panel.spacing = unit(0, "npc"),
+          axis.text = element_blank(),
+          axis.text.x = element_blank(),
+          axis.text.y = element_blank()
+        )
+    },
+    title = "Structure of ecomony in Bangladesh",
+    subtitle = "Industry value added (2020) and employment breakdown (2019)",
+    source = "Source: World Development Indicators"
+  )
+}
+
+fig_ch1_structure_of_economy_var1()
+
+figure_save_draft_png(fig_ch1_structure_of_economy_var1(), style_SAR_CCDR, "../png/fig_ch1_structure_of_economy_var1.png", height=4.1, width=8.5)
+```
 
 
 
@@ -766,13 +1133,13 @@ figure_save_draft_png(fig_ch1_natural_disaster_damage(), style_SAR_CCDR, "../png
 
 ## National GHG Emission Profile 
 
-Data source: https://www.climatewatchdata.org/data-explorer/historical-emissions?historical-emissions-data-sources=cait&historical-emissions-gases=all-ghg&historical-emissions-regions=All%20Selected%2CNPL&historical-emissions-sectors=All%20Selected&page=1
+Data source: https://www.climatewatchdata.org/ghg-emissions?breakBy=sector&chartType=area&end_year=2018&regions=NPL&sectors=total-including-lucf&start_year=1990
 
 Source: CAIT
 
 Country: Nepal
 
-Sector: All selected
+Sector: Total including LUCF
 
 Gases: All GHG
 
@@ -780,13 +1147,21 @@ Gases: All GHG
 fig_ch1_greenhouse_gas_emissions <- function() {
   
   # data
-  df <- read_csv("../data/historical_emissions.csv")
-  df <- df[-c(1,2),] %>%
+  df <- read_csv("../data/ghg-emissions.csv")
+  df <- head(df, - 2)
+  df <- df %>%
     gather(key="Year", value="Emissions", "2018":"1990") %>%
     select(Sector, Year, Emissions) %>%
     mutate(Year = as.numeric(Year))
   
   # chart
+  color_list = c(
+    "Agriculture" = style$colors$navy, 
+    "Energy" = style$colors$blue,   
+    "Industrial Processes" = style$colors$neutral.light,
+    "Land-Use Change and Forestry" = style$colors$neutral,
+    "Waste" = style$colors$neutral)
+  
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
@@ -796,27 +1171,14 @@ fig_ch1_greenhouse_gas_emissions <- function() {
         scale_y_continuous(
           position="left",
           sec.axis = dup_axis(
-            breaks = df %>% filter(Year == max(Year)) %>% pull(Emissions) %>% repel(gap=6),
+            breaks = df %>% filter(Year == max(Year)) %>% pull(Emissions) %>% repel(gap=1),
             labels = df %>% filter(Year == max(Year)) %>% pull(Sector)
           )) +
-        scale_color_manual(values = c(
-          "Agriculture" = "#A43031", 
-          "Building" = "#888D8E",   
-          "Bunker Fuels" = "#888D8E",   
-          "Electricity/Heat" = "#CB6655",   
-          "Energy" = "#A41623",   
-          "Fugitive Emissions" = "#888D8E",  
-          "Industrial Processes" = "#888D8E",
-          "Land-Use Change and Forestry" = "#888D8E",
-          "Manufacturing/Construction" = "#888D8E",
-          "Other Fuel Combustion" = "#888D8E",
-          "Transportation" = "#888D8E",
-          "Waste" = "#888D8E"),
-          labels = unique(df$Sector)) +
+        scale_color_manual(values = color_list, labels = unique(df$Sector)) +
         style$theme()
     },
     aspect_ratio = 1,
-    title = "Energy and agriculture sectors take up the largest portions of greenhouse gas emissions in Nepal.",
+    title = "Agriculture and energy sectors take up the largest portions of greenhouse gas emissions in Nepal.",
     subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
   )
@@ -830,64 +1192,53 @@ figure_save_draft_png(fig_ch1_greenhouse_gas_emissions(), style_SAR_CCDR, "../pn
 
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
-fig_ch1_GHG_emissions_line <- function() {
+fig_ch1_GHG_emissions_area <- function() {
   
   # data
-  df <- read_csv("../data/historical_emissions.csv")
-  df <- df[-c(1,2),] %>%
+  df <- read_csv("../data/ghg-emissions.csv")
+  df <- head(df, - 2)
+  df <- df %>%
     gather(key="Year", value="Emissions", "2018":"1990") %>%
     select(Sector, Year, Emissions) %>%
     mutate(Year = as.numeric(Year)) %>%
-    mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Other Fuel Combustion", "Transportation", "Manufacturing/Construction"),
-                                  Sector, 
-                                  "Other")) %>%
-    select(-Sector) %>%
-    group_by(Year, Sector_merged) %>% 
-    summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
-    rename(Sector = Sector_merged) %>%
     group_by(Year) %>%
     mutate(percentage =  100 *Emissions/sum(Emissions, na.rm=TRUE))
   
+  ordered_sector <- df %>%
+    filter(Year == 2018) %>%
+    arrange(desc(percentage)) %>% pull(Sector)
+  
   # chart
+  color_list = c(
+    "Agriculture" = style$colors$orange,  
+    "Energy" = style$colors$blue, 
+    "Land-Use Change and Forestry" = style$colors$red,
+    "Waste" = style$colors$purple,
+    "Industrial Processes" = style$colors$navy)
+  
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
-      ggplot(df, aes(x = Year, y = Emissions, group = Sector, color = Sector)) +
-        geom_line(size = style$linesize) +
+      ggplot(df, aes(x = Year, y = Emissions, fill = factor(Sector, levels=ordered_sector))) +
+        geom_area() +
         scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
         scale_y_continuous(
-          position="left",
-          sec.axis = dup_axis(
-            breaks = df %>% filter(Year == 2018) %>% pull(Emissions) %>% repel(gap=6),
-            labels = df %>% filter(Year == 2018) %>% pull(Sector)
-          )) +
-        scale_color_manual(values = c(
-          "Agriculture" = "#2F4858", 
-          "Building" = "#888D8E",   
-          "Bunker Fuels" = "#888D8E",   
-          "Electricity/Heat" = "#86BBD8",   
-          "Energy" = "#336699",   
-          "Fugitive Emissions" = "#888D8E",  
-          "Industrial Processes" = "#888D8E",
-          "Land-Use Change and Forestry" = "#9EE493",
-          "Manufacturing/Construction" = "#DAF7DC",
-          "Other Fuel Combustion" = "#86BBD8",
-          "Transportation" = "#9EE493",
-          "Waste" = "#DAF7DC",
-          "Other" = "#CED0CE"), 
-          labels = unique(df$Sector)) +
-        style$theme()
+          position="left"
+        ) +
+        scale_fill_manual(values = color_list) +
+        style$theme() +
+        style$theme_legend("right")
     },
     aspect_ratio = 1,
-    title = "Emissions are primarily from Agriculture and Energy, comprising 33% and 30% respectively, followed by Other Fuel Combustion (17%), Transportation (6%), and Manufacturing/Construction (4%).",
+    title = "Emissions are primarily from agriculture and energy, comprising 47% and 43% respectively, followed by Land-Use Change and Forestry (6.1%), Waste (1.8%), and Industrial Processes (1.7%).",
     subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
   )
 }
 
-fig_ch1_GHG_emissions_line()
+fig_ch1_GHG_emissions_area()
 
-figure_save_draft_png(fig_ch1_GHG_emissions_line(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_line.png", height=5.1, width=5.5)
+figure_save_draft_png(fig_ch1_GHG_emissions_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_area.png", height=5.1, width=5.5)
 ```
 
 
@@ -897,54 +1248,41 @@ figure_save_draft_png(fig_ch1_GHG_emissions_line(), style_SAR_CCDR, "../png/fig_
 fig_ch1_GHG_emissions_pie <- function() {
   
   # data
-  df <- read_csv("../data/historical_emissions.csv")
-  df <- df[-c(1,2),] %>%
+  df <- read_csv("../data/ghg-emissions.csv")
+  df <- head(df, - 2)
+  df <- df %>%
     gather(key="Year", value="Emissions", "2018":"1990") %>%
-    dplyr::select(Sector, Year, Emissions) %>%
+    select(Sector, Year, Emissions) %>%
     mutate(Year = as.numeric(Year)) %>%
-    mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Other Fuel Combustion", "Transportation", "Manufacturing/Construction"),
-                                  Sector, 
-                                  "Other")) %>%
-    dplyr::select(-Sector) %>%
-    group_by(Year, Sector_merged) %>% 
-    summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
-    rename(Sector = Sector_merged) %>%
     group_by(Year) %>%
-    mutate(percentage =  100 *Emissions/sum(Emissions, na.rm=TRUE)) %>%
+    mutate(percentage = 100 *Emissions/sum(Emissions, na.rm=TRUE)) %>%
     filter(Year == 2018) %>%
-    arrange(desc(percentage)) %>%
-    arrange(Sector == "Other")
+    arrange(desc(percentage))
   
   df$ymax <- cumsum(df$percentage)
   df$ymin <- c(0, head(df$ymax, n=-1))
   df$labelPosition <- (df$ymax + df$ymin) / 2
   df$label <- paste0(df$Sector, "\n", round(df$percentage,1), "%")
-  df$label <- c("Agriculture\n32.7%", "Energy\n30%", "Other Fuel\nCombustion\n16.9%", "Transportation\n6.8%", "Manufacturing\n/Construction\n4.3%", "Other\n9.1%")
+  df$label <- c("Agriculture\n47.2%", "Energy\n43.3%", "Land-Use Change\nand Forestry\n6.1%", "Waste\n1.8%", "Industrial Processes\n1.7%")
+  df$vjust <- c(0.5, 0.5, 0.99, 0.6, -0.1)
   
   # chart
+  color_list = c(
+    "Energy" = style$colors$blue,   
+    "Agriculture" = style$colors$orange,  
+    "Industrial Processes" = style$colors$navy, 
+    "Waste" = style$colors$purple,
+    "Land-Use Change and Forestry" = style$colors$red)
+    
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
       ggplot(df, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector)) +
       geom_rect() +
-      geom_label(x=4.35, aes(y=labelPosition, label=label), size=2.5, label.size = NA, fill = NA) +
+      geom_label(x=4.5, aes(y=labelPosition, label=label, vjust=vjust), size=2.5, label.size = NA, fill = NA) +
       coord_polar(theta="y") +
       xlim(c(2, 4.5)) +
-      scale_fill_manual(values = c(
-        "Agriculture" = "#2F4858", 
-        "Building" = "#888D8E",   
-        "Bunker Fuels" = "#888D8E",   
-        "Electricity/Heat" = "#86BBD8",   
-        "Energy" = "#336699",   
-        "Fugitive Emissions" = "#888D8E",  
-        "Industrial Processes" = "#888D8E",
-        "Land-Use Change and Forestry" = "#9EE493",
-        "Manufacturing/Construction" = "#DAF7DC",
-        "Other Fuel Combustion" = "#86BBD8",
-        "Transportation" = "#9EE493",
-        "Waste" = "#DAF7DC",
-        "Other" = "#CED0CE"), 
-        labels = unique(df$Sector)) +
+      scale_fill_manual(values = color_list) +
       # theme_void() +
       style$theme() +
       theme(legend.position = "none",
@@ -952,10 +1290,11 @@ fig_ch1_GHG_emissions_pie <- function() {
             panel.grid.major.y = element_blank(),
             axis.text = element_blank(),
             axis.text.x = element_blank(),
-            axis.text.y = element_blank())
+            axis.text.y = element_blank(),
+            plot.margin = margin(0,1,-15,1, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "Emissions are primarily from Agriculture and Energy, comprising 33% and 30% respectively, followed by Other Fuel Combustion (17%), Transportation (6%), and Manufacturing/Construction (4%).",
+    title = "Emissions are primarily from agriculture and energy, comprising 47% and 43% respectively, followed by Land-Use Change and Forestry (6.1%), Waste (1.8%), and Industrial Processes (1.7%).",
     subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 2018",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (2018)."
   )
@@ -965,115 +1304,6 @@ fig_ch1_GHG_emissions_pie()
 
 figure_save_draft_png(fig_ch1_GHG_emissions_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_pie.png", height=5.1, width=5.5)
 ```
-
-
-
-
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.5, fig.width=8.2, out.width=800, dpi=200}
-
-library(zoo)
-
-fig_ch1_GHG_emissions_line_pie <- function() {
-
-  # data
-  df <- read_csv("../data/historical_emissions.csv")
-  df <- df[-c(1,2),] %>%
-    gather(key="Year", value="Emissions", "2018":"1990") %>%
-    dplyr::select(Sector, Year, Emissions) %>%
-    mutate(Year = as.numeric(Year)) %>%
-    mutate(Sector_merged = ifelse(Sector %in% c("Energy", "Agriculture", "Other Fuel Combustion", "Transportation", "Manufacturing/Construction"),
-                                  Sector, 
-                                  "Other")) %>%
-    dplyr::select(-Sector) %>%
-    group_by(Year, Sector_merged) %>% 
-    summarise(across(everything(), sum, na.rm = TRUE), .groups = 'drop') %>%
-    rename(Sector = Sector_merged) %>%
-    group_by(Year) %>%
-    mutate(percentage =  100 *Emissions/sum(Emissions, na.rm=TRUE))
-  
-  # chart
-  color_list <- c(
-    "Agriculture" = "#2F4858", 
-    "Building" = "#888D8E",   
-    "Bunker Fuels" = "#888D8E",   
-    "Electricity/Heat" = "#86BBD8",   
-    "Energy" = "#336699",   
-    "Fugitive Emissions" = "#888D8E",  
-    "Industrial Processes" = "#888D8E",
-    "Land-Use Change and Forestry" = "#9EE493",
-    "Manufacturing/Construction" = "#DAF7DC",
-    "Other Fuel Combustion" = "#86BBD8",
-    "Transportation" = "#9EE493",
-    "Waste" = "#DAF7DC",
-    "Other" = "#CED0CE")
-  figure(
-    data = df,
-    plot = function(df, style = style_SAR_CCDR()) {
-
-      p.line <- ggplot(df, aes(x = Year, y = Emissions, group = Sector, color = Sector)) +
-        geom_line(size = style$linesize) +
-        scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
-        scale_y_continuous(
-          position="left",
-          sec.axis = dup_axis(
-            breaks = df %>% filter(Year == 2018) %>% pull(Emissions) %>% repel(gap=8),
-            labels = df %>% filter(Year == 2018) %>% pull(Sector)
-          )) +
-        scale_color_manual(values = color_list, labels = unique(df$Sector)) +
-        style$theme()
-      
-      df.pie <- df %>%
-        filter(Year == 2018) %>%
-        arrange(desc(percentage)) %>%
-        arrange(Sector == "Other")
-  
-      df.pie$ymax <- cumsum(df.pie$percentage)
-      df.pie$ymin <- c(0, head(df.pie$ymax, n=-1))
-      df.pie$labelPosition <- (df.pie$ymax + df.pie$ymin) / 2
-      df.pie$label <- paste0(df.pie$Sector, "\n", round(df.pie$percentage,1), "%")
-      df.pie$label <- c("Agriculture\n32.7%", "Energy\n30%", "Other Fuel\nCombustion\n16.9%", "Transportation\n6.8%", "Manufacturing\n/Construction\n4.3%", "Other\n9.1%")
-      
-      p.pie <- ggplot(df.pie, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector)) +
-        geom_rect() +
-        geom_label(x=4.4, aes(y=labelPosition, label=label), family=style$family, size=2.5, label.size = NA, fill = NA) +
-        coord_polar(theta="y") +
-        xlim(c(2, 4.5)) +
-        scale_fill_manual(values = color_list, labels = unique(df$Sector)) +
-        annotate(geom = 'text', x = 2, y = 0, label = "2018") +
-        style$theme() +
-        theme(legend.position = "none",
-              panel.grid.major.x = element_blank(),
-              panel.grid.major.y = element_blank(),
-              axis.text = element_blank(),
-              axis.text.x = element_blank(),
-              axis.text.y = element_blank())
-      
-      pt.line <- ggplotGrob(p.line)
-      pt.pie <- ggplotGrob(p.pie)
-  
-      chart <- gtable_row(
-        "chart", 
-        list(pt.line, zeroGrob(), pt.pie), 
-        height = unit(1, "null"), 
-        widths = unit.c(unit(1, "null"), unit(0.1, "in"), unit(1, "null"))
-        )
-      chart$theme <- style$theme()
-      chart
-      
-    },
-    aspect_ratio = 1,
-    title = "Emissions are primarily from Agriculture and Energy, comprising 33% and 30% respectively, followed by Other Fuel Combustion (17%), Transportation (6%), and Manufacturing/Construction (4%).",
-    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
-    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
-  )
-}
-
-fig_ch1_GHG_emissions_line_pie()
-
-figure_save_draft_png(fig_ch1_GHG_emissions_line_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_emissions_line_pie.png", height=4.5, width=8.2)
-
-```
-
 
 
 
