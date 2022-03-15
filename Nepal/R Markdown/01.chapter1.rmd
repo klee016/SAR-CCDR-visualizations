@@ -1377,6 +1377,7 @@ fig_ch1_vulnerability <- function() {
     plot = function(df, style = style_SAR_CCDR()) {
       ggradar(
         df,
+        background.circle.colour = "white",
         font.radar = style$family,
         values.radar = c(min, (min+max)/2, max),
         grid.min = 0, grid.mid = 0.5, grid.max = 1,
@@ -1477,6 +1478,7 @@ fig_ch1_readiness <- function() {
     plot = function(df, style = style_SAR_CCDR()) {
       ggradar(
         df,
+        background.circle.colour = "white",
         font.radar = style$family,
         values.radar = c(min, (min+max)/2, max),
         grid.min = 0, grid.mid = 0.5, grid.max = 1,
@@ -1631,6 +1633,7 @@ fig_ch1_vulnerability_readiness <- function() {
       
       p.vulnerability <- ggradar(
           df.vulnerability,
+          background.circle.colour = "white",
           font.radar = style$family,
           values.radar = c(vulnerability.min, (vulnerability.min+vulnerability.max)/2, vulnerability.max),
           grid.min = 0, grid.mid = 0.5, grid.max = 1,
@@ -1662,6 +1665,7 @@ fig_ch1_vulnerability_readiness <- function() {
       
       p.readiness <- ggradar(
           df.readiness,
+          background.circle.colour = "white",
           font.radar = style$family,
           values.radar = c(readiness.min, (readiness.min+readiness.max)/2, readiness.max),
           grid.min = 0, grid.mid = 0.5, grid.max = 1,

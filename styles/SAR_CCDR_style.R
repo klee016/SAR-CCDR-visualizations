@@ -100,7 +100,7 @@ style_SAR_CCDR <- function(textsize=7, family="Segoe UI Light", family.bold = "S
       orange.light             = if (!is.cmyk) "#FCCA89"               else cmyk(0, 20, 46, 1, maxColorValue = 100),
       red                      = if (!is.cmyk) "#C06063"               else cmyk(0, 50, 48, 25, maxColorValue = 100),
       red.light                = if (!is.cmyk) "#E6BFC1"               else cmyk(0, 17, 16, 10, maxColorValue = 100),
-      purple                   = if (!is.cmyk) "#61457B"               else cmyk(21, 44, 0, 52, maxColorValue = 100),
+      purple                   = if (!is.cmyk) "#8864A8"               else cmyk(19, 40, 0, 34, maxColorValue = 100),
       purple.light             = if (!is.cmyk) "#C0AED1"               else cmyk(8, 17, 0, 18, maxColorValue = 100),
       navy                     = if (!is.cmyk) "#243B67"               else cmyk(65, 43, 0, 60, maxColorValue = 100),
       spot.primary             = if (!is.cmyk) "#3066BE"               else cmyk(75, 46, 0, 25, maxColorValue = 100),
