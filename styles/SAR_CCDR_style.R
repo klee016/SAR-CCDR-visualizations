@@ -83,7 +83,8 @@ style_base <- function(textsize=7) {
 }
 
 #' @export
-style_SAR_CCDR <- function(textsize=7, family="Segoe UI Light", family.bold = "Segoe UI Semibold", is.cmyk = FALSE) {
+#style_SAR_CCDR <- function(textsize=7, family="Segoe UI Light", family.bold = "Segoe UI Semibold", is.cmyk = FALSE) {
+style_SAR_CCDR <- function(textsize=7, family="Franklin Gothic Book", family.bold = "Franklin Gothic Medium", is.cmyk = FALSE) {
   modifyList(style_base(textsize), listy(
     ## FONTY STUFF #############################################################
     family = family,
@@ -103,6 +104,7 @@ style_SAR_CCDR <- function(textsize=7, family="Segoe UI Light", family.bold = "S
       purple                   = if (!is.cmyk) "#8864A8"               else cmyk(19, 40, 0, 34, maxColorValue = 100),
       purple.light             = if (!is.cmyk) "#C0AED1"               else cmyk(8, 17, 0, 18, maxColorValue = 100),
       navy                     = if (!is.cmyk) "#243B67"               else cmyk(65, 43, 0, 60, maxColorValue = 100),
+      navy.light               = if (!is.cmyk) "#8393C7"               else cmyk(34, 26, 0, 22, maxColorValue = 100),
       spot.primary             = if (!is.cmyk) "#3066BE"               else cmyk(75, 46, 0, 25, maxColorValue = 100),
       spot.primary.light       = if (!is.cmyk) lighten(spot.primary)   else cmyk(1.3, 50, 29.3, 6.1, maxColorValue = 100),
       spot.primary.dark        = if (!is.cmyk) darken(spot.primary)    else cmyk(0, 97, 68, 75, maxColorValue = 100),

@@ -99,9 +99,9 @@ fig_ch1_economic_growth <- function() {
         style$theme()
     },
     aspect_ratio = 1,
-    title = "Pakistan's economic growth compared with South Asia and lower-middle-income group",
+    # title = "Pakistan's economic growth compared with South Asia and lower-middle-income group",
     subtitle = "GDP per capita, PPP (current international $), 1990 to 2020",
-    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)."
+    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)"
   )
 }
 
@@ -152,7 +152,7 @@ fig_ch1_economic_growth_var1 <- function() {
     aspect_ratio = 1,
     title = "Pakistan's economic growth compared with South Asia and lower-middle-income group",
     subtitle = "GDP per capita, PPP (current international $), 1990 to 2020",
-    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)."
+    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)"
   )
 }
 
@@ -211,9 +211,9 @@ fig_ch1_poverty <- function() {
         style$theme()
     },
     aspect_ratio = 1,
-    title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
+    # title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
     subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)",
-    source = "Source: World Development Indicators (SI.POV.DDAY)."
+    source = "Source: World Development Indicators (SI.POV.DDAY)"
   )
 }
 
@@ -223,6 +223,9 @@ figure_save_draft_png(fig_ch1_poverty(), style_SAR_CCDR, "../png/fig_ch1_poverty
 
 ```
 
+Data source: WDI
+
+Indicators: SI.POV.DDAY
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -270,13 +273,133 @@ fig_ch1_poverty_var1 <- function() {
     aspect_ratio = 1,
     title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
     subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)",
-    source = "Source: World Development Indicators (SI.POV.DDAY)."
+    source = "Source: World Development Indicators (SI.POV.DDAY)"
   )
 }
 
 fig_ch1_poverty_var1()
 
 figure_save_draft_png(fig_ch1_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_poverty_var1.png", height=3.1, width=5.5)
+
+```
+
+
+
+
+
+Data source: WDI
+
+Indicators: SI.POV.LMIC
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_poverty_var2 <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("SI.POV.LMIC"),
+    country = c("PAK", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(poverty = SI.POV.LMIC) %>% 
+    select(iso3c, country, date, poverty) 
+  df.poverty <- df %>%
+    group_by(iso3c) %>% 
+    mutate(interp = na.approx(poverty, na.rm=FALSE))
+  
+  # chart
+  color_list = c(
+    "XN" = style$colors$neutral.dark,
+    "SAS" = style$colors$neutral, 
+    "PAK" = style$colors$blue)
+  
+  figure(
+    data = df.poverty,
+    plot = function(df.poverty, style = style_SAR_CCDR()) {
+      ggplot(df.poverty, aes(x = date, group = rev(iso3c), color = iso3c)) +
+        geom_point(aes(y = poverty)) +
+        geom_line(aes(y = interp), size = style$linesize/2, linetype = "dotted") +
+        geom_line(aes(y = poverty), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,1)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = c(36, 33),
+            labels = c("Pakistan", "Lower middle income")
+          ), 
+          expand=c(0.1,0)) +
+        annotate("text", x = 2013, y = 70, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        scale_color_manual(values = color_list) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
+    subtitle = "Poverty headcount ratio at $3.20 a day (2011 PPP) (% of population)",
+    source = "Source: World Development Indicators (SI.POV.LMIC)"
+  )
+}
+
+fig_ch1_poverty_var2()
+
+figure_save_draft_png(fig_ch1_poverty_var2(), style_SAR_CCDR, "../png/fig_ch1_poverty_var2.png", height=3.1, width=5.5)
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_poverty_var3 <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("SI.POV.LMIC"),
+    country = c("PAK", "LMC", "SAS"),
+    start_date = 1990,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(poverty = SI.POV.LMIC) %>% 
+    select(iso3c, country, date, poverty) 
+  df.poverty <- df %>%
+    group_by(iso3c) %>% 
+    mutate(interp = na.approx(poverty, na.rm=FALSE))
+  
+  # chart
+  color_list = c(
+    "XN" = style$colors$red.light,
+    "SAS" = style$colors$purple.light, 
+    "PAK" = style$colors$navy)
+  
+  figure(
+    data = df.poverty,
+    plot = function(df.poverty, style = style_SAR_CCDR()) {
+      ggplot(df.poverty, aes(x = date, group = rev(iso3c), color = iso3c)) +
+        geom_point(aes(y = poverty)) +
+        geom_line(aes(y = interp), size = style$linesize/2, linetype = "dotted") +
+        geom_line(aes(y = poverty), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,1)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = c(36, 33),
+            labels = c("Pakistan", "Lower middle income")
+          ), 
+          expand=c(0.1,0)) +
+        annotate("text", x = 2013, y = 70, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        scale_color_manual(values = color_list) +
+        style$theme()
+    },
+    aspect_ratio = 1,
+    title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
+    subtitle = "Poverty headcount ratio at $3.20 a day (2011 PPP) (% of population)",
+    source = "Source: World Development Indicators (SI.POV.LMIC)."
+  )
+}
+
+fig_ch1_poverty_var3()
+
+figure_save_draft_png(fig_ch1_poverty_var3(), style_SAR_CCDR, "../png/fig_ch1_poverty_var3.png", height=3.1, width=5.5)
 
 ```
 
@@ -468,6 +591,85 @@ fig_ch1_economic_growth_and_poverty_var1()
 figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty_var1.png", height=3.1, width=8.2)
 
 ```
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## Structure of population
+
+Data source: https://population.un.org/wpp/Download/Probabilistic/Population/
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.5, out.width=800, dpi=200}
+
+fig_ch1_population_pyramid <- function() {
+  
+  # data
+  df <- read_excel("../data/UN_PPP2019_Output_PopulationByAge_Female.xlsx", sheet="Median", skip=16)
+  
+  df_female <- df %>%
+    rename(country = `Region, subregion, country or area *`) %>%
+    rename(year = `...8`) %>%
+    filter(country == "Pakistan") %>%
+    filter(year == "2020" | year == "2030" | year == "2050") %>%
+    select(`year`:`100+`) %>%
+    mutate(sex = "female")
+    
+  df <- read_excel("../data/UN_PPP2019_Output_PopulationByAge_Male.xlsx", sheet="Median", skip=16)
+  
+  df_male <- df %>%
+    rename(country = `Region, subregion, country or area *`) %>%
+    rename(year = `...8`) %>%
+    filter(country == "Pakistan") %>%
+    filter(year == "2020" | year == "2030" | year == "2050") %>%
+    select(`year`:`100+`) %>%
+    mutate(sex = "male")
+  
+  df <- bind_rows(df_male, df_female) %>%
+    gather(age_group, population, `0-4`:`100+`) %>%
+    mutate(population = as.numeric(population))
+  
+  df$population <- ifelse(df$sex == "male", -1*df$population, df$population)
+  
+  age_group_order <- unique(df$age_group)
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = factor(age_group, levels=age_group_order), y = population, fill = sex)) + 
+        geom_bar(data = subset(df, sex == "female"), stat = "identity") +
+        geom_bar(data = subset(df, sex == "male"), stat = "identity") + 
+        scale_y_continuous(labels = paste0(as.character(c(seq(20, 0, -10), seq(10, 20, 10))), "m")) +
+        coord_flip() +
+        facet_grid(cols = vars(factor(year))) + 
+        scale_fill_manual(
+          values = c(
+            male = style$colors$blue,
+            female = style$colors$red)) +
+        style$theme() +
+          style$theme_legend("bottom") +
+          theme(
+            axis.text = element_blank(),
+            panel.grid  = element_blank(),
+            panel.grid.major.x = element_line(color = "gray50", size = 0.1,linetype = 3),
+            strip.text.x = element_text(angle = 0, hjust = 0.5),
+            panel.spacing = unit(0, "npc")
+          )
+    },
+    title = "Population Pyramids of Pakistan in 2020, 2030, and 2050",
+    subtitle = "Population by age group and sex (million)",
+    source = "Source: United Nations, Department of Economic and Social Affairs, Population Division. World Population Prospects: The 2019 Revision. (Medium variant)"
+  )
+}
+
+fig_ch1_population_pyramid()
+
+figure_save_draft_png(fig_ch1_population_pyramid(), style_SAR_CCDR, "../png/fig_ch1_population_pyramid.png", height=4.1, width=8.5)
+
+```
+
 
 
 
@@ -685,6 +887,7 @@ fig_ch1_structure_of_economy_var1 <- function() {
     },
     title = "Structure of ecomony in Pakistan",
     subtitle = "Industry value added (2020) and employment breakdown (2019)",
+    note = "Note: The value added shares presented in the World Development Indicators for agriculture, industry, and services may not always add up to a hundred percent due to financial intermediary services indirectly measured (FISIM) and net indirect taxes.",
     source = "Source: World Development Indicators"
   )
 }
@@ -790,7 +993,7 @@ fig_ch1_natural_disasters <- function() {
   df2 <- df2 %>%
     select(-c('Wildfires', 'Mass movement (dry)', 'Volcanic activity')) %>%
     gather(Type, Damage, 4:9) %>%
-    mutate(Damage = Damage*100) %>%
+    mutate(Damage = Damage) %>%
     select(Year, Type, Damage)
   
   df <- merge(df1, df2, by=c("Year", "Type"))
@@ -802,8 +1005,8 @@ fig_ch1_natural_disasters <- function() {
       p <- ggplot(df, aes(x=Year, y=reorder(Type, desc(Type)), size=ifelse(Damage==0, NA, Damage), color=Deaths, fill=Deaths)) +
         geom_point(alpha=0.5, shape=21, color="black") +
         scale_size(range = c(1, 20), name="Damage (%GDP)",
-                   breaks = c(10, 50,100),
-                   labels = c("10", "50", "100")) +
+                   breaks = c(0.1, 0.5, 1),
+                   labels = c("0.1", "0.5", "1")) +
         scale_fill_distiller(palette = "Spectral") + 
         scale_x_continuous(limits = c(1960, 2012), breaks = c(1960, 1970, 1980, 1990, 2000, 2010), labels = c("1960-1969", "1970-1979", "1980-1989", "1990-1999", "2000-2009", "2010-2019")) +
         xlab("Year") +
@@ -849,6 +1052,275 @@ fig_ch1_natural_disasters()
 figure_save_draft_png(fig_ch1_natural_disasters(), style_SAR_CCDR, "../png/fig_ch1_natural_disasters.png", height=4.1, width=5.5)
 ```
 
+
+
+
+Data source: https://public.emdat.be/data
+Variables: Deaths and economic damages
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_natural_disasters_var1 <- function() {
+  
+  # data
+  GDP_2020 <- wb_data(
+    indicator = c("NY.GDP.MKTP.CD"),
+    country = c("PAK"),
+    start_date = 2020,
+    end_date = 2020
+  )
+  GDP_2020 <- GDP_2020$NY.GDP.MKTP.CD[1]
+  
+  df <- read_excel("../data/emdat_public_2022_03_14_Pakistan.xlsx", skip=6) %>%
+    filter(Year >= 1960 & Year <= 2019) %>%
+    mutate(Decade = as.numeric(paste0(substr(Year, 1, 3), '0'))) %>%
+    rename(Group = `Disaster Subgroup`) %>%
+    rename(Type = `Disaster Type`) %>%
+    rename(Deaths = `Total Deaths`) %>%
+    mutate(Damages = `Total Damages, Adjusted ('000 US$)`*1000/GDP_2020 * 100) %>%
+    select(Decade, Group, Type, Deaths, Damages)
+  
+  df <- df %>%
+    group_by(Decade, Type) %>%
+      summarise(Frequency = n(),
+                Deaths = sum(Deaths, na.rm=TRUE),
+                Damages = sum(Damages, na.rm=TRUE),
+                .groups = 'drop') %>%
+    filter(Damages > 0)
+  
+  # chart
+  figure(
+    data =  df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      p <- ggplot(df, aes(x=Decade, y=reorder(Type, desc(Type)), size=Damages, color=Deaths, fill=Deaths)) +
+        geom_point(alpha=0.5, shape=21, color="black") +
+        scale_size(range = c(1, 20), name="Damage (%GDP)",
+                   breaks = c(1, 4, 8),
+                   labels = c("1", "4", "8")) +
+        scale_fill_distiller(palette = "Accent", direction=1) +
+        scale_x_continuous(limits = c(1960, 2014), breaks = c(1960, 1970, 1980, 1990, 2000, 2010), labels = c("1960-1969", "1970-1979", "1980-1989", "1990-1999", "2000-2009", "2010-2019")) +
+        xlab("Year") +
+        ylab("Natural Disasters") +
+        geom_curve(aes(x = 1990, y = 4.5, xend = 1997, yend = 5),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = -0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 1990, y = 4.3, label = "including 2005 Kashmir earthquake", size = 2.5, family = style$family) +
+        geom_curve(aes(x = 1975, y = 2, xend = 1973, yend = 2.8),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = 0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 1975, y = 1.8, label = "including 1970 East Pakistan cyclone", size = 2.5, family = style$family) +
+        geom_curve(aes(x = 2000, y = 1.8, xend = 2006, yend = 2.6),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = -0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 2000, y = 1.6, label = "including 2010 floods", size = 2.5, family = style$family) +
+        style$theme() +
+        theme(
+          axis.title.x = element_text(vjust = -5),
+          axis.title.y = element_text(angle = 90, vjust = 0, margin = margin(r = 15)),
+          axis.text.x = element_text(angle = 0, vjust = 2), 
+          legend.title = element_text(),
+          legend.box.just = "center",
+          legend.position = "right"
+        )
+    },
+    aspect_ratio = 1,
+    title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
+    subtitle = "Decadal sum: Number of deaths and economic damages (% GDP) from natural disasters",
+    note = "Note: Decadal figures are measured as the annual sum over the subsequent ten-year period.",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_natural_disasters_var1()
+
+figure_save_draft_png(fig_ch1_natural_disasters_var1(), style_SAR_CCDR, "../png/fig_ch1_natural_disasters_var1.png", height=4.1, width=5.5)
+
+```
+
+
+Data source: https://public.emdat.be/data
+Variables: Affected and economic damages
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_natural_disasters_var2 <- function() {
+  
+  # data
+  GDP_2020 <- wb_data(
+    indicator = c("NY.GDP.MKTP.CD"),
+    country = c("PAK"),
+    start_date = 2020,
+    end_date = 2020
+  )
+  GDP_2020 <- GDP_2020$NY.GDP.MKTP.CD[1]
+  
+  df <- read_excel("../data/emdat_public_2022_03_14_Pakistan.xlsx", skip=6) %>%
+    filter(Year >= 1960 & Year <= 2019) %>%
+    mutate(Decade = as.numeric(paste0(substr(Year, 1, 3), '0'))) %>%
+    rename(Group = `Disaster Subgroup`) %>%
+    rename(Type = `Disaster Type`) %>%
+    rename(Affected = `Total Affected`) %>%
+    mutate(Damages = `Total Damages, Adjusted ('000 US$)`*1000/GDP_2020 * 100) %>%
+    select(Decade, Group, Type, Affected, Damages)
+  
+  df <- df %>%
+    group_by(Decade, Type) %>%
+      summarise(Frequency = n(),
+                Affected = sum(Affected, na.rm=TRUE),
+                Damages = sum(Damages, na.rm=TRUE),
+                .groups = 'drop') %>%
+    filter(Damages > 0)
+  
+  # chart
+  figure(
+    data =  df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      p <- ggplot(df, aes(x=Decade, y=reorder(Type, desc(Type)), size=Damages, color=Affected, fill=Affected)) +
+        geom_point(alpha=0.5, shape=21, color="black") +
+        scale_size(range = c(1, 20), name="Damage (%GDP)",
+                   breaks = c(1, 4, 8),
+                   labels = c("1", "4", "8")) +
+        scale_fill_distiller(palette = "Accent", direction=1) +
+        scale_x_continuous(limits = c(1960, 2014), breaks = c(1960, 1970, 1980, 1990, 2000, 2010), labels = c("1960-1969", "1970-1979", "1980-1989", "1990-1999", "2000-2009", "2010-2019")) +
+        xlab("Year") +
+        ylab("Natural Disasters") +
+        geom_curve(aes(x = 1990, y = 4.5, xend = 1997, yend = 5),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = -0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 1990, y = 4.3, label = "including 2005 Kashmir earthquake", size = 2.5, family = style$family) +
+        geom_curve(aes(x = 1975, y = 2, xend = 1973, yend = 2.8),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = 0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 1975, y = 1.8, label = "including 1970 East Pakistan cyclone", size = 2.5, family = style$family) +
+        geom_curve(aes(x = 2000, y = 1.8, xend = 2006, yend = 2.6),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = -0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 2000, y = 1.6, label = "including 2010 floods", size = 2.5, family = style$family) +
+        style$theme() +
+        theme(
+          axis.title.x = element_text(vjust = -5),
+          axis.title.y = element_text(angle = 90, vjust = 0, margin = margin(r = 15)),
+          axis.text.x = element_text(angle = 0, vjust = 2), 
+          legend.title = element_text(),
+          legend.box.just = "center",
+          legend.position = "right"
+        )
+    },
+    aspect_ratio = 1,
+    title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
+    subtitle = "Decadal sum: Number of people affected and economic damages (% GDP) from natural disasters",
+    note = "Note: Decadal figures are measured as the annual sum over the subsequent ten-year period.",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_natural_disasters_var2()
+
+figure_save_draft_png(fig_ch1_natural_disasters_var2(), style_SAR_CCDR, "../png/fig_ch1_natural_disasters_var2.png", height=4.1, width=5.5)
+
+```
+
+
+
+Data source: https://public.emdat.be/data
+Variables: Frequency and economic damages
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_natural_disasters_var3 <- function() {
+  
+  # data
+  GDP_2020 <- wb_data(
+    indicator = c("NY.GDP.MKTP.CD"),
+    country = c("PAK"),
+    start_date = 2020,
+    end_date = 2020
+  )
+  GDP_2020 <- GDP_2020$NY.GDP.MKTP.CD[1]
+  
+  df <- read_excel("../data/emdat_public_2022_03_14_Pakistan.xlsx", skip=6) %>%
+    filter(Year >= 1960 & Year <= 2019) %>%
+    mutate(Decade = as.numeric(paste0(substr(Year, 1, 3), '0'))) %>%
+    rename(Group = `Disaster Subgroup`) %>%
+    rename(Type = `Disaster Type`) %>%
+    rename(Affected = `Total Affected`) %>%
+    mutate(Damages = `Total Damages, Adjusted ('000 US$)`*1000/GDP_2020 * 100) %>%
+    select(Decade, Group, Type, Affected, Damages)
+  
+  df <- df %>%
+    group_by(Decade, Type) %>%
+      summarise(Frequency = n(),
+                Affected = sum(Affected, na.rm=TRUE),
+                Damages = sum(Damages, na.rm=TRUE),
+                .groups = 'drop') %>%
+    filter(Damages > 0)
+  
+  # chart
+  figure(
+    data =  df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      p <- ggplot(df, aes(x=Decade, y=reorder(Type, desc(Type)), size=Damages, color=Frequency, fill=Frequency)) +
+        geom_point(alpha=0.5, shape=21, color="black") +
+        scale_size(range = c(1, 20), name="Damage (%GDP)",
+                   breaks = c(1, 4, 8),
+                   labels = c("1", "4", "8")) +
+        scale_fill_distiller(palette = "YlGnBu", direction=1) +
+        scale_x_continuous(limits = c(1960, 2014), breaks = c(1960, 1970, 1980, 1990, 2000, 2010), labels = c("1960-1969", "1970-1979", "1980-1989", "1990-1999", "2000-2009", "2010-2019")) +
+        xlab("Year") +
+        ylab("Natural Disasters") +
+        geom_curve(aes(x = 1990, y = 4.5, xend = 1997, yend = 5),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = -0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 1990, y = 4.3, label = "including 2005 Kashmir earthquake", size = 2.5, family = style$family) +
+        geom_curve(aes(x = 1975, y = 2, xend = 1973, yend = 2.8),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = 0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 1975, y = 1.8, label = "including 1970 East Pakistan cyclone", size = 2.5, family = style$family) +
+        geom_curve(aes(x = 2000, y = 1.8, xend = 2006, yend = 2.6),
+                               colour = "#555555",
+                               size=0.3,
+                               curvature = -0.2,
+                               arrow = arrow(length = unit(0.03, "npc"))) +
+        annotate("text", x = 2000, y = 1.6, label = "including 2010 floods", size = 2.5, family = style$family) +
+        style$theme() +
+        theme(
+          axis.title.x = element_text(vjust = -5),
+          axis.title.y = element_text(angle = 90, vjust = 0, margin = margin(r = 15)),
+          axis.text.x = element_text(angle = 0, vjust = 2), 
+          legend.title = element_text(),
+          legend.box.just = "center",
+          legend.position = "right"
+        )
+    },
+    aspect_ratio = 1,
+    title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
+    subtitle = "Decadal sum: Number of events and economic damages (% GDP) from natural disasters",
+    note = "Note: Decadal figures are measured as the annual sum over the subsequent ten-year period.",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_natural_disasters_var3()
+
+figure_save_draft_png(fig_ch1_natural_disasters_var3(), style_SAR_CCDR, "../png/fig_ch1_natural_disasters_var3.png", height=4.1, width=5.5)
+
+```
 
 
 
@@ -979,7 +1451,7 @@ fig_ch1_natural_disaster_frequency_var1 <- function() {
     "Meteorological" = style$colors$purple,   
     "Geophysical" = style$colors$red,   
     "Biological" = style$colors$orange,   
-    "Climatological" = style$colors$navy)
+    "Climatological" = style$colors$navy.light)
   
   figure(
     data = df,
@@ -1166,7 +1638,7 @@ fig_ch1_natural_disaster_deaths_var1 <- function() {
     "Meteorological" = style$colors$purple,   
     "Geophysical" = style$colors$red,   
     "Biological" = style$colors$orange,   
-    "Climatological" = style$colors$navy)
+    "Climatological" = style$colors$navy.light)
   
   figure(
     data = df,
@@ -1351,7 +1823,7 @@ fig_ch1_natural_disaster_damage_var1 <- function() {
     "Meteorological" = style$colors$purple,   
     "Geophysical" = style$colors$red,   
     "Biological" = style$colors$orange,   
-    "Climatological" = style$colors$navy)
+    "Climatological" = style$colors$navy.light)
   
   figure(
     data = df,
@@ -1408,6 +1880,102 @@ fig_ch1_natural_disaster_damage_var1()
 
 figure_save_draft_png(fig_ch1_natural_disaster_damage_var1(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_damage_var1.png", height=5.1, width=5.5)
 ```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_natural_disaster_affected_var1 <- function() {
+  
+  # data
+  df <- read_excel("../data/emdat_public_2022_03_14_Pakistan.xlsx", skip=6) %>%
+    filter(Year >= 1990 & Year <= 2021) %>%
+    select(`Disaster Subgroup`, `Disaster Type`, `Total Affected`, `Total Damages, Adjusted ('000 US$)`) %>% 
+    rename(category = `Disaster Subgroup`) %>%
+    rename(type = `Disaster Type`)
+  
+  df.category <- df %>%
+    group_by(category) %>%
+    summarise(category_frequency = n(),
+              category_affected = sum(`Total Affected`, na.rm=TRUE),
+              category_damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE)) %>%
+    mutate(percentage_frequency =  100 *category_frequency/sum(category_frequency, na.rm=TRUE)) %>%
+    mutate(percentage_affected =  100 *category_affected/sum(category_affected, na.rm=TRUE)) %>%
+    mutate(percentage_damage =  100 *category_damage/sum(category_damage, na.rm=TRUE)) 
+
+  df.type <- df %>%
+    group_by(category, type) %>%
+    summarise(frequency = n(),
+              affected = sum(`Total Affected`, na.rm=TRUE),
+              damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE),
+              .groups = 'drop') %>%
+    inner_join(df.category, by="category") 
+  
+  # chart
+  color_list <- c(
+    "Hydrological" = style$colors$blue, 
+    "Meteorological" = style$colors$purple,   
+    "Geophysical" = style$colors$red,   
+    "Biological" = style$colors$orange,   
+    "Climatological" = style$colors$navy.light)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.category <- df.category %>%
+        arrange(desc(category_affected))
+      df.category$ymax <- cumsum(df.category$category_affected)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      df.category$label <- paste0(df.category$category, "\n(", prettyNum(df.category$category_affected,big.mark=","), ")")
+      df.category$label <- c("Hydrological\n(65,812,788)", "Geophysical\n(7,404,106)", "Climatological\n(6,880,912)", "Meteorological\n(3,274,667)", "")
+      df.category$vjust <- c(0.5, 0.5, 0.5, -0.3, 0.5)
+      
+      df.type <- df.type %>%
+        arrange(desc(category_affected), desc(affected))
+      df.type$ymax <- cumsum(df.type$affected)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180,
+                              90 - df.type$labelPosition/max(df.type$ymax)*360,
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type, "\n(", prettyNum(df.type$affected,big.mark=","), ")")
+      df.type$label <- c("Flood\n(65,778,734)", "Landslide\n(34,054)", "Earthquake\n(7,404,106)", "", "Drought\n(6,880,912)", "Storm\n(3,194,093)", "Extreme temperature\n(80,574)", "", "")
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1, 1)
+
+  
+      ggplot() +
+      geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+      geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+      geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3, box.padding = unit(0, "lines"), 
+                      show.legend = F) +
+      geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, show.legend = F) + 
+      coord_polar(theta="y") +
+      xlim(c(1, 5.1)) +
+      scale_fill_manual(values = color_list)+
+      annotate(geom = 'text', x = 1, y = 0, label = "Affected") +
+      style$theme() +
+      theme(legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank(),
+            plot.margin = margin(-5,1,-15, unit = "mm"))
+    },
+    aspect_ratio = 1,
+    title = "Natural disasters in recent years",
+    subtitle = "Total affected from natural disasters by type, 1990-2021",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_natural_disaster_affected_var1()
+
+figure_save_draft_png(fig_ch1_natural_disaster_affected_var1(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_affected_var1.png", height=5.1, width=5.5)
+```
+
 
 
 
@@ -1641,7 +2209,7 @@ fig_ch1_recent_natural_disaster_var1 <- function() {
     "Meteorological" = style$colors$purple,   
     "Geophysical" = style$colors$red,   
     "Biological" = style$colors$orange,   
-    "Climatological" = style$colors$navy)
+    "Climatological" = style$colors$navy.light)
   
   figure(
     data = df,
@@ -1798,6 +2366,258 @@ fig_ch1_recent_natural_disaster_var1()
 figure_save_draft_png(fig_ch1_recent_natural_disaster_var1(), style_SAR_CCDR, "../png/fig_ch1_recent_natural_disaster_var1.png", height=5.1, width=12.5)
 
 ```
+
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=8.1, fig.width=8.5, out.width=800, dpi=200}
+
+fig_ch1_recent_natural_disaster_var2 <- function() {
+
+  # data
+  df <- read_excel("../data/emdat_public_2022_03_14_Pakistan.xlsx", skip=6) %>%
+    filter(Year >= 1990 & Year <= 2021) %>%
+    select(`Disaster Subgroup`, `Disaster Type`, `Total Deaths`, `Total Damages, Adjusted ('000 US$)`, `Total Affected`) %>% 
+    rename(category = `Disaster Subgroup`) %>%
+    rename(type = `Disaster Type`)
+  
+  df.category <- df %>%
+    group_by(category) %>%
+    summarise(category_frequency = n(),
+              category_deaths = sum(`Total Deaths`, na.rm=TRUE),
+              category_damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE),
+              category_affected = sum(`Total Affected`, na.rm=TRUE)) %>%
+    mutate(percentage_frequency =  100 *category_frequency/sum(category_frequency, na.rm=TRUE)) %>%
+    mutate(percentage_deaths =  100 *category_deaths/sum(category_deaths, na.rm=TRUE)) %>%
+    mutate(percentage_damage =  100 *category_damage/sum(category_damage, na.rm=TRUE)) %>%
+    mutate(percentage_affected =  100 *category_affected/sum(category_affected, na.rm=TRUE)) 
+
+  df.type <- df %>%
+    group_by(category, type) %>%
+    summarise(frequency = n(),
+              deaths = sum(`Total Deaths`, na.rm=TRUE),
+              damage = sum(`Total Damages, Adjusted ('000 US$)`, na.rm=TRUE),
+              affected = sum(`Total Affected`, na.rm=TRUE),
+              .groups = 'drop') %>%
+    inner_join(df.category, by="category") 
+  
+  # chart
+  color_list <- c(
+    "Hydrological" = style$colors$blue, 
+    "Meteorological" = style$colors$purple,   
+    "Geophysical" = style$colors$red,   
+    "Biological" = style$colors$orange,   
+    "Climatological" = style$colors$navy.light)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      # frequency
+      df.category <- df.category %>%
+        arrange(desc(category_frequency))
+      df.category$ymax <- cumsum(df.category$category_frequency)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      df.category$labelPosition <- c(55.0, 128.5, 159.5, 179.0, 187.0)
+      df.category$label <- paste0(df.category$category, "\n(", df.category$category_frequency, ")")
+      df.category$label <- c("Hydrological\n(110)", "Meteorological\n(37)", "Geophysical\n(25)", "Biological\n(14)", "")
+      df.category$vjust <- c(0.5, 0.5, 0.5, 0.9, 0.0)
+      
+      df.type <- df.type %>%
+        arrange(desc(category_frequency), desc(frequency))
+      df.type$ymax <- cumsum(df.type$frequency)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180, 
+                              90 - df.type$labelPosition/max(df.type$ymax)*360, 
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type, " (", df.type$frequency, ")")
+      df.type$label <- c("Flood (90)", "Landslide (20)", "Storm (22)", "Extreme temperature (15)", "Earthquake (24)", "Mass movement (dry) (1)", "Epidemic (12)", "Insect infestation (2)", "")
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1, 1)
+  
+      p.frequency <- ggplot() +
+        geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+        geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+        geom_text(data = df.category, x=2.8, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3, lineheight = .9) +
+        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+        coord_polar(theta="y") +
+        xlim(c(1, 5.1)) +
+        scale_fill_manual(values = color_list)+
+        annotate(geom = 'text', x = 1, y = 0, label = "Frequency", size=3.5) +
+        labs(subtitle = "Frequency of natural disasters by type")+
+        style$theme() +
+        theme(legend.position = "none",
+              plot.subtitle=element_text(hjust=0.5),
+              panel.grid.major.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_blank(),
+              axis.text.x = element_blank(),
+              axis.text.y = element_blank(),
+              plot.margin = margin(0,-5,0,-5, unit = "mm"))
+      
+      # deaths
+      df.category <- df.category %>%
+        arrange(desc(category_deaths))
+      df.category$ymax <- cumsum(df.category$category_deaths)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      # df.category$labelPosition <- c(37202.5, 76007.0, 85776.0, 85784.5, 85764.5)
+      df.category$label <- paste0(df.category$category, "\n(", prettyNum(df.category$category_deaths,big.mark=","), ")")
+      df.category$label <- c("Geophysical\n(74,818)", "Hydrological\n(12,679)", "Meteorological\n(4,352)", "", "")
+      df.category$vjust <- c(0.5, 0.5, 0.2, 0.5, 0.5)
+      
+      df.type <- df.type %>%
+        arrange(desc(category_deaths), desc(deaths))
+      df.type$ymax <- cumsum(df.type$deaths)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180, 
+                              90 - df.type$labelPosition/max(df.type$ymax)*360, 
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type, "\n(", prettyNum(df.type$deaths,big.mark=","), ")")
+      df.type$label <- c("Earthquake\n(74,805)", "Mass movement (dry)\n(13)", "Flood\n(12,017)", "Landslide\n(662)", "Extreme temperature\n(2,759)", "Storm\n(1,593)", "", "", "")
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1, 1)
+  
+      p.deaths <- ggplot() +
+        geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+        geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+        geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3, lineheight = .9) +
+        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+        coord_polar(theta="y") +
+        xlim(c(1, 5.2)) +
+        scale_fill_manual(values = color_list)+
+        annotate(geom = 'text', x = 1, y = 0, label = "Deaths", size=3.5) +
+        labs(subtitle = "Total deaths from natural disasters by type")+
+        style$theme() +
+        theme(legend.position = "none",
+              plot.subtitle=element_text(hjust=0.5),
+              panel.grid.major.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_blank(),
+              axis.text.x = element_blank(),
+              axis.text.y = element_blank(),
+              plot.margin = margin(0,-5,-15,-5, unit = "mm"))
+      
+      # damage
+      df.category <- df.category %>%
+        arrange(desc(category_damage))
+      df.category$ymax <- cumsum(df.category$category_damage)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      df.category$label <- paste0(df.category$category, "\n(", prettyNum(df.category$category_damage,big.mark=","), ")")
+      df.category$label <- c("Hydrological\n(26,604,257)", "Geophysical\n(7,384,722)", "Meteorological\n(2,254,936)", "", "")
+      
+      df.type <- df.type %>%
+        arrange(desc(category_damage), desc(damage))
+      df.type$ymax <- cumsum(df.type$damage)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180,
+                              90 - df.type$labelPosition/max(df.type$ymax)*360,
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type, "\n(", prettyNum(df.type$damage,big.mark=","), ")")
+      df.type$label <- c("Flood\n(26,581,889)", "Landslide\n(22,368)", "Earthquake\n(7,384,722)", "", "Storm\n(2,234,333)", "", "", "", "")
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1, 1)
+
+      p.damage <- ggplot() +
+        geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+        geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+        geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, family=style$family), size=3, lineheight = .9, box.padding = unit(0, "lines"), 
+                  show.legend = F) +
+        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+        coord_polar(theta="y") +
+        xlim(c(1, 5.1)) +
+        scale_fill_manual(values = color_list)+
+        annotate(geom = 'text', x = 1, y = 0, label = "Damage", size=3.5) +
+        labs(subtitle = "Total damages from natural disasters by type, adjusted ('000 US$)")+
+        style$theme() +
+        theme(legend.position = "none",
+              plot.subtitle=element_text(hjust=0.5),
+              panel.grid.major.x = element_blank(),
+              panel.grid.major.y = element_blank(),
+              axis.text = element_blank(),
+              axis.text.x = element_blank(),
+              axis.text.y = element_blank(),
+              plot.margin = margin(0,-5,0,-5, unit = "mm"))
+      
+      # affected
+      df.category <- df.category %>%
+        arrange(desc(category_affected))
+      df.category$ymax <- cumsum(df.category$category_affected)
+      df.category$ymin <- c(0, head(df.category$ymax, n=-1))
+      df.category$labelPosition <- (df.category$ymax + df.category$ymin) / 2
+      df.category$label <- paste0(df.category$category, "\n(", prettyNum(df.category$category_affected,big.mark=","), ")")
+      df.category$label <- c("Hydrological\n(65,812,788)", "Geophysical\n(7,404,106)", "Climatological\n(6,880,912)", "Meteorological\n(3,274,667)", "")
+      df.category$vjust <- c(0.5, 0.5, 0.5, -0.3, 0.5)
+      
+      df.type <- df.type %>%
+        arrange(desc(category_affected), desc(affected))
+      df.type$ymax <- cumsum(df.type$affected)
+      df.type$ymin <- c(0, head(df.type$ymax, n=-1))
+      df.type$labelPosition <- (df.type$ymax + df.type$ymin) / 2
+      df.type$angle <- ifelse(df.type$labelPosition/max(df.type$ymax)*360 < 180,
+                              90 - df.type$labelPosition/max(df.type$ymax)*360,
+                              df.type$labelPosition/max(df.type$ymax)*360*-1 + 270)
+      df.type$label <- paste0(df.type$type, "\n(", prettyNum(df.type$affected,big.mark=","), ")")
+      df.type$label <- c("Flood\n(65,778,734)", "Landslide\n(34,054)", "Earthquake\n(7,404,106)", "", "Drought\n(6,880,912)", "Storm\n(3,194,093)", "Extreme temperature\n(80,574)", "", "")
+      df.type$hjust <- c(0, 1, 1, 1, 1, 1, 1, 1, 1)
+  
+      p.affected <- ggplot() +
+      geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
+      geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
+      geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3, lineheight = .9, box.padding = unit(0, "lines"), 
+                      show.legend = F) +
+      geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+      coord_polar(theta="y") +
+      xlim(c(1, 5.1)) +
+      scale_fill_manual(values = color_list)+
+      annotate(geom = 'text', x = 1, y = 0, label = "Affected", size=3.5) +
+      labs(subtitle = "Total affected from natural disasters by type") +
+      style$theme() +
+      theme(legend.position = "none",
+            plot.subtitle=element_text(hjust=0.5),
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank(),
+            plot.margin = margin(0,1,-15, unit = "mm"))
+      
+      # merge charts
+      pt.frequency <- ggplotGrob(p.frequency)
+      pt.deaths <- ggplotGrob(p.deaths)
+      pt.damage <- ggplotGrob(p.damage)
+      pt.affected <- ggplotGrob(p.affected)
+      
+      mat <- matrix(list(pt.frequency, pt.deaths, pt.damage, pt.affected), nrow = 2)
+  
+      chart <- gtable_matrix(
+        "chart", 
+        mat, 
+        unit(c(1, 1), "null"), 
+        unit(c(1, 1), "null"))
+      
+      chart$theme <- style$theme() +
+        theme(plot.margin = margin(0,0,0,0, unit = "mm"))
+      
+      chart
+      
+    },
+    aspect_ratio = 1,
+    title = "Natural disasters in recent years, 1990-2021",
+    source = "Source: The international disasters database"
+  )
+}
+
+fig_ch1_recent_natural_disaster_var2()
+
+figure_save_draft_png(fig_ch1_recent_natural_disaster_var2(), style_SAR_CCDR, "../png/fig_ch1_recent_natural_disaster_var2.png", height=8.1, width=8.5)
+
+```
+
+
 
 
 
@@ -2073,6 +2893,119 @@ fig_ch1_GHG_by_sector_pie()
 figure_save_draft_png(fig_ch1_GHG_by_sector_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_sector_pie.png", height=5.1, width=5.5)
 ```
 
+
+
+Data source: 
+
+* https://www.climatewatchdata.org/ghg-emissions?breakBy=sector&chartType=area&end_year=2018&regions=PAK&sectors=total-including-lucf&start_year=1990
+
+
+* https://www.climatewatchdata.org/ghg-emissions?breakBy=sector&chartType=area&end_year=2018&regions=PAK&sectors=building%2Celectricity-heat%2Cfugitive-emissions%2Cmanufacturing-construction%2Cother-fuel-combustion%2Ctransportation&start_year=1990
+
+Source: CAIT
+
+Country: Pakistan
+
+Sector: Total including LUCF, Sub-catagories of Energy
+
+Gases: All GHG
+
+Show by: Sectors
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.5, fig.width=5.5, out.width=800, dpi=200}
+
+fig_ch1_GHG_by_sector_pie_var1 <- function() {
+  
+  # data
+  df <- read_csv("../data/ghg-emissions_by_sector.csv")
+  df <- head(df, - 2)
+  df <- df %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    select(Sector, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year)) %>%
+    group_by(Year) %>%
+    mutate(percentage = 100 *Emissions/sum(Emissions, na.rm=TRUE)) %>%
+    filter(Year == 2018) %>%
+    arrange(desc(percentage))
+  
+  df$ymax <- cumsum(df$percentage)
+  df$ymin <- c(0, head(df$ymax, n=-1))
+  df$labelPosition <- (df$ymax + df$ymin) / 2
+  df$label <- paste0(df$Sector, "\n", round(df$percentage,1), "%")
+  df$label <- c("Energy\n48.1% ", "Agriculture\n42.5%", "Industrial\nProcesses\n5.7%", "Waste\n2.1%", "Land-Use Change and Forestry\n1.6%")
+  df$vjust <- c(0.5, 0.5, 0.85, 1, 0.0)
+  df$hjust <- c(2.5, 0.5, 0.5, 0.5, 0.5)
+  
+  energy_percentage <- df$percentage[1]
+  df_energy <- read_csv("../data/ghg-emissions_by_catagory_in_energy.csv")
+  df_energy <- head(df_energy, - 2)
+  df_energy <- df_energy %>%
+    gather(key="Year", value="Emissions", "2018":"1990") %>%
+    select(Sector, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year)) %>%
+    mutate(Emissions = as.numeric(Emissions)) %>%
+    group_by(Year) %>%
+    mutate(percentage = energy_percentage*Emissions/sum(Emissions, na.rm=TRUE)) %>%
+    filter(Year == 2018) %>%
+    arrange(desc(percentage))
+  
+  df_energy$ymax <- cumsum(df_energy$percentage)
+  df_energy$ymin <- c(0, head(df_energy$ymax, n=-1))
+  df_energy$labelPosition <- (df_energy$ymax + df_energy$ymin) / 2
+  df_energy$label <- paste0(df_energy$Sector, "\n", round(df_energy$percentage,1), "%")
+  df_energy$angle <- ifelse(df_energy$labelPosition/max(df_energy$ymax)*360*energy_percentage/100 < 180,
+                              90 - df_energy$labelPosition/max(df_energy$ymax)*360*energy_percentage/100,
+                              df_energy$labelPosition/max(df_energy$ymax)*360*energy_percentage/100*-1 + 270)
+  df_energy$hjust <- c(0,0,0,0,0,0)
+  
+  
+  # chart
+  color_list = c(
+    "Energy" = style$colors$blue,   
+    "Agriculture" = style$colors$orange,  
+    "Industrial Processes" = style$colors$navy, 
+    "Waste" = style$colors$purple,
+    "Land-Use Change and Forestry" = style$colors$red,
+    "Electricity/Heat" = "#05B2DC",   
+    "Transportation" = "#0497C7",  
+    "Manufacturing/Construction" = "#037BB1", 
+    "Building" = "#025F9B", 
+    "Fugitive Emissions" = "#004385",
+    "Other Fuel Combustion" = "#033860")
+    
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot() +
+      geom_rect(data=df, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector), color = "white", size=1) +
+      geom_rect(data=df_energy, aes(ymax=ymax, ymin=ymin, xmax=4.5, xmin=4, fill=Sector), color = "white", size=1, alpha = 0.4) +
+      geom_text(data=df, x=4.5, aes(y=labelPosition, label=label, vjust=vjust, hjust=hjust), size=2.5, family = style$family, lineheight = 1) +
+      geom_text(data = df_energy, x=4.6, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = 1, show.legend = F) + 
+      coord_polar(theta="y") +
+      xlim(c(2, 5.4)) +
+      scale_fill_manual(values = color_list) +
+      # theme_void() +
+      style$theme() +
+      theme(legend.position = "none",
+            panel.grid.major.x = element_blank(),
+            panel.grid.major.y = element_blank(),
+            axis.text = element_blank(),
+            axis.text.x = element_blank(),
+            axis.text.y = element_blank(),
+            plot.margin = margin(-10,1,1,1, unit = "mm"))
+    },
+    aspect_ratio = 1,
+    title = "Emissions are primarily from energy and agriculture, comprising 48% and 42% respectively, followed by Industrial Processes (6%), Waste (2.1%), and Land-Use Change and Forestry (1.6%).",
+    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 2018",
+    source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (2018)."
+  )
+}
+
+fig_ch1_GHG_by_sector_pie_var1()
+
+figure_save_draft_png(fig_ch1_GHG_by_sector_pie_var1(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_sector_pie_var1.png", height=5.5, width=5.5)
+```
 
 
 
