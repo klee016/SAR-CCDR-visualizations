@@ -56,13 +56,13 @@ style = style_SAR_CCDR()
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-## Economic growth and poverty
+### Pakistan's economic growth compared with South Asia and lower-middle-income group
 
 Data source: WDI
 
 Indicators: NY.GDP.PCAP.PP.CD
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=3.2, out.width=800, dpi=200}
 
 fig_ch1_economic_growth <- function() {
 
@@ -100,19 +100,28 @@ fig_ch1_economic_growth <- function() {
     },
     aspect_ratio = 1,
     # title = "Pakistan's economic growth compared with South Asia and lower-middle-income group",
-    subtitle = "GDP per capita, PPP (current international $), 1990 to 2020",
+    subtitle = "GDP per capita, PPP (current international $)",
     source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)"
   )
 }
 
 fig_ch1_economic_growth()
 
-figure_save_draft_png(fig_ch1_economic_growth(), style_SAR_CCDR, "../png/fig_ch1_economic_growth.png", height=3.1, width=5.5)
+figure_save_draft_png(fig_ch1_economic_growth(), style_SAR_CCDR, "../png/fig_ch1_economic_growth.png", height=2.6, width=3.2)
 
 ```
 
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's economic growth compared with South Asia and lower-middle-income group
+
+Data source: WDI
+
+Indicators: NY.GDP.PCAP.PP.CD
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=3.2, out.width=800, dpi=200}
 
 fig_ch1_economic_growth_var1 <- function() {
 
@@ -150,25 +159,29 @@ fig_ch1_economic_growth_var1 <- function() {
         style$theme()
     },
     aspect_ratio = 1,
-    title = "Pakistan's economic growth compared with South Asia and lower-middle-income group",
-    subtitle = "GDP per capita, PPP (current international $), 1990 to 2020",
+    # title = "Pakistan's economic growth compared with South Asia and lower-middle-income group",
+    subtitle = "GDP per capita, PPP (current international $)",
     source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD)"
   )
 }
 
 fig_ch1_economic_growth_var1()
 
-figure_save_draft_png(fig_ch1_economic_growth_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_var1.png", height=3.1, width=5.5)
+figure_save_draft_png(fig_ch1_economic_growth_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_var1.png", height=2.6, width=3.2)
 
 ```
 
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's poverty compared with South Asia and lower-middle-income group
+
 Data source: WDI
 
 Indicators: SI.POV.DDAY
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=3.2, out.width=800, dpi=200}
 
 fig_ch1_poverty <- function() {
 
@@ -206,28 +219,34 @@ fig_ch1_poverty <- function() {
             breaks = c(4.4, 12.8),
             labels = c("Pakistan", "Lower middle income")
           )) +
-        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2013, y = 35, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
         style$theme()
     },
     aspect_ratio = 1,
     # title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
-    subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)",
+    subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP)",
     source = "Source: World Development Indicators (SI.POV.DDAY)"
   )
 }
 
 fig_ch1_poverty()
 
-figure_save_draft_png(fig_ch1_poverty(), style_SAR_CCDR, "../png/fig_ch1_poverty.png", height=3.1, width=5.5)
+figure_save_draft_png(fig_ch1_poverty(), style_SAR_CCDR, "../png/fig_ch1_poverty.png", height=2.6, width=3.2)
 
 ```
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's poverty compared with South Asia and lower-middle-income group
 
 Data source: WDI
 
 Indicators: SI.POV.DDAY
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=3.2, out.width=800, dpi=200}
 
 fig_ch1_poverty_var1 <- function() {
 
@@ -266,32 +285,35 @@ fig_ch1_poverty_var1 <- function() {
             labels = c("Pakistan", "Lower middle income")
           ), 
           expand=c(0.1,0)) +
-        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2013, y = 35, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
         style$theme()
     },
     aspect_ratio = 1,
-    title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
-    subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)",
+    # title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
+    subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP)",
     source = "Source: World Development Indicators (SI.POV.DDAY)"
   )
 }
 
 fig_ch1_poverty_var1()
 
-figure_save_draft_png(fig_ch1_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_poverty_var1.png", height=3.1, width=5.5)
+figure_save_draft_png(fig_ch1_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_poverty_var1.png", height=2.6, width=3.2)
 
 ```
 
 
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's poverty compared with South Asia and lower-middle-income group
 
 Data source: WDI
 
 Indicators: SI.POV.LMIC
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=3.2, out.width=800, dpi=200}
 
 fig_ch1_poverty_var2 <- function() {
 
@@ -326,28 +348,38 @@ fig_ch1_poverty_var2 <- function() {
         scale_y_continuous(
           position="left",
           sec.axis = dup_axis(
-            breaks = c(36, 33),
+            breaks = c(38, 32),
             labels = c("Pakistan", "Lower middle income")
           ), 
           expand=c(0.1,0)) +
-        annotate("text", x = 2013, y = 70, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2013, y = 75, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
         style$theme()
     },
     aspect_ratio = 1,
     # title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
-    subtitle = "Poverty headcount ratio at $3.20 a day (2011 PPP) (% of population)",
+    subtitle = "Poverty headcount ratio at $3.20 a day (2011 PPP)",
     source = "Source: World Development Indicators (SI.POV.LMIC)"
   )
 }
 
 fig_ch1_poverty_var2()
 
-figure_save_draft_png(fig_ch1_poverty_var2(), style_SAR_CCDR, "../png/fig_ch1_poverty_var2.png", height=3.1, width=5.5)
+figure_save_draft_png(fig_ch1_poverty_var2(), style_SAR_CCDR, "../png/fig_ch1_poverty_var2.png", height=2.6, width=3.2)
 
 ```
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's poverty compared with South Asia and lower-middle-income group
+
+Data source: WDI
+
+Indicators: SI.POV.LMIC
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=3.2, out.width=800, dpi=200}
 
 fig_ch1_poverty_var3 <- function() {
 
@@ -382,34 +414,38 @@ fig_ch1_poverty_var3 <- function() {
         scale_y_continuous(
           position="left",
           sec.axis = dup_axis(
-            breaks = c(36, 33),
+            breaks = c(38, 32),
             labels = c("Pakistan", "Lower middle income")
           ), 
           expand=c(0.1,0)) +
-        annotate("text", x = 2013, y = 70, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2013, y = 75, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
         style$theme()
     },
     aspect_ratio = 1,
-    title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
-    subtitle = "Poverty headcount ratio at $3.20 a day (2011 PPP) (% of population)",
+    # title = "Pakistan's poverty compared with South Asia and lower-middle-income group",
+    subtitle = "Poverty headcount ratio at $3.20 a day (2011 PPP)",
     source = "Source: World Development Indicators (SI.POV.LMIC)."
   )
 }
 
 fig_ch1_poverty_var3()
 
-figure_save_draft_png(fig_ch1_poverty_var3(), style_SAR_CCDR, "../png/fig_ch1_poverty_var3.png", height=3.1, width=5.5)
+figure_save_draft_png(fig_ch1_poverty_var3(), style_SAR_CCDR, "../png/fig_ch1_poverty_var3.png", height=2.6, width=3.2)
 
 ```
 
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group
+
 Data source: WDI
 
 Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=8.2, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=6.5, out.width=800, dpi=200}
 
 fig_ch1_economic_growth_and_poverty <- function() {
 
@@ -468,9 +504,9 @@ fig_ch1_economic_growth_and_poverty <- function() {
             breaks = c(4.4, 12.8),
             labels = c("Pakistan", "Lower middle income")
           )) +
-        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2013, y = 35, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
-        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)")+
+        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP)")+
         style$theme()
       
       
@@ -488,19 +524,28 @@ fig_ch1_economic_growth_and_poverty <- function() {
       
     },
     aspect_ratio = 1,
-    title = "Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group",
+    # title = "Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group",
     source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD, SI.POV.DDAY)."
   )
 }
 
 fig_ch1_economic_growth_and_poverty()
 
-figure_save_draft_png(fig_ch1_economic_growth_and_poverty(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty.png", height=3.1, width=8.2)
+figure_save_draft_png(fig_ch1_economic_growth_and_poverty(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty.png", height=2.6, width=6.5)
 
 ```
 
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=8.2, out.width=800, dpi=200}
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group
+
+Data source: WDI
+
+Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=6.5, out.width=800, dpi=200}
 
 fig_ch1_economic_growth_and_poverty_var1 <- function() {
 
@@ -561,9 +606,9 @@ fig_ch1_economic_growth_and_poverty_var1 <- function() {
             labels = c("Pakistan", "Lower middle income")
           ), 
           expand=c(0.1,0)) +
-        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2013, y = 35, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
-        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)")+
+        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP)")+
         style$theme()
       
       
@@ -581,27 +626,28 @@ fig_ch1_economic_growth_and_poverty_var1 <- function() {
       
     },
     aspect_ratio = 1,
-    title = "Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group",
+    # title = "Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group",
     source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD, SI.POV.DDAY)."
   )
 }
 
 fig_ch1_economic_growth_and_poverty_var1()
 
-figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty_var1.png", height=3.1, width=8.2)
+figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty_var1.png", height=2.6, width=6.5)
 
 ```
 
 
 
 
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-## Structure of population
+### Population Pyramids of Pakistan in 2020, 2030, and 2050
 
 Data source: https://population.un.org/wpp/Download/Probabilistic/Population/
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.7, fig.width=6.5, out.width=800, dpi=200}
 
 fig_ch1_population_pyramid <- function() {
   
@@ -658,7 +704,7 @@ fig_ch1_population_pyramid <- function() {
             panel.spacing = unit(0, "npc")
           )
     },
-    title = "Population Pyramids of Pakistan in 2020, 2030, and 2050",
+    # title = "Population Pyramids of Pakistan in 2020, 2030, and 2050",
     subtitle = "Population by age group and sex (million)",
     source = "Source: United Nations, Department of Economic and Social Affairs, Population Division. World Population Prospects: The 2019 Revision. (Medium variant)"
   )
@@ -666,7 +712,7 @@ fig_ch1_population_pyramid <- function() {
 
 fig_ch1_population_pyramid()
 
-figure_save_draft_png(fig_ch1_population_pyramid(), style_SAR_CCDR, "../png/fig_ch1_population_pyramid.png", height=4.1, width=8.5)
+figure_save_draft_png(fig_ch1_population_pyramid(), style_SAR_CCDR, "../png/fig_ch1_population_pyramid.png", height=3.7, width=6.5)
 
 ```
 
@@ -676,13 +722,13 @@ figure_save_draft_png(fig_ch1_population_pyramid(), style_SAR_CCDR, "../png/fig_
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-## Structure of economy
+### Structure of ecomony in Pakistan
 
 Data source: WDI
 
 Indicators: "NV.AGR.TOTL.ZS", "NV.IND.TOTL.ZS", "NV.SRV.TOTL.ZS", "SL.AGR.EMPL.ZS", "SL.IND.EMPL.ZS", "SL.SRV.EMPL.ZS", "SL.AGR.EMPL.MA.ZS", "SL.IND.EMPL.MA.ZS", "SL.SRV.EMPL.MA.ZS", "SL.AGR.EMPL.FE.ZS", "SL.IND.EMPL.FE.ZS", "SL.SRV.EMPL.FE.ZS"
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=6.5, out.width=800, dpi=200}
 
 fig_ch1_structure_of_economy <- function() {
   
@@ -747,7 +793,8 @@ df <- bind_rows(df.nv, df.empl, df.ma, df.fe) %>%
   mutate(year = as.numeric(year))
 
 # chart
-indicator_labels = c("value added (% of GDP)", "% of employment (modeled ILO estimate)", "% of male employment (modeled ILO estimate)", "% of female employment (modeled ILO estimate)")
+indicator_levels = c("value added (% of GDP)", "% of employment (modeled ILO estimate)", "% of male employment (modeled ILO estimate)", "% of female employment (modeled ILO estimate)")
+indicator_labels = c("value added (% of GDP)", "% of employment", "% of male employment", "% of female employment")
 figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
@@ -759,7 +806,7 @@ figure(
           Services = style$colors$spot.primary
         )) +
         # geom_text(aes(y = ypos, label = sector), color = "white", size=2) +
-        facet_grid(cols = vars(factor(indicator, levels=indicator_labels))) +
+        facet_grid(cols = vars(factor(indicator, levels=indicator_levels, labels=indicator_labels))) +
         # facet_grid(indicator ~ .) +
         # facet_grid(iso3c ~ ., labeller = as_labeller(str_wrap_lines(wbgref$regions$labels,3,force=TRUE))) + 
         coord_polar(theta = "y") +
@@ -772,21 +819,30 @@ figure(
           panel.spacing = unit(0, "npc")
         )
     },
-    title = "Structure of ecomony in Pakistan",
-    subtitle = "Industry value added (2020) and employment breakdown (2019)",
+    # title = "Structure of ecomony in Pakistan",
+    subtitle = "Industry value added (2020) and employment breakdown (modeled ILO estimate, 2019)",
     source = "Source: World Development Indicators"
   )
 }
 
 fig_ch1_structure_of_economy()
 
-figure_save_draft_png(fig_ch1_structure_of_economy(), style_SAR_CCDR, "../png/fig_ch1_structure_of_economy.png", height=4.1, width=8.5)
+figure_save_draft_png(fig_ch1_structure_of_economy(), style_SAR_CCDR, "../png/fig_ch1_structure_of_economy.png", height=3.1, width=6.5)
 ```
 
 
 
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.5, out.width=800, dpi=200}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Structure of ecomony in Pakistan
+
+Data source: WDI
+
+Indicators: "NV.AGR.TOTL.ZS", "NV.IND.TOTL.ZS", "NV.SRV.TOTL.ZS", "SL.AGR.EMPL.ZS", "SL.IND.EMPL.ZS", "SL.SRV.EMPL.ZS", "SL.AGR.EMPL.MA.ZS", "SL.IND.EMPL.MA.ZS", "SL.SRV.EMPL.MA.ZS", "SL.AGR.EMPL.FE.ZS", "SL.IND.EMPL.FE.ZS", "SL.SRV.EMPL.FE.ZS"
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=6.5, out.width=800, dpi=200}
 
 fig_ch1_structure_of_economy_var1 <- function() {
   
@@ -860,7 +916,8 @@ fig_ch1_structure_of_economy_var1 <- function() {
     Services = style$colors$blue
   )
   
-  indicator_labels = c("value added (% of GDP)", "% of employment (modeled ILO estimate)", "% of male employment (modeled ILO estimate)", "% of female employment (modeled ILO estimate)")
+  indicator_levels = c("value added (% of GDP)", "% of employment (modeled ILO estimate)", "% of male employment (modeled ILO estimate)", "% of female employment (modeled ILO estimate)")
+  indicator_labels = c("value added (% of GDP)", "% of employment", "% of male employment", "% of female employment")
   
   figure(
     data = df,
@@ -869,8 +926,8 @@ fig_ch1_structure_of_economy_var1 <- function() {
         geom_bar(width = 1, stat = "identity", color = "white", size=1) +
         scale_fill_manual(values = color_list) +
         # geom_text(aes(y = ypos, label = sector), color = "white", size=2) +
-        geom_text(aes(x= factor(1), y=pos, label = paste0(round(value), "%")), size=3, family=style$family) +
-        facet_grid(cols = vars(factor(indicator, levels=indicator_labels))) +
+        geom_text(aes(x= factor(1), y=pos, label = paste0(round(value), "%")), size=2.5, family=style$family) +
+        facet_grid(cols = vars(factor(indicator, levels=indicator_levels, labels=indicator_labels))) +
         # facet_grid(indicator ~ .) +
         # facet_grid(iso3c ~ ., labeller = as_labeller(str_wrap_lines(wbgref$regions$labels,3,force=TRUE))) + 
         coord_polar(theta = "y") +
@@ -885,8 +942,8 @@ fig_ch1_structure_of_economy_var1 <- function() {
           axis.text.y = element_blank()
         )
     },
-    title = "Structure of ecomony in Pakistan",
-    subtitle = "Industry value added (2020) and employment breakdown (2019)",
+    # title = "Structure of ecomony in Pakistan",
+    subtitle = "Industry value added (2020) and employment breakdown (modeled ILO estimate, 2019)",
     note = "Note: The value added shares presented in the World Development Indicators for agriculture, industry, and services may not always add up to a hundred percent due to financial intermediary services indirectly measured (FISIM) and net indirect taxes.",
     source = "Source: World Development Indicators"
   )
@@ -894,7 +951,7 @@ fig_ch1_structure_of_economy_var1 <- function() {
 
 fig_ch1_structure_of_economy_var1()
 
-figure_save_draft_png(fig_ch1_structure_of_economy_var1(), style_SAR_CCDR, "../png/fig_ch1_structure_of_economy_var1.png", height=4.1, width=8.5)
+figure_save_draft_png(fig_ch1_structure_of_economy_var1(), style_SAR_CCDR, "../png/fig_ch1_structure_of_economy_var1.png", height=3.1, width=6.5)
 ```
 
 
@@ -902,11 +959,11 @@ figure_save_draft_png(fig_ch1_structure_of_economy_var1(), style_SAR_CCDR, "../p
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-## Total energy supply (TES)
+### Total energy supply (TES)
 
 Data source: https://www.iea.org/data-and-statistics/data-browser/?country=PAKISTAN&fuel=Energy%20supply&indicator=TESbySource
 
-```{r, echo=FALSE, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=6.5, out.width=800, dpi=200}
+```{r, echo=FALSE, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
 
 fig_ch1_TES_share_by_source <- function() {
   
@@ -944,7 +1001,7 @@ fig_ch1_TES_share_by_source <- function() {
         scale_fill_manual(values=color_list)
       },
       aspect_ratio = 1.5,
-      title = paste0("Biofuels and waste provide 33% of total energy supply, followed by natural gas, oil, and coal."),
+      # title = paste0("Biofuels and waste provide 33% of total energy supply, followed by natural gas, oil, and coal."),
       subtitle = "Total energy supply (TES) by source (%), 1990-2019",
       note = "Note: TES is made up of production + imports - exports - international marine bunkers - international aviation bunkers ± stock changes.",
       source = "Source: IEA World Energy Balances https://www.iea.org/data-and-statistics/data-product/world-energy-statistics-and-balances"
@@ -953,7 +1010,7 @@ fig_ch1_TES_share_by_source <- function() {
 
 fig_ch1_TES_share_by_source()
 
-figure_save_draft_png(fig_ch1_TES_share_by_source(), style_SAR_CCDR, "../png/fig_ch1_TES_share_by_source.png", height=4.1, width=6.5)
+figure_save_draft_png(fig_ch1_TES_share_by_source(), style_SAR_CCDR, "../png/fig_ch1_TES_share_by_source.png", height=3.1, width=5.5)
 
 ```
 
@@ -963,7 +1020,7 @@ figure_save_draft_png(fig_ch1_TES_share_by_source(), style_SAR_CCDR, "../png/fig
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-## Natural disasters
+### Number of deaths and economic damages (% GDP) from natural disasters
 
 Data source: https://ourworldindata.org/natural-disasters
 
@@ -1040,7 +1097,7 @@ fig_ch1_natural_disasters <- function() {
         )
     },
     aspect_ratio = 1,
-    title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
+    # title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
     subtitle = "Decadal average: Number of deaths and economic damages (% GDP) from natural disasters",
     note = "Note: Decadal figures are measured as the annual average over the subsequent ten-year period.",
     source = "Source: Our World in Data."
@@ -1055,7 +1112,12 @@ figure_save_draft_png(fig_ch1_natural_disasters(), style_SAR_CCDR, "../png/fig_c
 
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Number of deaths and economic damages (% GDP) from natural disasters
+
 Data source: https://public.emdat.be/data
+
 Variables: Deaths and economic damages
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
@@ -1130,7 +1192,7 @@ fig_ch1_natural_disasters_var1 <- function() {
         )
     },
     aspect_ratio = 1,
-    title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
+    # title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
     subtitle = "Decadal sum: Number of deaths and economic damages (% GDP) from natural disasters",
     note = "Note: Decadal figures are measured as the annual sum over the subsequent ten-year period.",
     source = "Source: The international disasters database"
@@ -1144,7 +1206,13 @@ figure_save_draft_png(fig_ch1_natural_disasters_var1(), style_SAR_CCDR, "../png/
 ```
 
 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Number of people affected and economic damages (% GDP) from natural disasters
+
 Data source: https://public.emdat.be/data
+
 Variables: Affected and economic damages
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
@@ -1219,7 +1287,7 @@ fig_ch1_natural_disasters_var2 <- function() {
         )
     },
     aspect_ratio = 1,
-    title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
+    # title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
     subtitle = "Decadal sum: Number of people affected and economic damages (% GDP) from natural disasters",
     note = "Note: Decadal figures are measured as the annual sum over the subsequent ten-year period.",
     source = "Source: The international disasters database"
@@ -1234,7 +1302,14 @@ figure_save_draft_png(fig_ch1_natural_disasters_var2(), style_SAR_CCDR, "../png/
 
 
 
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Number of events and economic damages (% GDP) from natural disasters
+
 Data source: https://public.emdat.be/data
+
 Variables: Frequency and economic damages
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=5.5, out.width=800, dpi=200}
@@ -1309,7 +1384,7 @@ fig_ch1_natural_disasters_var3 <- function() {
         )
     },
     aspect_ratio = 1,
-    title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
+    # title = "Floods and earthquakes are the most damaging natural disasters in Pakistan.",
     subtitle = "Decadal sum: Number of events and economic damages (% GDP) from natural disasters",
     note = "Note: Decadal figures are measured as the annual sum over the subsequent ten-year period.",
     source = "Source: The international disasters database"
@@ -1324,7 +1399,13 @@ figure_save_draft_png(fig_ch1_natural_disasters_var3(), style_SAR_CCDR, "../png/
 
 
 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Natural disasters in recent years
+
 Data source: https://public.emdat.be/data
+
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1405,7 +1486,7 @@ fig_ch1_natural_disaster_frequency <- function() {
             axis.text.y = element_blank())
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
+    # title = "Natural disasters in recent years",
     subtitle = "Frequency of natural disasters by type, 2000-2022",
     source = "Source: The international disasters database"
   )
@@ -1416,6 +1497,10 @@ fig_ch1_natural_disaster_frequency()
 figure_save_draft_png(fig_ch1_natural_disaster_frequency(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_frequency.png", height=5.1, width=5.5)
 ```
 
+
+### Natural disasters in recent years
+
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1498,7 +1583,7 @@ fig_ch1_natural_disaster_frequency_var1 <- function() {
             plot.margin = margin(-5,1,-15,1, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
+    # title = "Natural disasters in recent years",
     subtitle = "Frequency of natural disasters by type, 1990-2021",
     source = "Source: The international disasters database"
   )
@@ -1510,7 +1595,9 @@ figure_save_draft_png(fig_ch1_natural_disaster_frequency_var1(), style_SAR_CCDR,
 ```
 
 
+### Natural disasters in recent years
 
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1592,7 +1679,7 @@ fig_ch1_natural_disaster_deaths <- function() {
             axis.text.y = element_blank())
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
+    # title = "Natural disasters in recent years",
     subtitle = "Total deaths from natural disasters by type, 2000-2022",
     source = "Source: The international disasters database"
   )
@@ -1603,6 +1690,10 @@ fig_ch1_natural_disaster_deaths()
 figure_save_draft_png(fig_ch1_natural_disaster_deaths(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_deaths.png", height=5.1, width=5.5)
 ```
 
+
+### Natural disasters in recent years
+
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1686,7 +1777,7 @@ fig_ch1_natural_disaster_deaths_var1 <- function() {
             plot.margin = margin(-5,1,-15, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
+    # title = "Natural disasters in recent years",
     subtitle = "Total deaths from natural disasters by type, 1990-2021",
     source = "Source: The international disasters database"
   )
@@ -1698,6 +1789,9 @@ figure_save_draft_png(fig_ch1_natural_disaster_deaths_var1(), style_SAR_CCDR, ".
 ```
 
 
+### Natural disasters in recent years
+
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1776,7 +1870,7 @@ fig_ch1_natural_disaster_damage <- function() {
             axis.text.y = element_blank())
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
+    # title = "Natural disasters in recent years",
     subtitle = "Total damages from natural disasters by type, Adjusted ('000 US$), 2000-2022",
     source = "Source: The international disasters database"
   )
@@ -1787,7 +1881,9 @@ fig_ch1_natural_disaster_damage()
 figure_save_draft_png(fig_ch1_natural_disaster_damage(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_damage.png", height=5.1, width=5.5)
 ```
 
+### Natural disasters in recent years
 
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1870,7 +1966,7 @@ fig_ch1_natural_disaster_damage_var1 <- function() {
             plot.margin = margin(-5,1,-15, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
+    # title = "Natural disasters in recent years",
     subtitle = "Total damages from natural disasters by type, Adjusted ('000 US$), 1990-2021",
     source = "Source: The international disasters database"
   )
@@ -1882,6 +1978,9 @@ figure_save_draft_png(fig_ch1_natural_disaster_damage_var1(), style_SAR_CCDR, ".
 ```
 
 
+### Natural disasters in recent years
+
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1965,7 +2064,7 @@ fig_ch1_natural_disaster_affected_var1 <- function() {
             plot.margin = margin(-5,1,-15, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
+    # title = "Natural disasters in recent years",
     subtitle = "Total affected from natural disasters by type, 1990-2021",
     source = "Source: The international disasters database"
   )
@@ -1977,7 +2076,9 @@ figure_save_draft_png(fig_ch1_natural_disaster_affected_var1(), style_SAR_CCDR, 
 ```
 
 
+### Natural disasters in recent years, 2000-2022
 
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=13.5, out.width=800, dpi=200}
 
@@ -2163,7 +2264,7 @@ fig_ch1_recent_natural_disaster <- function() {
       
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years, 2000-2022",
+    # title = "Natural disasters in recent years, 2000-2022",
     source = "Source: The international disasters database"
   )
 }
@@ -2173,6 +2274,12 @@ fig_ch1_recent_natural_disaster()
 figure_save_draft_png(fig_ch1_recent_natural_disaster(), style_SAR_CCDR, "../png/fig_ch1_recent_natural_disaster.png", height=5.1, width=13.5)
 
 ```
+
+
+
+### Natural disasters in recent years, 1990-2021
+
+Data source: https://public.emdat.be/data
 
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=12.5, out.width=800, dpi=200}
@@ -2255,7 +2362,7 @@ fig_ch1_recent_natural_disaster_var1 <- function() {
               axis.text = element_blank(),
               axis.text.x = element_blank(),
               axis.text.y = element_blank(),
-              plot.margin = margin(-5,-5,-15,-5, unit = "mm"))
+              plot.margin = margin(-2,-5,-15,-5, unit = "mm"))
       
       # deaths
       df.category <- df.category %>%
@@ -2338,7 +2445,7 @@ fig_ch1_recent_natural_disaster_var1 <- function() {
               axis.text = element_blank(),
               axis.text.x = element_blank(),
               axis.text.y = element_blank(),
-              plot.margin = margin(-5,-5,-15,-5, unit = "mm"))
+              plot.margin = margin(-2,-5,-15,-5, unit = "mm"))
       
       pt.frequency <- ggplotGrob(p.frequency)
       pt.deaths <- ggplotGrob(p.deaths)
@@ -2356,7 +2463,7 @@ fig_ch1_recent_natural_disaster_var1 <- function() {
       
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years, 1990-2021",
+    # title = "Natural disasters in recent years, 1990-2021",
     source = "Source: The international disasters database"
   )
 }
@@ -2368,10 +2475,12 @@ figure_save_draft_png(fig_ch1_recent_natural_disaster_var1(), style_SAR_CCDR, ".
 ```
 
 
+### Natural disasters in recent years, 1990-2021
+
+Data source: https://public.emdat.be/data
 
 
-
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=8.1, fig.width=8.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=6.8, fig.width=6.5, out.width=800, dpi=200}
 
 fig_ch1_recent_natural_disaster_var2 <- function() {
 
@@ -2423,7 +2532,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
       df.category$labelPosition <- c(55.0, 128.5, 159.5, 179.0, 187.0)
       df.category$label <- paste0(df.category$category, "\n(", df.category$category_frequency, ")")
       df.category$label <- c("Hydrological\n(110)", "Meteorological\n(37)", "Geophysical\n(25)", "Biological\n(14)", "")
-      df.category$vjust <- c(0.5, 0.5, 0.5, 0.9, 0.0)
+      df.category$vjust <- c(0.5, 0.5, 0.5, 0.2, 0.0)
       
       df.type <- df.type %>%
         arrange(desc(category_frequency), desc(frequency))
@@ -2440,12 +2549,12 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
       p.frequency <- ggplot() +
         geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
         geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
-        geom_text(data = df.category, x=2.8, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3, lineheight = .9) +
-        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+        geom_text(data = df.category, x=2.8, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=2, lineheight = .9) +
+        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=1.7, lineheight = .9, show.legend = F) + 
         coord_polar(theta="y") +
         xlim(c(1, 5.1)) +
         scale_fill_manual(values = color_list)+
-        annotate(geom = 'text', x = 1, y = 0, label = "Frequency", size=3.5) +
+        annotate(geom = 'text', x = 1, y = 0, label = "Frequency", size=3) +
         labs(subtitle = "Frequency of natural disasters by type")+
         style$theme() +
         theme(legend.position = "none",
@@ -2466,7 +2575,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
       # df.category$labelPosition <- c(37202.5, 76007.0, 85776.0, 85784.5, 85764.5)
       df.category$label <- paste0(df.category$category, "\n(", prettyNum(df.category$category_deaths,big.mark=","), ")")
       df.category$label <- c("Geophysical\n(74,818)", "Hydrological\n(12,679)", "Meteorological\n(4,352)", "", "")
-      df.category$vjust <- c(0.5, 0.5, 0.2, 0.5, 0.5)
+      df.category$vjust <- c(0.5, 0.5, 0.1, 0.5, 0.5)
       
       df.type <- df.type %>%
         arrange(desc(category_deaths), desc(deaths))
@@ -2483,12 +2592,12 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
       p.deaths <- ggplot() +
         geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
         geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
-        geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3, lineheight = .9) +
-        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+        geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=2, lineheight = .9) +
+        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=1.7, lineheight = .9, show.legend = F) + 
         coord_polar(theta="y") +
-        xlim(c(1, 5.2)) +
+        xlim(c(1, 5.1)) +
         scale_fill_manual(values = color_list)+
-        annotate(geom = 'text', x = 1, y = 0, label = "Deaths", size=3.5) +
+        annotate(geom = 'text', x = 1, y = 0, label = "Deaths", size=3) +
         labs(subtitle = "Total deaths from natural disasters by type")+
         style$theme() +
         theme(legend.position = "none",
@@ -2498,7 +2607,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
               axis.text = element_blank(),
               axis.text.x = element_blank(),
               axis.text.y = element_blank(),
-              plot.margin = margin(0,-5,-15,-5, unit = "mm"))
+              plot.margin = margin(5,-5,-10,-5, unit = "mm"))
       
       # damage
       df.category <- df.category %>%
@@ -2524,13 +2633,13 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
       p.damage <- ggplot() +
         geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
         geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
-        geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, family=style$family), size=3, lineheight = .9, box.padding = unit(0, "lines"), 
+        geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, family=style$family), size=2, lineheight = .9, box.padding = unit(0, "lines"), 
                   show.legend = F) +
-        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+        geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=1.7, lineheight = .9, show.legend = F) + 
         coord_polar(theta="y") +
         xlim(c(1, 5.1)) +
         scale_fill_manual(values = color_list)+
-        annotate(geom = 'text', x = 1, y = 0, label = "Damage", size=3.5) +
+        annotate(geom = 'text', x = 1, y = 0, label = "Damage", size=3) +
         labs(subtitle = "Total damages from natural disasters by type, adjusted ('000 US$)")+
         style$theme() +
         theme(legend.position = "none",
@@ -2567,13 +2676,13 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
       p.affected <- ggplot() +
       geom_rect(data=df.category, aes(ymax=ymax, ymin=ymin, xmax=3.5, xmin=2, fill=category), color = "white", size=1) +
       geom_rect(data=df.type, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3.5, fill=category), color = "white", size=1, alpha = 0.4) +
-      geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=3, lineheight = .9, box.padding = unit(0, "lines"), 
+      geom_text(data = df.category, x=2.6, aes(y = labelPosition, label = label, vjust=vjust, family=style$family), size=2, lineheight = .9, box.padding = unit(0, "lines"), 
                       show.legend = F) +
-      geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = .9, show.legend = F) + 
+      geom_text(data = df.type, x=4.1, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=1.7, lineheight = .9, show.legend = F) + 
       coord_polar(theta="y") +
       xlim(c(1, 5.1)) +
       scale_fill_manual(values = color_list)+
-      annotate(geom = 'text', x = 1, y = 0, label = "Affected", size=3.5) +
+      annotate(geom = 'text', x = 1, y = 0, label = "Affected", size=3) +
       labs(subtitle = "Total affected from natural disasters by type") +
       style$theme() +
       theme(legend.position = "none",
@@ -2583,7 +2692,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
             axis.text = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
-            plot.margin = margin(0,1,-15, unit = "mm"))
+            plot.margin = margin(5,-5,-10,-5, unit = "mm"))
       
       # merge charts
       pt.frequency <- ggplotGrob(p.frequency)
@@ -2606,16 +2715,18 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
       
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years, 1990-2021",
+    # title = "Natural disasters in recent years, 1990-2021",
     source = "Source: The international disasters database"
   )
 }
 
 fig_ch1_recent_natural_disaster_var2()
 
-figure_save_draft_png(fig_ch1_recent_natural_disaster_var2(), style_SAR_CCDR, "../png/fig_ch1_recent_natural_disaster_var2.png", height=8.1, width=8.5)
+figure_save_draft_png(fig_ch1_recent_natural_disaster_var2(), style_SAR_CCDR, "../png/fig_ch1_recent_natural_disaster_var2.png", height=6.8, width=6.5)
 
 ```
+
+
 
 
 
@@ -2623,56 +2734,153 @@ figure_save_draft_png(fig_ch1_recent_natural_disaster_var2(), style_SAR_CCDR, ".
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-## Projected temperatures
+### Total CO2 emissions
 
-Data source: https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections
+Data source: WDI
+
+Indicators: EN.ATM.CO2E.KT
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=6.5, out.width=800, dpi=200}
-fig_ch1_projected_annual_mean_temperature <- function() {
+fig_ch1_total_CO2_emissions <- function() {
   
   # data
-  df <- read_csv("../data/projected-mean-temperature.csv")
-  color_list <- c("#303036", "#7FB7BE", "#D3F3EE", "#DACC3E", "#BC2C1A", "#7D1538")
+  df <- wb_data(
+    indicator = c("EN.ATM.CO2E.KT"),
+    country = c("HIC", "UMC", "LMC", "LIC", "SAS", "PAK", "CHN", "IND", "USA", "CAN", "AUS", "EUU"),
+    start_date = 1960,
+    end_date = 2018
+  )
+
+  df <- df %>% 
+    mutate(num_def = EN.ATM.CO2E.KT) %>% 
+    select(iso3c, country, date, num_def)
 
   # chart
+  color_list = c(
+    "XD" = style$colors$neutral.dark, 
+    "XT" = style$colors$neutral.dark, 
+    "XN" = style$colors$neutral.dark, 
+    "XM" = style$colors$neutral.dark, 
+    "SAS" = style$colors$orange, 
+    "PAK" = style$colors$blue, 
+    "CHN" = style$colors$neutral.light,
+    "IND" = style$colors$neutral.light, 
+    "USA" = style$colors$neutral.light, 
+    "CAN" = style$colors$neutral.light, 
+    "AUS" = style$colors$neutral.light, 
+    "EUU" = style$colors$neutral.light)
+  
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
-      ggplot(df, aes(x=Year, y=Mean, color=Projection)) +
-      geom_line(aes(x=Year, y=Mean, color=Projection), size=2) +
-      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`, ymax=`10-90th Percentile Range (high)`, 
-                      fill=Projection),color="grey70",alpha=0.2) +
-      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
-      scale_y_continuous(
-        position="left",
-        sec.axis = dup_axis(
-          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6),
-          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
-        )) +
-      annotate("text", x = 2005, y = 22.3, label = "Hist. Ref. Per.\n1995-2014", size = 3, family = style$family, color=style$colors$text) +
-      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
-      geom_vline(xintercept = 2014, linetype = "dashed") +
-      style$theme()
+      ggplot(df, aes(x = date, y = num_def, color = iso3c)) +
+      geom_line(size = style$linesize) +
+      geom_line(data = df %>% filter(iso3c == "PAK"), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,0)) +
+        scale_y_continuous(
+          labels = millions(),
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(date == max(date)) %>% pull(num_def) %>% repel(gap=500000, force = TRUE),
+            labels = df %>% filter(date == max(date)) %>% pull(country)
+          )) +
+        scale_color_manual(values = color_list) +
+        style$theme()
     },
-    aspect_ratio = 1,
-    title = "Pakistan faces rates of warming considerably above the global average.",
-    subtitle = "Projected Annual Mean Temperature between 2015-2100 (°C) in Pakistan (Baseline: 1995-2014, Multi-Model Ensemble)",
-    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections."
+    aspect_ratio = 1.5,
+    # title = paste0("Carbon dioxide (CO2) emissions"),
+    subtitle = "Annual CO2 emissions (Gt)",
+    source = "Source: Carbon Dioxide Information Analysis Center. World Development Indicators (EN.ATM.CO2E.KT)."
   )
 }
 
-fig_ch1_projected_annual_mean_temperature()
+fig_ch1_total_CO2_emissions()
 
-figure_save_draft_png(fig_ch1_projected_annual_mean_temperature(), style_SAR_CCDR, "../png/fig_ch1_projected_annual_mean_temperature.png", height=4.1, width=6.5)
+figure_save_draft_png(fig_ch1_total_CO2_emissions(), style_SAR_CCDR, "../png/fig_ch1_total_CO2_emissions.png", height=4.1, width=6.5)
 ```
 
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Per capita CO2 emissions
+
+Data source: WDI
+
+Indicators: EN.ATM.CO2E.PC
+
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=6.5, out.width=800, dpi=200}
+fig_ch1_per_capita_CO2_emissions <- function() {
+  
+  # data
+  df <- wb_data(
+    indicator = c("EN.ATM.CO2E.PC"),
+    country = c("HIC", "UMC", "LMC", "LIC", "SAS", "PAK", "CHN", "IND", "USA", "CAN", "AUS", "EUU"),
+    start_date = 1960,
+    end_date = 2018
+  )
+  
+  df <- df %>% 
+    mutate(num_def = EN.ATM.CO2E.PC) %>% 
+    select(iso3c, country, date, num_def)
+
+  # chart
+  color_list = c(
+    "XD" = style$colors$neutral.dark, 
+    "XT" = style$colors$neutral.dark, 
+    "XN" = style$colors$neutral.dark, 
+    "XM" = style$colors$neutral.dark, 
+    "SAS" = style$colors$orange, 
+    "PAK" = style$colors$blue, 
+    "CHN" = style$colors$neutral.light,
+    "IND" = style$colors$neutral.light, 
+    "USA" = style$colors$neutral.light, 
+    "CAN" = style$colors$neutral.light, 
+    "AUS" = style$colors$neutral.light, 
+    "EUU" = style$colors$neutral.light)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = date, y = num_def, color = iso3c)) +
+      geom_line(size = style$linesize) +
+      geom_line(data = df %>% filter(iso3c == "PAK"), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df %>% filter(date == max(date)) %>% pull(num_def) %>% repel(gap=0.7, force = TRUE),
+            labels = df %>% filter(date == max(date)) %>% pull(country)
+          )) +
+        scale_color_manual(values = color_list) +
+        style$theme()
+    },
+    aspect_ratio = 1.5,
+    # title = paste0("Carbon dioxide (CO2) emissions are growing exponentially in the South Asia region."),
+    subtitle = "Annual CO2 emissions (metric tons per capita)",
+    source = "Source: Carbon Dioxide Information Analysis Center. World Development Indicators (EN.ATM.CO2E.PC)."
+  )
+}
+
+fig_ch1_per_capita_CO2_emissions()
+
+figure_save_draft_png(fig_ch1_per_capita_CO2_emissions(), style_SAR_CCDR, "../png/fig_ch1_per_capita_CO2_emissions.png", height=4.1, width=6.5)
+```
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Projected Mean-Temperature
+
+Data source: https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=4.5, out.width=800, dpi=200}
 fig_ch1_projected_annual_mean_temperature_var1 <- function() {
   
   # data
-  df <- read_csv("../data/projected-mean-temperature.csv")
+  df <- read_csv("../data/projected-mean-temperature_edited.csv")
   color_list <- c(
     style$colors$neutral.dark, 
     style$colors$blue, 
@@ -2696,14 +2904,14 @@ fig_ch1_projected_annual_mean_temperature_var1 <- function() {
           breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6),
           labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
         )) +
-      annotate("text", x = 2005, y = 22.3, label = "Hist. Ref. Per.\n1995-2014", size = 3, family = style$family, color=style$colors$text) +
+      annotate("text", x = 2005, y = 22.3, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
       scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
       geom_vline(xintercept = 2014, linetype = "dashed") +
       style$theme()
     },
     aspect_ratio = 1,
-    title = "Pakistan faces rates of warming considerably above the global average.",
-    subtitle = "Projected Annual Mean Temperature between 2015-2100 (°C) in Pakistan (Baseline: 1995-2014, Multi-Model Ensemble)",
+    # title = "Pakistan faces rates of warming considerably above the global average.",
+    subtitle = "Projected Mean-Temperature (°C, Baseline: 1995-2014, Multi-Model Ensemble)",
     source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections."
   )
 }
@@ -2714,6 +2922,447 @@ figure_save_draft_png(fig_ch1_projected_annual_mean_temperature_var1(), style_SA
 ```
 
 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Projected Changes in Mean-Temperature
+
+Data source: https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+fig_ch1_projected_temperature_changes <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-mean-temperature.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")
+  
+  df.spp126 <- df %>%
+    select(Year, 8:10) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-2.6`) %>%
+    rename_with(~ gsub('SSP1-2.6 ', '', .x)) %>%
+    mutate(Projection = "SSP1-2.6")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+  
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df.spp585 <- df %>%
+    select(Year, 17:19) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP5-8.5`) %>%
+    rename_with(~ gsub('SSP5-8.5 ', '', .x)) %>%
+    mutate(Projection = "SSP5-8.5")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp126, df.spp245, df.spp370, df.spp585)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$blue.light, 
+    style$colors$orange,  
+    style$colors$red.light, 
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection),color="grey70",alpha=0.2) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 1.5, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Mean-Temperature",
+    subtitle = "Projected changes in mean-temperature (°C)",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_temperature_changes()
+
+figure_save_draft_png(fig_ch1_projected_temperature_changes(), style_SAR_CCDR, "../png/fig_ch1_projected_temperature_changes.png", height=3.1, width=3.2)
+```
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Projected Changes in Precipitation
+
+Data source: https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+
+fig_ch1_projected_precipitation_changes <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-precipitation.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")
+  
+  df.spp126 <- df %>%
+    select(Year, 8:10) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-2.6`) %>%
+    rename_with(~ gsub('SSP1-2.6 ', '', .x)) %>%
+    mutate(Projection = "SSP1-2.6")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+  
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df.spp585 <- df %>%
+    select(Year, 17:19) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP5-8.5`) %>%
+    rename_with(~ gsub('SSP5-8.5 ', '', .x)) %>%
+    mutate(Projection = "SSP5-8.5")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp126, df.spp245, df.spp370, df.spp585)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$blue.light, 
+    style$colors$orange,  
+    style$colors$red.light, 
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection),color="grey70",alpha=0.2) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          # breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          breaks = c(15, -10, 40, 65, 90),
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 50, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Precipitation",
+    subtitle = "Projected changes in precipitation (mm)",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_precipitation_changes()
+
+figure_save_draft_png(fig_ch1_projected_precipitation_changes(), style_SAR_CCDR, "../png/fig_ch1_projected_precipitation_changes.png", height=3.1, width=3.2)
+```
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Projected Changes in Heat Index > 35 
+
+Data source: https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+
+fig_ch1_projected_heat_index_changes <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-days-with-heat-index.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")
+  
+  df.spp126 <- df %>%
+    select(Year, 8:10) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-2.6`) %>%
+    rename_with(~ gsub('SSP1-2.6 ', '', .x)) %>%
+    mutate(Projection = "SSP1-2.6")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+  
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df.spp585 <- df %>%
+    select(Year, 17:19) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP5-8.5`) %>%
+    rename_with(~ gsub('SSP5-8.5 ', '', .x)) %>%
+    mutate(Projection = "SSP5-8.5")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp126, df.spp245, df.spp370, df.spp585)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$blue.light, 
+    style$colors$orange,  
+    style$colors$red.light, 
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection),color="grey70",alpha=0.2) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          # breaks = c(15, -10, 40, 65, 90),
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 25, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Days with Heat Index > 35°C",
+    subtitle = "Projected changes in days with heat index > 35°C",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_heat_index_changes()
+
+figure_save_draft_png(fig_ch1_projected_heat_index_changes(), style_SAR_CCDR, "../png/fig_ch1_projected_heat_index_changes.png", height=3.1, width=3.2)
+```
+
+
+
+
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Projected Changes in Average largest 5-day cumulative rainfall 
+
+Data source: https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+
+fig_ch1_projected_cumulative_rainfall_changes <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-average-largest-5-day-cumulative-rainfall.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")
+  
+  df.spp126 <- df %>%
+    select(Year, 8:10) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-2.6`) %>%
+    rename_with(~ gsub('SSP1-2.6 ', '', .x)) %>%
+    mutate(Projection = "SSP1-2.6")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+  
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df.spp585 <- df %>%
+    select(Year, 17:19) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP5-8.5`) %>%
+    rename_with(~ gsub('SSP5-8.5 ', '', .x)) %>%
+    mutate(Projection = "SSP5-8.5")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp126, df.spp245, df.spp370, df.spp585)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$blue.light, 
+    style$colors$orange,  
+    style$colors$red.light, 
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection),color="grey70",alpha=0.2) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          # breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          breaks = c(0,  6, 18, 12, 24),
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 15, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Average Largest 5-day Cumulative Rainfall",
+    subtitle = "Projected changes in average largest 5-day cumulative rainfall (mm)",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_cumulative_rainfall_changes()
+
+figure_save_draft_png(fig_ch1_projected_cumulative_rainfall_changes(), style_SAR_CCDR, "../png/fig_ch1_projected_cumulative_rainfall_changes.png", height=3.1, width=3.2)
+```
 
 
 
@@ -2768,7 +3417,7 @@ fig_ch1_GHG_by_sector_line <- function() {
         style$theme()
     },
     aspect_ratio = 1,
-    title = "Energy and agriculture sectors take up the largest portions of greenhouse gas emissions in Pakistan.",
+    # title = "Energy and agriculture sectors take up the largest portions of greenhouse gas emissions in Pakistan.",
     subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
   )
@@ -2780,7 +3429,7 @@ figure_save_draft_png(fig_ch1_GHG_by_sector_line(), style_SAR_CCDR, "../png/fig_
 ```
 
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
 fig_ch1_GHG_by_sector_area <- function() {
   
   # data
@@ -2819,15 +3468,15 @@ fig_ch1_GHG_by_sector_area <- function() {
         style$theme_legend("right")
     },
     aspect_ratio = 1,
-    title = "Emissions are primarily from energy and agriculture, comprising 48% and 42% respectively, followed by Industrial Processes (6%), Waste (2.1%), and Land-Use Change and Forestry (1.6%).",
-    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
+    # title = "Greenhouse gas emissions by sectors",
+    subtitle = "Historical GHG emissions (MtCO2e)",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
   )
 }
 
 fig_ch1_GHG_by_sector_area()
 
-figure_save_draft_png(fig_ch1_GHG_by_sector_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_sector_area.png", height=5.1, width=5.5)
+figure_save_draft_png(fig_ch1_GHG_by_sector_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_sector_area.png", height=3.1, width=5.5)
 ```
 
 
@@ -2882,8 +3531,8 @@ fig_ch1_GHG_by_sector_pie <- function() {
             plot.margin = margin(1,1,-15,1, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "Emissions are primarily from energy and agriculture, comprising 48% and 42% respectively, followed by Industrial Processes (6%), Waste (2.1%), and Land-Use Change and Forestry (1.6%).",
-    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 2018",
+    # title = "Emissions are primarily from energy and agriculture, comprising 48% and 42% respectively, followed by Industrial Processes (6%), Waste (2.1%), and Land-Use Change and Forestry (1.6%).",
+    subtitle = "GHG emissions (MtCO2e), 2018",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (2018)."
   )
 }
@@ -2993,11 +3642,11 @@ fig_ch1_GHG_by_sector_pie_var1 <- function() {
             axis.text = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_blank(),
-            plot.margin = margin(-10,1,1,1, unit = "mm"))
+            plot.margin = margin(-20,1,-10,1, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "Emissions are primarily from energy and agriculture, comprising 48% and 42% respectively, followed by Industrial Processes (6%), Waste (2.1%), and Land-Use Change and Forestry (1.6%).",
-    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 2018",
+    # title = "Emissions are primarily from energy and agriculture, comprising 48% and 42% respectively, followed by Industrial Processes (6%), Waste (2.1%), and Land-Use Change and Forestry (1.6%).",
+    subtitle = "GHG emissions (MtCO2e), 2018",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (2018)."
   )
 }
@@ -3023,7 +3672,7 @@ Gases: All GHG
 
 Show by: Gases
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=5.5, out.width=800, dpi=200}
 fig_ch1_GHG_by_gas_area <- function() {
   
   # data
@@ -3061,20 +3710,20 @@ fig_ch1_GHG_by_gas_area <- function() {
         style$theme_legend("right")
     },
     aspect_ratio = 1,
-    title = "GHG emissions by gases",
-    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 1990-2018",
+    # title = "Greenhouse gas emissions by gases",
+    subtitle = "Historical GHG emissions (MtCO2e)",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (1990-2018)."
   )
 }
 
 fig_ch1_GHG_by_gas_area()
 
-figure_save_draft_png(fig_ch1_GHG_by_gas_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_gas_area.png", height=5.1, width=5.5)
+figure_save_draft_png(fig_ch1_GHG_by_gas_area(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_gas_area.png", height=3.1, width=5.5)
 ```
 
 
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.5, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
 
 fig_ch1_GHG_by_gas_pie <- function() {
   
@@ -3111,7 +3760,7 @@ fig_ch1_GHG_by_gas_pie <- function() {
       geom_rect(color = "white", size=1) +
       geom_label(x=4.3, aes(y=labelPosition, label=label, vjust=vjust), size=2.5, family = style$family, label.size = NA, fill = NA) +
       coord_polar(theta="y") +
-      xlim(c(2, 4)) +
+      xlim(c(2, 4.1)) +
       scale_fill_manual(values = color_list) +
       style$theme() +
       theme(legend.position = "none",
@@ -3123,15 +3772,15 @@ fig_ch1_GHG_by_gas_pie <- function() {
             plot.margin = margin(1,1,-5,1, unit = "mm"))
     },
     aspect_ratio = 1,
-    title = "GHG emissions by gases",
-    subtitle = "Historical Country Greenhouse Gas Emissions (MtCO2e), 2018",
+    # title = "Greenhouse gas emissions by gases",
+    subtitle = "GHG emissions (MtCO2e), 2018",
     source = "Source: Climate Watch Historical Country Greenhouse Gas Emissions Data (2018)."
   )
 }
 
 fig_ch1_GHG_by_gas_pie()
 
-figure_save_draft_png(fig_ch1_GHG_by_gas_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_gas_pie.png", height=3.1, width=3.5)
+figure_save_draft_png(fig_ch1_GHG_by_gas_pie(), style_SAR_CCDR, "../png/fig_ch1_GHG_by_gas_pie.png", height=3.1, width=3.2)
 ```
 
 
