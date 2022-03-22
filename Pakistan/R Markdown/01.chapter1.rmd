@@ -3582,9 +3582,9 @@ fig_ch1_GHG_by_sector_pie_var1 <- function() {
   df$ymin <- c(0, head(df$ymax, n=-1))
   df$labelPosition <- (df$ymax + df$ymin) / 2
   df$label <- paste0(df$Sector, "\n", round(df$percentage,1), "%")
-  df$label <- c("Energy\n48.1% ", "Agriculture\n42.5%", "Industrial\nProcesses\n5.7%", "Waste\n2.1%", "Land-Use Change and Forestry\n1.6%")
-  df$vjust <- c(0.5, 0.5, 0.85, 1, 0.0)
-  df$hjust <- c(2.5, 0.5, 0.5, 0.5, 0.5)
+  df$label <- c("Energy\n48.1% ", "Agriculture\n42.5%             ", "Industrial\nProcesses\n5.7%", "Waste\n2.1%", "Land-Use Change\nand Forestry\n1.6%")
+  df$vjust <- c(0.5, 0.5, 0.9, 0.9, -0.2)
+  df$hjust <- c(3, -1.2, 0.5, 0.5, 0.5)
   
   energy_percentage <- df$percentage[1]
   df_energy <- read_csv("../data/ghg-emissions_by_catagory_in_energy.csv")
@@ -3607,30 +3607,31 @@ fig_ch1_GHG_by_sector_pie_var1 <- function() {
                               90 - df_energy$labelPosition/max(df_energy$ymax)*360*energy_percentage/100,
                               df_energy$labelPosition/max(df_energy$ymax)*360*energy_percentage/100*-1 + 270)
   df_energy$hjust <- c(0,0,0,0,0,0)
+  df_energy$alpha <- seq(0.7, 0.2, length = 6)
   
   
   # chart
   color_list = c(
-    "Energy" = style$colors$blue,   
-    "Agriculture" = style$colors$orange,  
-    "Industrial Processes" = style$colors$navy, 
+    "Energy" = style$colors$blue,
+    "Agriculture" = style$colors$orange,
+    "Industrial Processes" = style$colors$navy,
     "Waste" = style$colors$purple,
     "Land-Use Change and Forestry" = style$colors$red,
-    "Electricity/Heat" = "#05B2DC",   
-    "Transportation" = "#0497C7",  
-    "Manufacturing/Construction" = "#037BB1", 
-    "Building" = "#025F9B", 
-    "Fugitive Emissions" = "#004385",
-    "Other Fuel Combustion" = "#033860")
+    "Electricity/Heat" = "#50B1E2",
+    "Transportation" = "#50B1E2",
+    "Manufacturing/Construction" = "#50B1E2",
+    "Building" = "#50B1E2",
+    "Fugitive Emissions" = "#50B1E2",
+    "Other Fuel Combustion" = "#50B1E2")
     
   figure(
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
       ggplot() +
       geom_rect(data=df, aes(ymax=ymax, ymin=ymin, xmax=4, xmin=3, fill=Sector), color = "white", size=1) +
-      geom_rect(data=df_energy, aes(ymax=ymax, ymin=ymin, xmax=4.5, xmin=4, fill=Sector), color = "white", size=1, alpha = 0.4) +
+      geom_rect(data=df_energy, aes(ymax=ymax, ymin=ymin, xmax=4.5, xmin=4, fill=Sector, alpha=alpha), color = "white", size=1) +
       geom_text(data=df, x=4.5, aes(y=labelPosition, label=label, vjust=vjust, hjust=hjust), size=2.5, family = style$family, lineheight = 1) +
-      geom_text(data = df_energy, x=4.6, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = 1, show.legend = F) + 
+      geom_text(data=df_energy, x=4.6, aes(y = labelPosition, label = label, angle=angle, hjust=hjust, family=style$family), size=2, lineheight = 1, show.legend = F) + 
       coord_polar(theta="y") +
       xlim(c(2, 5.4)) +
       scale_fill_manual(values = color_list) +
