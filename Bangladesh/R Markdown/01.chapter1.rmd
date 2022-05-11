@@ -791,7 +791,7 @@ fig_ch1_natural_disasters <- function() {
   df2 <- df2 %>%
     select(-c('Wildfires', 'Mass movement (dry)', 'Volcanic activity')) %>%
     gather(Type, Damage, 4:9) %>%
-    mutate(Damage = Damage*100) %>%
+    mutate(Damage = Damage) %>%
     select(Year, Type, Damage)
   
   df <- merge(df1, df2, by=c("Year", "Type"))
@@ -803,8 +803,8 @@ fig_ch1_natural_disasters <- function() {
       p <- ggplot(df, aes(x=Year, y=reorder(Type, desc(Type)), size=ifelse(Damage==0, NA, Damage), color=Deaths, fill=Deaths)) +
         geom_point(alpha=0.5, shape=21, color="black") +
         scale_size(range = c(1, 20), name="Damage (%GDP)",
-                   breaks = c(10, 50,100),
-                   labels = c("10", "50", "100")) +
+                   breaks = c(0.1, 0.5, 1),
+                   labels = c("0.1", "0.5", "1")) +
         scale_fill_distiller(palette = "Spectral") + 
         scale_x_continuous(limits = c(1960, 2012), breaks = c(1960, 1970, 1980, 1990, 2000, 2010), labels = c("1960-1969", "1970-1979", "1980-1989", "1990-1999", "2000-2009", "2010-2019")) +
         xlab("Year") +
