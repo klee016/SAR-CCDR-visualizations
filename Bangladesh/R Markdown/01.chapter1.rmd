@@ -841,7 +841,9 @@ figure_save_draft_png(fig_ch1_natural_disasters(), style_SAR_CCDR, "../png/fig_c
 
 
 
+### Natural disasters in recent years, 2000-2021
 
+Frequency of natural disasters by type
 
 Data source: https://public.emdat.be/data
 
@@ -924,8 +926,8 @@ fig_ch1_natural_disaster_frequency <- function() {
             axis.text.y = element_blank())
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
-    subtitle = "Frequency of natural disasters by type, 2000-2022",
+    # title = "Natural disasters in recent years",
+    # subtitle = "Frequency of natural disasters by type, 2000-2022",
     source = "Source: The international disasters database"
   )
 }
@@ -936,6 +938,14 @@ figure_save_draft_png(fig_ch1_natural_disaster_frequency(), style_SAR_CCDR, "../
 ```
 
 
+
+
+
+### Natural disasters in recent years, 2000-2021
+
+Total deaths from natural disasters by type
+
+Data source: https://public.emdat.be/data
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
 
@@ -1017,8 +1027,8 @@ fig_ch1_natural_disaster_deaths <- function() {
             axis.text.y = element_blank())
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
-    subtitle = "Total deaths from natural disasters by type, 2000-2022",
+    # title = "Natural disasters in recent years",
+    # subtitle = "Total deaths from natural disasters by type, 2000-2022",
     source = "Source: The international disasters database"
   )
 }
@@ -1027,6 +1037,13 @@ fig_ch1_natural_disaster_deaths()
 
 figure_save_draft_png(fig_ch1_natural_disaster_deaths(), style_SAR_CCDR, "../png/fig_ch1_natural_disaster_deaths.png", height=5.1, width=5.5)
 ```
+
+
+### Natural disasters in recent years, 2000-2021
+
+Total damages from natural disasters by type, Adjusted ('000 US$)
+
+Data source: https://public.emdat.be/data
 
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=5.1, fig.width=5.5, out.width=800, dpi=200}
@@ -1107,8 +1124,8 @@ fig_ch1_natural_disaster_damage <- function() {
             axis.text.y = element_blank())
     },
     aspect_ratio = 1,
-    title = "Natural disasters in recent years",
-    subtitle = "Total damages from natural disasters by type, Adjusted ('000 US$), 2000-2022",
+    # title = "Natural disasters in recent years",
+    # subtitle = "Total damages from natural disasters by type, Adjusted ('000 US$), 2000-2022",
     source = "Source: The international disasters database"
   )
 }
