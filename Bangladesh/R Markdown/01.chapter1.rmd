@@ -281,6 +281,8 @@ figure_save_draft_png(fig_ch1_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_po
 
 
 
+### Bangladesh's economic growth and poverty compared with South Asia and lower-middle-income group
+
 Data source: WDI
 
 Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
@@ -364,7 +366,7 @@ fig_ch1_economic_growth_and_poverty <- function() {
       
     },
     aspect_ratio = 1,
-    title = "Bangladesh's economic growth and poverty compared with South Asia and lower-middle-income group",
+    # title = "Bangladesh's economic growth and poverty compared with South Asia and lower-middle-income group",
     source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD, SI.POV.DDAY)."
   )
 }
@@ -376,7 +378,13 @@ figure_save_draft_png(fig_ch1_economic_growth_and_poverty(), style_SAR_CCDR, "..
 ```
 
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=8.2, out.width=800, dpi=200}
+### Bangladesh's economic growth and poverty compared with South Asia and lower-middle-income group
+
+Data source: WDI
+
+Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=6.2, out.width=800, dpi=200}
 
 fig_ch1_economic_growth_and_poverty_var1 <- function() {
 
@@ -395,9 +403,9 @@ fig_ch1_economic_growth_and_poverty_var1 <- function() {
   
   # chart
   color_list = c(
-    "XN" = style$colors$red.light,
-    "SAS" = style$colors$purple.light, 
-    "BGD" = style$colors$navy)
+    "XN" = "#0061AE",
+    "SAS" = "#61457B", 
+    "BGD" = "#C06063")
   
   figure(
     data = df,
@@ -437,9 +445,9 @@ fig_ch1_economic_growth_and_poverty_var1 <- function() {
             labels = c("Bangladesh", "Lower middle income")
           ), 
           expand=c(0.35,0)) +
-        annotate("text", x = 2013, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        annotate("text", x = 2015, y = 30, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
-        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP) (% of population)")+
+        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP)")+
         style$theme()
       
       
@@ -457,14 +465,14 @@ fig_ch1_economic_growth_and_poverty_var1 <- function() {
       
     },
     aspect_ratio = 1,
-    title = "Bangladesh's economic growth and poverty compared with South Asia and lower-middle-income group",
+    # title = "Bangladesh's economic growth and poverty compared with South Asia and lower-middle-income group",
     source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD, SI.POV.DDAY)."
   )
 }
 
 fig_ch1_economic_growth_and_poverty_var1()
 
-figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty_var1.png", height=3.1, width=8.2)
+figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var1(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty_var1.png", height=3.1, width=6.2)
 
 ```
 
@@ -1423,7 +1431,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
         coord_polar(theta="y") +
         xlim(c(1, 5.1)) +
         scale_fill_manual(values = color_list)+
-        annotate(geom = 'text', x = 1, y = 0, label = "Frequency", size=3) +
+        annotate(geom = 'text', x = 1, y = 0, label = "Frequency", size=3, family=style$family) +
         labs(subtitle = "Frequency of natural disasters")+
         style$theme() +
         theme(legend.position = "none",
@@ -1466,7 +1474,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
         coord_polar(theta="y") +
         xlim(c(1, 5.1)) +
         scale_fill_manual(values = color_list)+
-        annotate(geom = 'text', x = 1, y = 0, label = "Deaths", size=3) +
+        annotate(geom = 'text', x = 1, y = 0, label = "Deaths", size=3, family=style$family) +
         labs(subtitle = "Total deaths from natural disasters")+
         style$theme() +
         theme(legend.position = "none",
@@ -1509,7 +1517,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
         coord_polar(theta="y") +
         xlim(c(1, 5.1)) +
         scale_fill_manual(values = color_list)+
-        annotate(geom = 'text', x = 1, y = 0, label = "Damage", size=3) +
+        annotate(geom = 'text', x = 1, y = 0, label = "Damage", size=3, family=style$family) +
         labs(subtitle = "Total damages from natural disasters, adjusted ('000 US$)")+
         style$theme() +
         theme(legend.position = "none",
@@ -1835,9 +1843,9 @@ fig_ch1_vulnerability <- function() {
       #   "Bangladesh" = style$colors$spot.primary
       # ))
       scale_color_manual(values = c(
-        "Lower middle income" = "#A6A6A6", 
-        "South Asia" = "#203864",
-        "Bangladesh" = "#C00000"
+        "Lower middle income" = "#0061AE", 
+        "South Asia" = "#61457B",
+        "Bangladesh" = "#C06063"
       ))
     },
     aspect_ratio = 1,
@@ -1944,10 +1952,10 @@ fig_ch1_readiness <- function() {
       #   "Bangladesh" = style$colors$spot.primary
       # ))
       scale_color_manual(values = c(
-        "Lower middle income" = "#A6A6A6", 
-        "South Asia" = "#203864",
-        "Bangladesh" = "#C00000"
-      ))  
+        "Lower middle income" = "#0061AE", 
+        "South Asia" = "#61457B",
+        "Bangladesh" = "#C06063"
+      ))
     },
     aspect_ratio = 1,
     # title = "Bangladesh's readiness in economic opportunity, governance, and social structures.",
@@ -1969,7 +1977,7 @@ figure_save_draft_png(fig_ch1_readiness(), style_SAR_CCDR, "../png/fig_ch1_readi
 ### Bangladesh's climate vulnerability and adaptation readiness
 
 
-```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=8.2, out.width=800, dpi=200}
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=7.2, out.width=800, dpi=200}
 
 library(zoo)
 
@@ -2106,9 +2114,9 @@ fig_ch1_vulnerability_readiness <- function() {
         #   "Bangladesh" = style$colors$spot.primary
         # )) +
         scale_color_manual(values = c(
-          "Lower middle income" = "#A6A6A6", 
-          "South Asia" = "#203864",
-          "Bangladesh" = "#C00000"
+          "Lower middle income" = "#0061AE", 
+          "South Asia" = "#61457B",
+          "Bangladesh" = "#C06063"
         )) +
         labs(subtitle = "Vulnerability scores (0-1 lower is better), 2019")
       
@@ -2143,9 +2151,9 @@ fig_ch1_vulnerability_readiness <- function() {
         #   "Bangladesh" = style$colors$spot.primary
         # )) +
         scale_color_manual(values = c(
-          "Lower middle income" = "#A6A6A6", 
-          "South Asia" = "#203864",
-          "Bangladesh" = "#C00000"
+          "Lower middle income" = "#0061AE", 
+          "South Asia" = "#61457B",
+          "Bangladesh" = "#C06063"
         )) +
         labs(subtitle = "Readiness scores (0-1 higher is better), 2019")
       
@@ -2165,14 +2173,14 @@ fig_ch1_vulnerability_readiness <- function() {
     },
     aspect_ratio = 1,
     # title = "Bangladesh's climate vulnerability and adaptation readiness",
-    note = "Note: Vulnerability measures a country's exposure, sensitivity and ability to adapt to the negative impact of climate change while Readiness measures a country’s ability to leverage investments and convert them to adaptation actions.",
+    note = "Note: Vulnerability measures a country's exposure, sensitivity and ability to adapt to the negative impact of climate change nwhile Readiness measures a country’s ability to leverage investments and convert them to adaptation actions.",
     source = "Source: The Notre Dame-Global Adaptation Index (ND-GAIN) Country Index."
   )
 }
 
 fig_ch1_vulnerability_readiness()
 
-figure_save_draft_png(fig_ch1_vulnerability_readiness(), style_SAR_CCDR, "../png/fig_ch1_vulnerability_readiness.png", height=4.1, width=8.2)
+figure_save_draft_png(fig_ch1_vulnerability_readiness(), style_SAR_CCDR, "../png/fig_ch1_vulnerability_readiness.png", height=4.1, width=7.2)
 
 ```
 
