@@ -936,7 +936,7 @@ fig_ch1_natural_disaster_frequency <- function() {
     aspect_ratio = 1,
     # title = "Natural disasters in recent years",
     # subtitle = "Frequency of natural disasters by type, 2000-2022",
-    source = "Source: The international disasters database"
+    source = "Source: EM-DAT The International Disasters Database"
   )
 }
 
@@ -1037,7 +1037,7 @@ fig_ch1_natural_disaster_deaths <- function() {
     aspect_ratio = 1,
     # title = "Natural disasters in recent years",
     # subtitle = "Total deaths from natural disasters by type, 2000-2022",
-    source = "Source: The international disasters database"
+    source = "Source: EM-DAT The International Disasters Database"
   )
 }
 
@@ -1134,7 +1134,7 @@ fig_ch1_natural_disaster_damage <- function() {
     aspect_ratio = 1,
     # title = "Natural disasters in recent years",
     # subtitle = "Total damages from natural disasters by type, Adjusted ('000 US$), 2000-2022",
-    source = "Source: The international disasters database"
+    source = "Source: EM-DAT The International Disasters Database"
   )
 }
 
@@ -1339,7 +1339,7 @@ fig_ch1_recent_natural_disaster_var1 <- function() {
     },
     aspect_ratio = 1,
     # title = "Natural disasters in recent years, 1990-2021",
-    source = "Source: The international disasters database"
+    source = "Source: EM-DAT The International Disasters Database"
   )
 }
 
@@ -1547,7 +1547,7 @@ fig_ch1_recent_natural_disaster_var2 <- function() {
     },
     aspect_ratio = 1,
     # title = "Natural disasters in recent years, 1990-2021",
-    source = "Source: The international disasters database"
+    source = "Source: EM-DAT The International Disasters Database"
   )
 }
 
@@ -1973,15 +1973,15 @@ figure_save_draft_png(fig_ch1_readiness(), style_SAR_CCDR, "../png/fig_ch1_readi
 
 
 
-
 ### Bangladesh's climate vulnerability and adaptation readiness
 
 
 ```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=7.2, out.width=800, dpi=200}
 
+library(ggradar)
 library(zoo)
 
-fig_ch1_vulnerability_readiness <- function() {
+fig_ch1_vulnerability_readiness_var1 <- function() {
 
   # vulnerability data
   df <- read_csv("../data/vulnerability.csv")
@@ -2021,8 +2021,8 @@ fig_ch1_vulnerability_readiness <- function() {
     select(Name, ecosystems, food, health, habitat, infrastructure, water)
   
   # rescale
-  vulnerability.min <- 0.3
-  vulnerability.max <- 0.9
+  vulnerability.min <- 0
+  vulnerability.max <- 1
   vulnerability.min_max_norm <- function(x) {
     (x - vulnerability.min) / (vulnerability.max - vulnerability.min)
   }
@@ -2066,8 +2066,8 @@ fig_ch1_vulnerability_readiness <- function() {
     select(Name, economic, governance, social)
   
   # rescale
-  readiness.min <- 0.2
-  readiness.max <- 0.5
+  readiness.min <- 0
+  readiness.max <- 1
   readiness.min_max_norm <- function(x) {
     (x - readiness.min) / (readiness.max - readiness.min)
   }
@@ -2092,7 +2092,7 @@ fig_ch1_vulnerability_readiness <- function() {
           font.radar = style$family,
           values.radar = c(vulnerability.min, (vulnerability.min+vulnerability.max)/2, vulnerability.max),
           grid.min = 0, grid.mid = 0.5, grid.max = 1,
-          grid.label.size = 3,  # Affects the grid annotations (0%, 50%, etc.)
+          grid.label.size = 4,  # Affects the grid annotations (0%, 50%, etc.)
           axis.label.size = 3, # Afftects the names of the variables
           group.point.size = 3   # Simply the size of the point 
         ) +
@@ -2106,7 +2106,8 @@ fig_ch1_vulnerability_readiness <- function() {
           legend.justification = c(1, 0),
           legend.text = element_text(size = 7, family = style$family),
           legend.key = element_rect(fill = NA, color = NA),
-          legend.background = element_blank()
+          legend.background = element_blank(),
+          plot.margin = margin(0,0,0,0, unit = "mm")
         ) +
         # scale_color_manual(values = c(
         #   "Lower middle income" = style$colors$spot.secondary, 
@@ -2129,7 +2130,7 @@ fig_ch1_vulnerability_readiness <- function() {
           font.radar = style$family,
           values.radar = c(readiness.min, (readiness.min+readiness.max)/2, readiness.max),
           grid.min = 0, grid.mid = 0.5, grid.max = 1,
-          grid.label.size = 3,  # Affects the grid annotations (0%, 50%, etc.)
+          grid.label.size = 4,  # Affects the grid annotations (0%, 50%, etc.)
           axis.label.size = 3, # Afftects the names of the variables
           group.point.size = 3   # Simply the size of the point 
         ) +
@@ -2143,7 +2144,8 @@ fig_ch1_vulnerability_readiness <- function() {
           legend.justification = c(1, 0),
           legend.text = element_text(size = 7, family = style$family),
           legend.key = element_rect(fill = NA, color = NA),
-          legend.background = element_blank()
+          legend.background = element_blank(),
+          plot.margin = margin(0,0,0,0, unit = "mm")
         ) +
         # scale_color_manual(values = c(
         #   "Lower middle income" = style$colors$spot.secondary, 
@@ -2178,9 +2180,223 @@ fig_ch1_vulnerability_readiness <- function() {
   )
 }
 
-fig_ch1_vulnerability_readiness()
+fig_ch1_vulnerability_readiness_var1()
 
-figure_save_draft_png(fig_ch1_vulnerability_readiness(), style_SAR_CCDR, "../png/fig_ch1_vulnerability_readiness.png", height=4.1, width=7.2)
+figure_save_draft_png(fig_ch1_vulnerability_readiness_var1(), style_SAR_CCDR, "../png/fig_ch1_vulnerability_readiness_var1.png", height=4.1, width=7.2)
+
+```
+
+
+### Bangladesh's climate vulnerability and adaptation readiness
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=4.1, fig.width=7.2, out.width=800, dpi=200}
+
+library(ggradar)
+library(zoo)
+
+fig_ch1_vulnerability_readiness_var2 <- function() {
+
+  # vulnerability data
+  df <- read_csv("../data/vulnerability.csv")
+
+  # add regions and income levels
+  df <- df %>%
+    rename(iso3c = ISO3) %>%
+    left_join(wbgref$countries$regions, by="iso3c") %>%
+    left_join(wbgref$countries$incomegroups, by="iso3c")
+  
+  # calculate aggregates by regions
+  region_aggregates <- df %>%
+    group_by(region_iso3c) %>% summarize(ecosystems = mean(ecosystems, na.rm=TRUE),
+                                         food = mean(food, na.rm=TRUE),
+                                         health = mean(health, na.rm=TRUE),
+                                         habitat = mean(habitat, na.rm=TRUE),
+                                         infrastructure = mean(infrastructure, na.rm=TRUE),
+                                         water = mean(water, na.rm=TRUE)) %>%
+    rename(iso3c = region_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$regions$labels), Name = wbgref$regions$labels), by="iso3c")
+    
+  # calculate aggregates by income levels
+  income_level_aggregates <- df %>%
+    group_by(income_level_iso3c) %>% summarize(ecosystems = mean(ecosystems, na.rm=TRUE),
+                                         food = mean(food, na.rm=TRUE),
+                                         health = mean(health, na.rm=TRUE),
+                                         habitat = mean(habitat, na.rm=TRUE),
+                                         infrastructure = mean(infrastructure, na.rm=TRUE),
+                                         water = mean(water, na.rm=TRUE)) %>%
+    rename(iso3c = income_level_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$incomes$labels), Name = wbgref$incomes$labels), by="iso3c")
+  
+  # merge and select
+  df <- df %>%
+    bind_rows(region_aggregates, income_level_aggregates) %>%
+    filter(iso3c == "BGD" | iso3c == "LMC" | iso3c == "SAS") %>%
+    select(Name, ecosystems, food, health, habitat, infrastructure, water)
+  
+  # rescale
+  vulnerability.min <- 0.3
+  vulnerability.max <- 0.7
+  vulnerability.min_max_norm <- function(x) {
+    (x - vulnerability.min) / (vulnerability.max - vulnerability.min)
+  }
+  df.vulnerability <- df %>%
+    mutate(ecosystems = vulnerability.min_max_norm(ecosystems)) %>%
+    mutate(food = vulnerability.min_max_norm(food)) %>%
+    mutate(health = vulnerability.min_max_norm(health)) %>%
+    mutate(habitat = vulnerability.min_max_norm(habitat)) %>%
+    mutate(infrastructure = vulnerability.min_max_norm(infrastructure)) %>%
+    mutate(water = vulnerability.min_max_norm(water))
+  
+  # readiness data
+  df <- read_csv("../data/readiness.csv")
+
+  # add regions and income levels
+  df <- df %>%
+    rename(iso3c = ISO3) %>%
+    left_join(wbgref$countries$regions, by="iso3c") %>%
+    left_join(wbgref$countries$incomegroups, by="iso3c")
+  
+  # calculate aggregates by regions
+  region_aggregates <- df %>%
+    group_by(region_iso3c) %>% summarize(economic = mean(economic, na.rm=TRUE),
+                                         governance = mean(governance, na.rm=TRUE),
+                                         social = mean(social, na.rm=TRUE)) %>%
+    rename(iso3c = region_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$regions$labels), Name = wbgref$regions$labels), by="iso3c")
+    
+  # calculate aggregates by income levels
+  income_level_aggregates <- df %>%
+    group_by(income_level_iso3c) %>% summarize(economic = mean(economic, na.rm=TRUE),
+                                         governance = mean(governance, na.rm=TRUE),
+                                         social = mean(social, na.rm=TRUE)) %>%
+    rename(iso3c = income_level_iso3c) %>% 
+    left_join(data.frame(iso3c = names(wbgref$incomes$labels), Name = wbgref$incomes$labels), by="iso3c")
+  
+  # merge and select
+  df <- df %>%
+    bind_rows(region_aggregates, income_level_aggregates) %>%
+    filter(iso3c == "BGD" | iso3c == "LMC" | iso3c == "SAS") %>%
+    select(Name, economic, governance, social)
+  
+  # rescale
+  readiness.min <- 0.1
+  readiness.max <- 0.5
+  readiness.min_max_norm <- function(x) {
+    (x - readiness.min) / (readiness.max - readiness.min)
+  }
+  df.readiness <- df %>%
+    mutate(economic = readiness.min_max_norm(economic)) %>%
+    mutate(governance = readiness.min_max_norm(governance)) %>%
+    mutate(social = readiness.min_max_norm(social))
+  
+  df <- merge(x = df.vulnerability, y = df.readiness, by = "Name", all = TRUE)
+  
+  # chart
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.vulnerability <- df %>%
+        select(Name, ecosystems, food, health, habitat, infrastructure, water)
+      
+      p.vulnerability <- ggradar(
+          df.vulnerability,
+          background.circle.colour = "white",
+          font.radar = style$family,
+          values.radar = c(vulnerability.min, (vulnerability.min+vulnerability.max)/2, vulnerability.max),
+          grid.min = 0, grid.mid = 0.5, grid.max = 1,
+          grid.label.size = 4,  # Affects the grid annotations (0%, 50%, etc.)
+          axis.label.size = 3, # Afftects the names of the variables
+          group.point.size = 3   # Simply the size of the point 
+        ) +
+        style$theme() +
+        theme(
+          plot.subtitle=element_text(hjust=0.5),
+          line = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text.x = element_blank(),
+          legend.position = c(1, 0),  
+          legend.justification = c(1, 0),
+          legend.text = element_text(size = 7, family = style$family),
+          legend.key = element_rect(fill = NA, color = NA),
+          legend.background = element_blank(),
+          plot.margin = margin(0,0,0,0, unit = "mm")
+        ) +
+        # scale_color_manual(values = c(
+        #   "Lower middle income" = style$colors$spot.secondary, 
+        #   "South Asia" = style$colors$spot.secondary.light,
+        #   "Bangladesh" = style$colors$spot.primary
+        # )) +
+        scale_color_manual(values = c(
+          "Lower middle income" = "#0061AE", 
+          "South Asia" = "#61457B",
+          "Bangladesh" = "#C06063"
+        )) +
+        labs(subtitle = "Vulnerability scores (0-1 lower is better), 2019")
+      
+      df.readiness <- df %>%
+        select(Name, economic, governance, social)
+      
+      p.readiness <- ggradar(
+          df.readiness,
+          background.circle.colour = "white",
+          font.radar = style$family,
+          values.radar = c(readiness.min, (readiness.min+readiness.max)/2, readiness.max),
+          grid.min = 0, grid.mid = 0.5, grid.max = 1,
+          grid.label.size = 4,  # Affects the grid annotations (0%, 50%, etc.)
+          axis.label.size = 3, # Afftects the names of the variables
+          group.point.size = 3   # Simply the size of the point 
+        ) +
+        style$theme() +
+        theme(
+          plot.subtitle=element_text(hjust=0.5),
+          line = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text.x = element_blank(),
+          legend.position = c(1, 0),  
+          legend.justification = c(1, 0),
+          legend.text = element_text(size = 7, family = style$family),
+          legend.key = element_rect(fill = NA, color = NA),
+          legend.background = element_blank(),
+          plot.margin = margin(0,0,0,0, unit = "mm")
+        ) +
+        # scale_color_manual(values = c(
+        #   "Lower middle income" = style$colors$spot.secondary, 
+        #   "South Asia" = style$colors$spot.secondary.light,
+        #   "Bangladesh" = style$colors$spot.primary
+        # )) +
+        scale_color_manual(values = c(
+          "Lower middle income" = "#0061AE", 
+          "South Asia" = "#61457B",
+          "Bangladesh" = "#C06063"
+        )) +
+        labs(subtitle = "Readiness scores (0-1 higher is better), 2019")
+      
+      
+      pt.vulnerability <- ggplotGrob(p.vulnerability)
+      pt.readiness <- ggplotGrob(p.readiness)
+  
+      chart <- gtable_row(
+        "chart", 
+        list(pt.vulnerability, zeroGrob(), pt.readiness), 
+        height = unit(1, "null"), 
+        widths = unit.c(unit(1, "null"), unit(0.3, "in"), unit(1, "null"))
+        )
+      chart$theme <- style$theme()
+      chart
+      
+    },
+    aspect_ratio = 1,
+    # title = "Bangladesh's climate vulnerability and adaptation readiness",
+    note = "Note: Vulnerability measures a country's exposure, sensitivity and ability to adapt to the negative impact of climate change nwhile Readiness measures a country’s ability to leverage investments and convert them to adaptation actions.",
+    source = "Source: The Notre Dame-Global Adaptation Index (ND-GAIN) Country Index."
+  )
+}
+
+fig_ch1_vulnerability_readiness_var2()
+
+figure_save_draft_png(fig_ch1_vulnerability_readiness_var2(), style_SAR_CCDR, "../png/fig_ch1_vulnerability_readiness_var2.png", height=4.1, width=7.2)
 
 ```
 
