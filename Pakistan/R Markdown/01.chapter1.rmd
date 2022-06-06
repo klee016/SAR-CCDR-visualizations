@@ -639,6 +639,105 @@ figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var1(), style_SAR_CCDR
 
 
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+### Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group, 2000-2020
+
+Data source: WDI
+
+Indicators: NY.GDP.PCAP.PP.CD, SI.POV.DDAY
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=2.6, fig.width=6.5, out.width=800, dpi=200}
+
+fig_ch1_economic_growth_and_poverty_var2 <- function() {
+
+  # data
+  df <- wb_data(
+    indicator = c("NY.GDP.PCAP.PP.CD", "SI.POV.DDAY"),
+    country = c("PAK", "LMC", "SAS"),
+    start_date = 2000,
+    end_date = 2020
+  )
+  df <- df %>% 
+    mutate(gdp = NY.GDP.PCAP.PP.CD) %>% 
+    mutate(poverty = SI.POV.DDAY) %>% 
+    select(iso3c, country, date, gdp, poverty)  %>%
+    mutate(date = as.numeric(date))
+  
+  # chart
+  color_list = c(
+    "XN" = style$colors$red.light,
+    "SAS" = style$colors$purple.light, 
+    "PAK" = style$colors$navy)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      
+      df.gdp <- df %>%
+        select(iso3c, country, date, gdp) 
+      
+      p.gdp <- ggplot(df.gdp, aes(x = date, y = gdp, group = rev(iso3c), color = iso3c)) +
+        geom_line(size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = df.gdp %>% filter(date == max(date)) %>% pull(gdp) %>% repel(gap=6),
+            labels = df.gdp %>% filter(date == max(date)) %>% pull(country)
+          ), 
+          expand=c(0.25,0)) +
+        scale_color_manual(values = color_list) +
+        labs(subtitle = "GDP per capita, PPP (current international $)")+
+        style$theme()
+      
+      df.poverty <- df %>%
+        select(iso3c, country, date, poverty) %>% 
+        group_by(iso3c) %>% 
+        mutate(interp = na.approx(poverty, na.rm=FALSE))
+      
+      p.poverty <- ggplot(df.poverty, aes(x = date, group = rev(iso3c), color = iso3c)) +
+        geom_point(aes(y = poverty)) +
+        geom_line(aes(y = interp), size = style$linesize/2, linetype = "dotted") +
+        geom_line(aes(y = poverty), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$date), expand=c(0,1)) +
+        scale_y_continuous(
+          position="left",
+          sec.axis = dup_axis(
+            breaks = c(3.6, 10.9),
+            labels = c("Pakistan", "Lower middle income")
+          ), 
+          expand=c(0.1,0)) +
+        annotate("text", x = 2014, y = 27, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        scale_color_manual(values = color_list) +
+        labs(subtitle = "Poverty headcount ratio at $1.90 a day (2011 PPP)")+
+        style$theme()
+      
+      
+      pt.gdp <- ggplotGrob(p.gdp)
+      pt.poverty <- ggplotGrob(p.poverty)
+  
+      chart <- gtable_row(
+        "chart", 
+        list(pt.gdp, zeroGrob(), pt.poverty), 
+        height = unit(1, "null"), 
+        widths = unit.c(unit(1, "null"), unit(0.3, "in"), unit(1, "null"))
+        )
+      chart$theme <- style$theme()
+      chart
+      
+    },
+    aspect_ratio = 1,
+    # title = "Pakistan's economic growth and poverty compared with South Asia and lower-middle-income group",
+    source = "Source: World Development Indicators (NY.GDP.PCAP.PP.CD, SI.POV.DDAY)."
+  )
+}
+
+fig_ch1_economic_growth_and_poverty_var2()
+
+figure_save_draft_png(fig_ch1_economic_growth_and_poverty_var2(), style_SAR_CCDR, "../png/fig_ch1_economic_growth_and_poverty_var2.png", height=2.6, width=6.5)
+
+```
 
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -2747,7 +2846,7 @@ fig_ch1_total_CO2_emissions <- function() {
   df <- wb_data(
     indicator = c("EN.ATM.CO2E.KT"),
     country = c("HIC", "UMC", "LMC", "LIC", "SAS", "PAK", "CHN", "IND", "USA", "CAN", "AUS", "EUU"),
-    start_date = 1960,
+    start_date = 1990,
     end_date = 2018
   )
 
@@ -2816,7 +2915,7 @@ fig_ch1_per_capita_CO2_emissions <- function() {
   df <- wb_data(
     indicator = c("EN.ATM.CO2E.PC"),
     country = c("HIC", "UMC", "LMC", "LIC", "SAS", "PAK", "CHN", "IND", "USA", "CAN", "AUS", "EUU"),
-    start_date = 1960,
+    start_date = 1990,
     end_date = 2018
   )
   
@@ -3075,6 +3174,85 @@ fig_ch1_projected_annual_mean_temperature_var3()
 
 figure_save_draft_png(fig_ch1_projected_annual_mean_temperature_var3(), style_SAR_CCDR, "../png/fig_ch1_projected_annual_mean_temperature_var3.png", height=4.1, width=6.5)
 ```
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=4.5, out.width=800, dpi=200}
+fig_ch1_projected_annual_mean_temperature_var4 <- function() {
+  
+  # data
+  # data
+  df <- read_csv("../data/projected-mean-temperature.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp245, df.spp370)
+  
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$orange,  
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean, color=Projection)) +
+      geom_line(aes(x=Year, y=Mean, color=Projection), size=1.5) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`, ymax=`10-90th Percentile Range (high)`, 
+                      fill=Projection, color=Projection),alpha=0.1) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6),
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2005, y = 22.3, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Pakistan faces rates of warming considerably above the global average.",
+    subtitle = "Projected Mean-Temperature (°C)",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections."
+  )
+}
+
+fig_ch1_projected_annual_mean_temperature_var4()
+
+figure_save_draft_png(fig_ch1_projected_annual_mean_temperature_var4(), style_SAR_CCDR, "../png/fig_ch1_projected_annual_mean_temperature_var4.png", height=4.1, width=6.5)
+```
+
 
 
 
@@ -3354,6 +3532,96 @@ fig_ch1_projected_temperature_changes_var3()
 
 figure_save_draft_png(fig_ch1_projected_temperature_changes_var3(), style_SAR_CCDR, "../png/fig_ch1_projected_temperature_changes_var3.png", height=3.1, width=3.2)
 ```
+
+
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+fig_ch1_projected_temperature_changes_var4 <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-mean-temperature.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp245, df.spp370)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$orange,  
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection, color=Projection),alpha=0.1) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 1.5, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Mean-Temperature",
+    subtitle = "Projected changes in mean-temperature (°C)",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_temperature_changes_var4()
+
+figure_save_draft_png(fig_ch1_projected_temperature_changes_var4(), style_SAR_CCDR, "../png/fig_ch1_projected_temperature_changes_var4.png", height=3.1, width=3.2)
+```
+
+
+
 
 
 
@@ -3640,6 +3908,95 @@ figure_save_draft_png(fig_ch1_projected_precipitation_changes_var3(), style_SAR_
 ```
 
 
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+
+fig_ch1_projected_precipitation_changes_var4 <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-precipitation.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+  
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp245, df.spp370)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$orange,  
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection, color=Projection), alpha=0.1) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 50, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Precipitation",
+    subtitle = "Projected changes in precipitation (mm)",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_precipitation_changes_var4()
+
+figure_save_draft_png(fig_ch1_projected_precipitation_changes_var4(), style_SAR_CCDR, "../png/fig_ch1_projected_precipitation_changes_var4.png", height=3.1, width=3.2)
+```
+
+
+
+
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 ### Projected Changes in Heat Index > 35 
@@ -3922,6 +4279,94 @@ fig_ch1_projected_heat_index_changes_var3()
 
 figure_save_draft_png(fig_ch1_projected_heat_index_changes_var3(), style_SAR_CCDR, "../png/fig_ch1_projected_heat_index_changes_var3.png", height=3.1, width=3.2)
 ```
+
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+
+fig_ch1_projected_heat_index_changes_var4 <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-days-with-heat-index.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp245, df.spp370)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$orange,  
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection, color=Projection), alpha=0.1) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          # breaks = c(15, -10, 40, 65, 90),
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 25, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Days with Heat Index > 35°C",
+    subtitle = "Projected changes in days with heat index > 35°C",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_heat_index_changes_var4()
+
+figure_save_draft_png(fig_ch1_projected_heat_index_changes_var4(), style_SAR_CCDR, "../png/fig_ch1_projected_heat_index_changes_var4.png", height=3.1, width=3.2)
+```
+
 
 
 
@@ -4211,6 +4656,90 @@ figure_save_draft_png(fig_ch1_projected_cumulative_rainfall_changes_var3(), styl
 
 
 
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.1, fig.width=3.2, out.width=800, dpi=200}
+
+fig_ch1_projected_cumulative_rainfall_changes_var4 <- function() {
+  
+  # data
+  df <- read_csv("../data/projected-average-largest-5-day-cumulative-rainfall.csv") %>%
+    rename(Year = Category)
+  
+  df.historical <- df %>%
+    select(Year, 2:4) %>%
+    filter(Year <= 2014) %>%
+    rename(Mean = `Hist. Ref. Per., 1995-2014`) %>%
+    rename_with(~ gsub('Historical ', '', .x)) %>%
+    mutate(Projection = "Historical")
+  
+  df.spp119 <- df %>%
+    select(Year, 5:7) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP1-1.9`) %>%
+    rename_with(~ gsub('SSP1-1.9 ', '', .x)) %>%
+    mutate(Projection = "SSP1-1.9")   
+
+  df.spp245 <- df %>%
+    select(Year, 11:13) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP2-4.5`) %>%
+    rename_with(~ gsub('SSP2-4.5 ', '', .x)) %>%
+    mutate(Projection = "SSP2-4.5")   
+  
+  df.spp370 <- df %>%
+    select(Year, 14:16) %>%
+    filter(Year >= 2014) %>%
+    rename(Mean = `SSP3-7.0`) %>%
+    rename_with(~ gsub('SSP3-7.0 ', '', .x)) %>%
+    mutate(Projection = "SSP3-7.0")   
+  
+  df <- bind_rows(df.historical, df.spp119, df.spp245, df.spp370)
+  
+  historical_average <- df %>%
+    filter(Projection == "Historical") %>%
+    select(Mean, `10-90th Percentile Range (low)`, `10-90th Percentile Range (high)`)
+  
+  historical_average.mean <- mean(historical_average$Mean, na.rm=TRUE)
+  historical_average.low <- mean(historical_average$`10-90th Percentile Range (low)`, na.rm=TRUE)
+  historical_average.high <- mean(historical_average$`10-90th Percentile Range (high)`, na.rm=TRUE)
+    
+  # chart
+  color_list <- c(
+    style$colors$neutral.dark, 
+    style$colors$blue, 
+    style$colors$orange,  
+    style$colors$red)
+  
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x=Year, y=Mean-historical_average.mean, color=Projection)) +
+      geom_line(size=1.2) +
+      geom_ribbon(aes(ymin=`10-90th Percentile Range (low)`-historical_average.mean, 
+                      ymax=`10-90th Percentile Range (high)`-historical_average.mean, 
+                      fill=Projection, color=Projection), alpha=0.1) +
+      scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,3)) +
+      scale_y_continuous(
+        position="left",
+        sec.axis = dup_axis(
+          breaks = df %>% filter(Year == max(Year)) %>% pull(Mean) %>% repel(gap=6)-historical_average.mean,
+          labels = df %>% filter(Year == max(Year)) %>% pull(Projection)
+        )) +
+      annotate("text", x = 2004, y = 15, label = "Hist. Ref. Per.\n1995-2014", size = 2, family = style$family, color=style$colors$text) +
+      scale_fill_manual(values=color_list) + scale_color_manual(values=color_list) +
+      geom_vline(xintercept = 2014, linetype = "dashed") +
+      style$theme()
+    },
+    aspect_ratio = 1,
+    # title = "Projected Changes in Average Largest 5-day Cumulative Rainfall",
+    subtitle = "Projected changes in average largest 5-day cumulative rainfall (mm)",
+    source = "Source: World Bank (2022). https://climateknowledgeportal.worldbank.org/country/pakistan/climate-data-projections"
+  )
+}
+
+fig_ch1_projected_cumulative_rainfall_changes_var4()
+
+figure_save_draft_png(fig_ch1_projected_cumulative_rainfall_changes_var4(), style_SAR_CCDR, "../png/fig_ch1_projected_cumulative_rainfall_changes_var4.png", height=3.1, width=3.2)
+```
 
 
 
