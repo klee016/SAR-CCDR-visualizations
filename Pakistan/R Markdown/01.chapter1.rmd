@@ -813,7 +813,7 @@ fig_ch1_economic_growth_and_poverty_var3 <- function() {
             labels = c("Pakistan", "Lower middle income", "South Asia")
           ), 
           expand=c(0.1,0)) +
-        annotate("text", x = 2014, y = 27, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
+        # annotate("text", x = 2014, y = 27, label = "South Asia", size = 2.5, family = style$family, color = style$colors$text) +
         scale_color_manual(values = color_list) +
         labs(subtitle = "Poverty headcount ratio at $3.20 a day (2011 PPP)")+
         style$theme()
