@@ -5696,6 +5696,94 @@ figure_save_draft_png(fig_ch1_GHG_by_gas_pie(), style_SAR_CCDR, "../png/fig_ch1_
 
 
 
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+## GHG Projection Under Different Policy Scenarios
+
+Data source: Pakistan CCDR Estimates
+
+```{r, echo=FALSE, message=FALSE, warning = FALSE, fig.height=3.5, fig.width=5.1, out.width=800, dpi=200}
+fig_ch1_GHG_projection_by_scenarios <- function() {
+  
+  # data
+  df <- read_csv("../data/GHG-E3ME.csv")
+  df1 <- df %>%
+    gather(key="Scenario", value="Emissions", "BAU":"Combined + SWM + TBTTP & BTAP") %>%
+    select(Scenario, Year, Emissions) %>%
+    mutate(Year = as.numeric(Year))
+  
+  df2 <- df %>%
+    mutate(Combined = (Combined - BAU)/BAU * 100) %>%
+    mutate(`Combined + SWM + TBTTP & BTAP` = (`Combined + SWM + TBTTP & BTAP` - BAU)/BAU * 100) %>%
+    select(Year, Combined, `Combined + SWM + TBTTP & BTAP`) %>%
+    gather(key="Scenario", value="Reduction", "Combined":"Combined + SWM + TBTTP & BTAP") %>%
+    select(Scenario, Year, Reduction) %>%
+    mutate(Year = as.numeric(Year))
+  
+  df <- left_join(df1, df2, by=c("Scenario","Year"))
+    
+  ordered_scenario <- df1 %>%
+    filter(Year == 2050) %>%
+    arrange(desc(Emissions),Scenario) %>% pull(Scenario)
+  
+  # chart
+  color_list = c(
+    "BAU" = style$colors$red, 
+    "IGCEP" = style$colors$red.light,   
+    "EV" = style$colors$orange,
+    "EE" = style$colors$orange.light,
+    "CT + RR + EE" = style$colors$purple,
+    "Elec" = style$colors$purple.light,
+    "Combined" = style$colors$blue,
+    "Combined + SWM + TBTTP & BTAP" = style$colors$navy
+  )
+  
+  coeff <- 10
+  diff <- 100
+    
+  figure(
+    data = df,
+    plot = function(df, style = style_SAR_CCDR()) {
+      ggplot(df, aes(x = Year, group = Scenario)) +
+        geom_ribbon(aes(ymin = (Reduction+diff)*coeff, ymax = (0+diff)*coeff, fill = factor(Scenario, levels = ordered_scenario)), alpha=0.3) +
+        geom_line(data = subset(df, Scenario != "BAU"),
+                  aes(y = Emissions, color = factor(Scenario, levels = ordered_scenario)), size = style$linesize) +
+        geom_line(data = subset(df, Scenario == "BAU"),
+                  aes(y = Emissions, color = factor(Scenario, levels = ordered_scenario)), size = style$linesize) +
+        scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
+        scale_y_continuous(
+          position="left",
+          # sec.axis = dup_axis(
+          #   breaks = df %>% filter(Year == max(Year)) %>% pull(Emissions) %>% repel(gap=6),
+          #   labels = df %>% filter(Year == max(Year)) %>% pull(Scenario)
+          # )
+          sec.axis = sec_axis(~./coeff-diff, name="Reduction (%)"),
+          limits=c(0,1000)
+        ) +
+        guides(color = guide_legend(override.aes = list(fill = c("#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", style$colors$blue, style$colors$navy.light)))) +
+        scale_color_manual(values = color_list, labels = ordered_scenario) +
+        scale_fill_manual(values = color_list, labels = ordered_scenario) +
+        style$theme() +
+        style$theme_legend("bottom")
+    },
+    aspect_ratio = 1,
+    subtitle = "GHG emissions (MtCO2e) and Reductions from BAU (%)",
+    source = "Source: Pakistan CCDR Estimates."
+  )
+}
+
+fig_ch1_GHG_projection_by_scenarios()
+
+figure_save_draft_png(fig_ch1_GHG_projection_by_scenarios(), style_SAR_CCDR, "../png/fig_ch1_GHG_projection_by_scenarios.png", height=3.5, width=5.1)
+```
+
+
+
+
+
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 ## Vulnerability score
