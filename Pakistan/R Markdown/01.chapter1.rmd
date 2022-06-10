@@ -5747,7 +5747,7 @@ fig_ch1_GHG_projection_by_scenarios <- function() {
     data = df,
     plot = function(df, style = style_SAR_CCDR()) {
       ggplot(df, aes(x = Year, group = Scenario)) +
-        geom_ribbon(aes(ymin = (Reduction+diff)*coeff, ymax = (0+diff)*coeff, fill = factor(Scenario, levels = ordered_scenario)), alpha=0.3) +
+        geom_ribbon(aes(ymin = (Reduction+diff)*coeff, ymax = (0+diff)*coeff, fill = factor(Scenario, levels = ordered_scenario)), alpha=0.2) +
         geom_line(data = subset(df, Scenario != "BAU"),
                   aes(y = Emissions, color = factor(Scenario, levels = ordered_scenario)), size = style$linesize) +
         geom_line(data = subset(df, Scenario == "BAU"),
@@ -5769,7 +5769,7 @@ fig_ch1_GHG_projection_by_scenarios <- function() {
         style$theme_legend("bottom")
     },
     aspect_ratio = 1,
-    subtitle = "GHG emissions (MtCO2e) and Reductions from BAU (%)",
+    subtitle = "GHG emission estimates (MtCO2e) and Potential reductions from BAU (%)",
     source = "Source: Pakistan CCDR Estimates."
   )
 }
