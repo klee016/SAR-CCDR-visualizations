@@ -5752,19 +5752,30 @@ fig_ch1_GHG_projection_by_scenarios <- function() {
                   aes(y = Emissions, color = factor(Scenario, levels = ordered_scenario)), size = style$linesize) +
         geom_line(data = subset(df, Scenario == "BAU"),
                   aes(y = Emissions, color = factor(Scenario, levels = ordered_scenario)), size = style$linesize) +
+        geom_point(aes(x=2030, y=208.451), shape=10, colour=style$colors$neutral.dark) +
+        annotate("text", x = 2027, y = 180, label = "NDC Target (Conditional)", hjust = 1, size = 2.5, family = style$family, color = style$colors$text) +
+        geom_curve(aes(x = 2027.1, y = 180, xend = 2029.7, yend = 208.451),
+                   colour = "#555555",
+                   size=0.3,
+                   curvature = 0.2,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
+        geom_point(aes(x=2030, y=354.366), shape=10, colour=style$colors$neutral.dark) +
+        annotate("text", x = 2027, y = 395, label = "NDC Target (Unconditional)", hjust = 1, size = 2.5, family = style$family, color = style$colors$text) +
+        geom_curve(aes(x = 2027.1, y = 395, xend = 2029.7, yend = 354.366),
+                   colour = "#555555",
+                   size=0.3,
+                   curvature = -0.2,
+                   arrow = arrow(length = unit(0.03, "npc"))) +
         scale_x_continuous(breaks = bracketed_breaks(df$Year), expand=c(0,0)) +
         scale_y_continuous(
           position="left",
-          # sec.axis = dup_axis(
-          #   breaks = df %>% filter(Year == max(Year)) %>% pull(Emissions) %>% repel(gap=6),
-          #   labels = df %>% filter(Year == max(Year)) %>% pull(Scenario)
-          # )
           sec.axis = sec_axis(~./coeff-diff, name="Reduction (%)"),
           limits=c(0,1000)
         ) +
         guides(color = guide_legend(override.aes = list(fill = c("#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", "#ffffff", style$colors$blue, style$colors$navy.light)))) +
         scale_color_manual(values = color_list, labels = ordered_scenario) +
         scale_fill_manual(values = color_list, labels = ordered_scenario) +
+        geom_vline(xintercept = 2030, linetype = "dashed", colour=style$colors$neutral) +
         style$theme() +
         style$theme_legend("bottom")
     },
